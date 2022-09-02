@@ -21,4 +21,29 @@ describe('AppController (e2e)', () => {
       .expect(200)
       .expect('Hello World!');
   });
+
+  describe('/auth/login (GET)', () => {
+    it('should return 401 because unauthenticated', () => {
+      return request(app.getHttpServer())
+        .post('/auth/login')
+        .send({
+          username: 'unauthorized',
+          password: 'none',
+        })
+        .expect(401);
+    });
+
+    it('should return user on authenticated', async () => {
+      return request(app.getHttpServer())
+        .post('/auth/login')
+        .send({
+          username: 'myuser',
+          password: '12345',
+        })
+        .expect(200)
+        .expect({
+          name: 'admin',
+        });
+    });
+  });
 });
