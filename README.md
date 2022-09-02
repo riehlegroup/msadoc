@@ -1,45 +1,48 @@
 # msadoc
 Document your microservice architecture - recentralize decentralized documentation!
 
+<!-- TODO: 2 nice screenshots of UI. -->
+
 ## Usage
 
-1. Host your `DocHub` instance on your servers.
+1. [Deploy](./docs/deployment.md) your `DocHub` instance on your servers.
 
-TODO via Docker & K8s & Helm
-
-
-2. Add a `msadoc.json` file to your project. Example:
+2. Add a `msadoc.json` file to your project. See the [docs](./docs/msadoc.md) for more information.
+Example:
 ```json
 {
   "serviceName": "PaymentService",
-  "dependencies": {
+  "usedAPIs": {
     "OrderService": "1.1.0",
   },
+  "producedEvents": [
+    "payment.success",
+    "payment.failure",
+  ]
+  "consumedEvents": [
+    "order.completed",
+  ],
   "technicalDocumentation": "https://github.com/osrgroup/msadoc/README.md",
-  "apiDocumentation": "https://petstore.swagger.io"
+  "apiDocumentation": "https://petstore.swagger.io",
   "responsibleTeam": "Payments",
-  "responsibles": "reponsible.developer@mymail.com",
+  "responsibles": [
+    "reponsible.developer@mymail.com",
+  ],
 }
 ```
 
-
-3. Push the `msadoc.json` file to the `DocHub` instance via your CI system. You can use the following shell script:
-
-```bash
-TODO
-```
-
+3. Push the `msadoc.json` file to the `DocHub` instance via your CI system. 
+3.1 Generate an [API key](./docs/api-keys.md) in the `DocHub`.
+3.2 Use the [CLI](./cli/README.md) to push to the `DocHub`.
 
 4. Browse all your microservices on your `DocHub` instance.
-
-TODO
 
 
 ## Architecture
 
-* The `DocHub` collects the `msadoc.json` files and provides backend functionality to browse the aggregated information.
-* The `UI` connects to the `DocHub` and presents the aggregated documentation to the user. 
-* The `CLI` allows pushing the `msadoc.json` file to the `DocHub`.
+* The [DocHub](./server/README.md) collects the `msadoc.json` files and provides backend functionality to browse the aggregated information.
+* The [DocHubUI](./ui/README.md) connects to the `DocHub` and presents the aggregated documentation to the user. 
+* The [CLI](./cli/README.md) allows pushing the `msadoc.json` file to the `DocHub`.
 
 
 ## License
