@@ -54,5 +54,60 @@ describe('AppController (e2e)', () => {
         username: 'myuser',
       });
     });
+
+    it('should return refreshable jwt token on authenticated', async () => {
+      const loginResponse = await request(app.getHttpServer())
+        .post('/auth/login')
+        .send({
+          username: 'myuser',
+          password: '12345',
+        })
+        .expect(200);
+
+      const refreshToken = loginResponse.body.refresh_token;
+      expect(refreshToken).toBeDefined();
+
+      const profileResponse = await request(app.getHttpServer())
+        .post('/auth/refresh')
+        .auth(refreshToken, { type: 'bearer' })
+        .send({
+          refresh_token: refreshToken,
+        })
+        .expect(200);
+
+      expect(profileResponse.body.access_token).toBeDefined();
+      expect(profileResponse.body.refresh_token).toBeDefined();
+    });
+
+    it('should fail if refresh uses access token', async () => {
+      const loginResponse = await request(app.getHttpServer())
+        .post('/auth/login')
+        .send({
+          username: 'myuser',
+          password: '12345',
+        })
+        .expect(200);
+
+      const accessToken = loginResponse.body.access_token;
+      const refreshToken = loginResponse.body.refresh_token;
+      expect(accessToken).toBeDefined();
+      expect(refreshToken).toBeDefined();
+
+      await request(app.getHttpServer())
+        .post('/auth/refresh')
+        .auth(refreshToken, { type: 'bearer' })
+        .send({
+          refresh_token: accessToken,
+        })
+        .expect(400);
+
+      await request(app.getHttpServer())
+        .post('/auth/refresh')
+        .auth(accessToken, { type: 'bearer' })
+        .send({
+          refresh_token: refreshToken,
+        })
+        .expect(401);
+    });
   });
 });

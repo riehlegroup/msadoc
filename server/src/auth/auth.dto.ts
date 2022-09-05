@@ -11,4 +11,12 @@ export class LoginRequestDto {
 export class LoginResponseDto {
   @ApiProperty()
   access_token: string;
+
+  @ApiProperty()
+  refresh_token: string;
+}
+
+export class RefreshTokenRequestDto {
+  @ApiProperty()
+  refresh_token: string;
 }
