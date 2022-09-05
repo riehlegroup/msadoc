@@ -8,7 +8,7 @@ Microservice-based projects often struggle with documentation. Information is di
 
 ## Usage
 
-1. [Deploy](./docs/deployment.md) your `DocHub` instance on your servers.
+1. [Deploy](./docs/deployment.md) your `msadoc-server` instance on your servers.
 
 2. Add a `msadoc.json` file to your project. See the [docs](./docs/msadoc.md) for more information.
 Example:
@@ -34,18 +34,18 @@ Example:
 }
 ```
 
-3. Push the `msadoc.json` file to the `DocHub` instance via your CI system. 
-3.1 Generate an [API key](./docs/api-keys.md) in the `DocHub`.
-3.2 Use the [CLI](./cli/README.md) to push to the `DocHub`.
+3. Push the `msadoc.json` file to the `msadoc-server` instance via your CI system.  
+  3.1 Generate an [API key](./docs/api-keys.md) in the `msadoc-server`.  
+  3.2 Use the [CLI](./cli/README.md) to push to the `msadoc-server`.
 
-4. Browse all your microservices on your `DocHub` instance.
+4. Browse all your microservices on your `msadoc-server` instance.
 
 
 ## Architecture
 
-* The [DocHub](./server/README.md) collects the `msadoc.json` files and provides backend functionality to browse the aggregated information.
-* The [DocHubUI](./ui/README.md) connects to the `DocHub` and presents the aggregated documentation to the user. 
-* The [CLI](./cli/README.md) allows pushing the `msadoc.json` file to the `DocHub`.
+* The [msadoc-server](./server/README.md) collects the `msadoc.json` files and provides backend functionality to browse the aggregated information.
+* The [msadoc-ui](./ui/README.md) connects to the `msadoc-server` and presents the aggregated documentation to the user. 
+* The [cli](./cli/README.md) allows pushing the `msadoc.json` file to the `msadoc-server`.
 
 
 ## License
