@@ -33,17 +33,26 @@ describe('AppController (e2e)', () => {
         .expect(401);
     });
 
-    it('should return user on authenticated', async () => {
-      return request(app.getHttpServer())
+    it('should return viable jwt token on authenticated', async () => {
+      const loginResponse = await request(app.getHttpServer())
         .post('/auth/login')
         .send({
           username: 'myuser',
           password: '12345',
         })
-        .expect(200)
-        .expect({
-          name: 'admin',
-        });
+        .expect(200);
+
+      const jwt = loginResponse.body.access_token;
+      expect(jwt).toBeDefined();
+
+      const profileResponse = await request(app.getHttpServer())
+        .get('/auth/me')
+        .auth(jwt, { type: 'bearer' })
+        .expect(200);
+
+      expect(profileResponse.body).toEqual({
+        username: 'myuser',
+      });
     });
   });
 });
