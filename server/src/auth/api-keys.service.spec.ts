@@ -18,7 +18,7 @@ describe('ApiKeysService', () => {
 
   it('should create api-key', async () => {
     service.create('test');
-    expect(service.getAllKeys()).toContain('test');
+    expect(service.getAllKeyNames()).toContain('test');
   });
 
   it('should create valid api-key', async () => {
@@ -29,7 +29,7 @@ describe('ApiKeysService', () => {
   it('should delete api-key', async () => {
     service.create('test');
     service.delete('test');
-    expect(service.getAllKeys()).not.toContain('test');
+    expect(service.getAllKeyNames()).not.toContain('test');
   });
 
   it('should not validate invalid api-key', async () => {

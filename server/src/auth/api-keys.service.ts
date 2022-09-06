@@ -12,7 +12,7 @@ export class ApiKeysService {
     return apiKey;
   }
 
-  getAllKeys(): string[] {
+  getAllKeyNames(): string[] {
     return [...this.apiKeys.keys()];
   }
 
