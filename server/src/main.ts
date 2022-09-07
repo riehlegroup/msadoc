@@ -10,7 +10,21 @@ async function bootstrap() {
     .setDescription('The msdoc server API description')
     .setVersion('1.0')
     .addTag('server')
-    .addBearerAuth()
+    .addSecurity('jwt', {
+      type: 'http',
+      scheme: 'bearer',
+      description: 'JWT access_token',
+    })
+    .addSecurity('jwt-refresh', {
+      type: 'http',
+      scheme: 'bearer',
+      description: 'JWT refresh_token',
+    })
+    .addSecurity('api-key', {
+      type: 'http',
+      scheme: 'bearer',
+      description: 'API key',
+    })
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);

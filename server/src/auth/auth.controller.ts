@@ -7,7 +7,7 @@ import {
   UseGuards,
   Request,
 } from '@nestjs/common';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import { ApiSecurity } from '@nestjs/swagger';
 import {
   LoginRequestDto,
   LoginResponseDto,
@@ -16,13 +16,13 @@ import {
 import { AuthService } from './auth.service';
 import { JwtAccessAuthGuard } from './jwt-access.guard';
 import { JwtRefreshAuthGuard } from './jwt-refresh.guard';
-import { LocalAuthGuard } from './local-auth.guard';
+import { UserPasswordAuthGuard } from './user-password.guard';
 
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
 
-  @UseGuards(LocalAuthGuard)
+  @UseGuards(UserPasswordAuthGuard)
   @Post('login')
   @HttpCode(200)
   async login(@Body() body: LoginRequestDto): Promise<LoginResponseDto> {
@@ -30,7 +30,7 @@ export class AuthController {
   }
 
   @UseGuards(JwtRefreshAuthGuard)
-  @ApiBearerAuth()
+  @ApiSecurity('jwt-refresh')
   @Post('refresh')
   @HttpCode(200)
   async refreshToken(
@@ -40,7 +40,7 @@ export class AuthController {
   }
 
   @UseGuards(JwtAccessAuthGuard)
-  @ApiBearerAuth()
+  @ApiSecurity('jwt')
   @Get('me')
   getMyProfile(@Request() req: any) {
     return req.user;

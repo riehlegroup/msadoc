@@ -8,7 +8,7 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import { ApiSecurity } from '@nestjs/swagger';
 import { JwtAccessAuthGuard } from '../auth/jwt-access.guard';
 import { ApiKeyAuthGuard } from './api-key.guard';
 import {
@@ -25,7 +25,7 @@ export class ApiKeysController {
   constructor(private apiKeysService: ApiKeysService) {}
 
   @UseGuards(JwtAccessAuthGuard)
-  @ApiBearerAuth()
+  @ApiSecurity('jwt')
   @Get('/')
   @HttpCode(200)
   getAllApiKeys(): GetApiKeysResponseDto {
@@ -41,7 +41,7 @@ export class ApiKeysController {
   }
 
   @UseGuards(JwtAccessAuthGuard)
-  @ApiBearerAuth()
+  @ApiSecurity('jwt')
   @Post('/')
   @HttpCode(200)
   createApiKey(
@@ -54,7 +54,7 @@ export class ApiKeysController {
   }
 
   @UseGuards(JwtAccessAuthGuard)
-  @ApiBearerAuth()
+  @ApiSecurity('jwt')
   @Delete('/:keyName')
   @HttpCode(200)
   deleteApiKey(@Param() params: { keyName: string }): void {
@@ -62,7 +62,7 @@ export class ApiKeysController {
   }
 
   @UseGuards(ApiKeyAuthGuard)
-  @ApiBearerAuth()
+  @ApiSecurity('api-key')
   @Get('/test')
   @HttpCode(200)
   testApiKey(): IsApiKeyValidResponseDto {
