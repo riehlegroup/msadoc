@@ -65,6 +65,42 @@ describe('ApiKeysController (e2e)', () => {
     });
   });
 
+  describe('/api-keys/test (GET)', () => {
+    it('should be protected', async () => {
+      await request(app.getHttpServer()).get('/api-keys/test').expect(401);
+    });
+
+    it('should validate valid api key', async () => {
+      const accessToken = await getAccessToken();
+      const apiKeyResponse = await request(app.getHttpServer())
+        .post('/api-keys')
+        .auth(accessToken, { type: 'bearer' })
+        .send({
+          keyName: 'testkey',
+        })
+        .expect(200);
+      const apiKey = apiKeyResponse.body.apiKey;
+
+      const testResponse = await request(app.getHttpServer())
+        .get('/api-keys/test')
+        .auth(apiKey, { type: 'bearer' })
+        .expect(200);
+      expect(testResponse.body).toEqual({
+        isApiKeyValid: true,
+      });
+    });
+  });
+
+  it('should not validate invalid api key', async () => {
+    const testResponse = await request(app.getHttpServer())
+      .get('/api-keys/test')
+      .auth('invalidApiKey', { type: 'bearer' })
+      .expect(401);
+    expect(testResponse.body).toEqual({
+      isApiKeyValid: false,
+    });
+  });
+
   async function getAccessToken(): Promise<string> {
     const loginResponse = await request(app.getHttpServer())
       .post('/auth/login')

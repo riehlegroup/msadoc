@@ -22,3 +22,8 @@ export class GetApiKeysResponseDto {
   @ApiProperty()
   apiKeys: GetApiKeyResponseDto[];
 }
+
+export class IsApiKeyValidResponseDto {
+  @ApiProperty()
+  isApiKeyValid: boolean;
+}
