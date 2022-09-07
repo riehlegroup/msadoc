@@ -1,5 +1,10 @@
-# msadoc
+![Logo](./docs/logo.png)
+
 **Document your microservice architecture - recentralize decentralized documentation!**
+
+_Note_: This project is currently in developent, this document describes the vision of the tool. If you like the project we'd appreciate a star!
+
+## Mission
 
 Microservice-based projects often struggle with documentation. Information is distributed to various places, especially if there is a lack of standard procedures to document the microservices and the architecture. `msadoc` is a tool that allows documenting metadata of each microservice directly in its code base increasing the odds of keeping the documentation consistent. The metadata is collected in a central place serving as an entry point to documentation, increasing documentation's discoverability, and automating the extraction of higher-value documentation.
 
