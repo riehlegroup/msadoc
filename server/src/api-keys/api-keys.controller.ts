@@ -10,11 +10,13 @@ import {
 } from '@nestjs/common';
 import { ApiBearerAuth } from '@nestjs/swagger';
 import { JwtAccessAuthGuard } from '../auth/jwt-access.guard';
+import { ApiKeyAuthGuard } from './api-key.guard';
 import {
   GetApiKeysResponseDto,
   GetApiKeyResponseDto,
   CreateApiKeyRequestDto,
   CreateApiKeyResponseDto,
+  IsApiKeyValidResponseDto,
 } from './api-keys.dto';
 import { ApiKeysService } from './api-keys.service';
 
@@ -57,5 +59,15 @@ export class ApiKeysController {
   @HttpCode(200)
   deleteApiKey(@Param() params: { keyName: string }): void {
     return this.apiKeysService.delete(params.keyName);
+  }
+
+  @UseGuards(ApiKeyAuthGuard)
+  @ApiBearerAuth()
+  @Get('/test')
+  @HttpCode(200)
+  testApiKey(): IsApiKeyValidResponseDto {
+    return {
+      isApiKeyValid: true,
+    };
   }
 }
