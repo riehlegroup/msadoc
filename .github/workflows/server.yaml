@@ -34,6 +34,11 @@ jobs:
 
       - name: Run test scripts
         run: npm run test
-      
-      - name: Run e2e test scripts
-        run: npm run test:e2e
+
+      - name: Run e2e tests
+        run: |
+          docker compose build 
+          cp .env.ci .env
+          docker compose up -d
+          npm run test:e2e
+          docker compose down
