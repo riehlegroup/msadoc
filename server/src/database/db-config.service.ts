@@ -6,6 +6,10 @@ import { TypeOrmOptionsFactory, TypeOrmModuleOptions } from '@nestjs/typeorm';
 export class TypeOrmConfigService implements TypeOrmOptionsFactory {
   constructor(private configService: ConfigService) {}
 
+  /**
+   * Used by NestJS to reach database.
+   * Keep in sync with @see TypeOrm.config.ts
+   */
   createTypeOrmOptions(): TypeOrmModuleOptions {
     return {
       type: 'postgres',
@@ -14,8 +18,10 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
       username: this.configService.getOrThrow('db_user'),
       password: this.configService.getOrThrow('db_pw'),
       database: this.configService.getOrThrow('db_db'),
-      entities: [],
-      synchronize: true,
+      entities: ['src/**/*.orm.ts', 'src/**/*.entity.ts'],
+      migrationsTableName: 'migrations',
+      migrationsRun: true,
+      migrations: ['src/database//migrations/*.ts'],
     };
   }
 }

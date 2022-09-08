@@ -33,35 +33,45 @@ describe('ApiKeysController (e2e)', () => {
         .send({
           keyName: 'testkey',
         })
-        .expect(200);
+        .expect(201);
+      expect(apiKeyResponse.body.id).toBeDefined();
       expect(apiKeyResponse.body.apiKey).toBeDefined();
+      expect(apiKeyResponse.body.creationTimestamp).toBeDefined();
     });
   });
 
   describe('/api-keys (GET)', () => {
+    beforeEach(async () => {
+      const accessToken = await getAccessToken();
+      await request(app.getHttpServer())
+        .delete('/api-keys')
+        .auth(accessToken, { type: 'bearer' })
+        .expect(200);
+    });
+
     it('should be protected', async () => {
       await request(app.getHttpServer()).get('/api-keys').expect(401);
     });
 
     it('should list api keys', async () => {
       const accessToken = await getAccessToken();
-      await request(app.getHttpServer())
+      const creationResponse = await request(app.getHttpServer())
         .post('/api-keys')
         .auth(accessToken, { type: 'bearer' })
         .send({
           keyName: 'testkey',
         })
-        .expect(200);
+        .expect(201);
 
-      const apiKeyResponse = await request(app.getHttpServer())
+      const listResponse = await request(app.getHttpServer())
         .get('/api-keys')
         .auth(accessToken, { type: 'bearer' })
         .expect(200);
-      expect(apiKeyResponse.body.apiKeys).toEqual([
-        {
-          keyName: 'testkey',
-        },
-      ]);
+      expect(listResponse.body.apiKeys).toContainEqual({
+        id: creationResponse.body.id,
+        keyName: creationResponse.body.keyName,
+        creationTimestamp: creationResponse.body.creationTimestamp,
+      });
     });
   });
 
@@ -78,7 +88,7 @@ describe('ApiKeysController (e2e)', () => {
         .send({
           keyName: 'testkey',
         })
-        .expect(200);
+        .expect(201);
       const apiKey = apiKeyResponse.body.apiKey;
 
       const testResponse = await request(app.getHttpServer())
