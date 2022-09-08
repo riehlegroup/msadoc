@@ -5,21 +5,18 @@ import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { ApiKeysModule } from './api-keys/api-keys.module';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { TypeOrmConfigService } from './TypeOrmConfigService';
+import { TypeOrmConfigService } from './database/db-config.service';
+import { DatabaseModule } from './database/database.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
-      envFilePath: ['.env.dev.local'],
+      envFilePath: ['.env'],
     }),
     AuthModule,
     UsersModule,
     ApiKeysModule,
-    TypeOrmModule.forRootAsync({
-      imports: [ConfigModule],
-      useClass: TypeOrmConfigService,
-    }),
+    DatabaseModule,
   ],
   exports: [ConfigModule],
   controllers: [AppController],

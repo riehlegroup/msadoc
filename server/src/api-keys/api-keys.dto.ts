@@ -5,17 +5,20 @@ export class CreateApiKeyRequestDto {
   keyName: string;
 }
 
-export class CreateApiKeyResponseDto {
-  @ApiProperty()
-  keyName: string;
-
-  @ApiProperty()
-  apiKey: string;
-}
-
 export class GetApiKeyResponseDto {
   @ApiProperty()
+  id: number;
+
+  @ApiProperty()
   keyName: string;
+
+  @ApiProperty()
+  creationTimestamp: Date;
+}
+
+export class CreateApiKeyResponseDto extends GetApiKeyResponseDto {
+  @ApiProperty()
+  apiKey: string;
 }
 
 export class GetApiKeysResponseDto {

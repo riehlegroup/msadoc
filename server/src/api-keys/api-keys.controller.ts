@@ -28,37 +28,44 @@ export class ApiKeysController {
   @ApiSecurity('jwt')
   @Get('/')
   @HttpCode(200)
-  getAllApiKeys(): GetApiKeysResponseDto {
+  async getAllApiKeys(): Promise<GetApiKeysResponseDto> {
     return {
-      apiKeys: this.apiKeysService
-        .getAllKeyNames()
-        .map((keyName): GetApiKeyResponseDto => {
+      apiKeys: (await this.apiKeysService.getAll()).map(
+        (model): GetApiKeyResponseDto => {
           return {
-            keyName: keyName,
+            id: model.id,
+            keyName: model.keyName,
+            creationTimestamp: model.creationTimestamp,
           };
-        }),
+        },
+      ),
     };
   }
 
   @UseGuards(JwtAccessAuthGuard)
   @ApiSecurity('jwt')
   @Post('/')
-  @HttpCode(200)
-  createApiKey(
+  @HttpCode(201)
+  async createApiKey(
     @Body() createApiKeyDto: CreateApiKeyRequestDto,
-  ): CreateApiKeyResponseDto {
-    return {
-      keyName: createApiKeyDto.keyName,
-      apiKey: this.apiKeysService.create(createApiKeyDto.keyName),
-    };
+  ): Promise<CreateApiKeyResponseDto> {
+    return await this.apiKeysService.create(createApiKeyDto.keyName);
   }
 
   @UseGuards(JwtAccessAuthGuard)
   @ApiSecurity('jwt')
-  @Delete('/:keyName')
+  @Delete('/')
   @HttpCode(200)
-  deleteApiKey(@Param() params: { keyName: string }): void {
-    return this.apiKeysService.delete(params.keyName);
+  async deleteAllApiKeys(): Promise<void> {
+    return await this.apiKeysService.deleteAll();
+  }
+
+  @UseGuards(JwtAccessAuthGuard)
+  @ApiSecurity('jwt')
+  @Delete('/:keyId')
+  @HttpCode(200)
+  async deleteApiKey(@Param() params: { keyId: number }): Promise<void> {
+    return await this.apiKeysService.delete(params.keyId);
   }
 
   @UseGuards(ApiKeyAuthGuard)

@@ -16,6 +16,11 @@ $ npm install
 $ docker compose up
 ```
 
+```bash
+# Setup environment
+$ cp .env.dev.local .env
+```
+
 ### Running the app
 
 ```bash
@@ -56,3 +61,11 @@ There are the following authentication mechanisms, each represented by an `AuthG
 * `ApiKeyAuthGuard` - only used for endpoints used by CI
 
 **Usage**: Annotate method in controller with e.g. `@UseGuards(JwtAccessAuthGuard)`
+
+
+### Database Migrations
+
+* Change the `orm` classes you want to change.
+* Make sure your `.env` file points to the right database.
+* Run `npm run typeorm:generate-migration --name=<MigrationName>` to create a new migration file in `/src/database/migrations`.
+* The next `npm run start` will automatically execute all required db migrations.
