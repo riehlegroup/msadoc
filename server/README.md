@@ -4,10 +4,16 @@ Backend service to collect and manage `msadoc` metadata of microservices.
 
 ## Getting Started
 
-### Install dependencies
+### Prerequesites
 
 ```bash
+# Install dependencies
 $ npm install
+```
+
+```bash
+# Start postgres db
+$ docker compose up
 ```
 
 ### Running the app
