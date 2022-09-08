@@ -22,7 +22,7 @@ describe('ApiKeysController (e2e)', () => {
         .send({
           keyName: 'testkey',
         })
-        .expect(413);
+        .expect(401);
     });
 
     it('should create api keys', async () => {
