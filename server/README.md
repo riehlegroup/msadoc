@@ -13,7 +13,7 @@ $ npm install
 
 ```bash
 # Start postgres db
-$ docker compose up
+$ docker compose -f ../deployment/dev/docker-compose.yaml up
 ```
 
 ```bash
