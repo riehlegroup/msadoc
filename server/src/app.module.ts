@@ -7,6 +7,7 @@ import { UsersModule } from './users/users.module';
 import { ApiKeysModule } from './api-keys/api-keys.module';
 import { TypeOrmConfigService } from './database/db-config.service';
 import { DatabaseModule } from './database/database.module';
+import { ServiceDocsModule } from './service-docs/service-docs.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { DatabaseModule } from './database/database.module';
     UsersModule,
     ApiKeysModule,
     DatabaseModule,
+    ServiceDocsModule,
   ],
   exports: [ConfigModule],
   controllers: [AppController],
