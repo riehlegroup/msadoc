@@ -11,9 +11,12 @@ services:
     ports:
       - 5432:5432
 
-  adminer:
-    # use "db" as host as it uses Docker internal DNS
-    image: adminer
-    restart: always
+  pgadmin:
+    image: dpage/pgadmin4:6
     ports:
-      - 5433:8080
+      - '5433:80'
+    environment:
+      PGADMIN_DEFAULT_EMAIL: example@example.com
+      PGADMIN_DEFAULT_PASSWORD: example
+    volumes:
+      - ./servers.json:/pgadmin4/servers.json
