@@ -3,9 +3,13 @@ import { PassportStrategy } from '@nestjs/passport';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { ApiKeysService } from './api-keys.service';
 import { Request } from 'express';
+import { ApiKeyAuthGuardHandle } from './api-key.guard';
 
 @Injectable()
-export class ApiKeyStrategy extends PassportStrategy(Strategy, 'api-key') {
+export class ApiKeyStrategy extends PassportStrategy(
+  Strategy,
+  ApiKeyAuthGuardHandle,
+) {
   constructor(private apiKeyService: ApiKeysService) {
     super();
   }

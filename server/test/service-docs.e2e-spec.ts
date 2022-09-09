@@ -16,6 +16,14 @@ describe('ServiceDocsController (e2e)', () => {
   });
 
   describe('/service-docs (POST)', () => {
+    beforeEach(async () => {
+      const accessToken = await getAccessToken();
+      await request(app.getHttpServer())
+        .delete('/service-docs')
+        .auth(accessToken, { type: 'bearer' })
+        .expect(200);
+    });
+
     it('should be protected', async () => {
       await request(app.getHttpServer())
         .post('/service-docs')
@@ -23,6 +31,38 @@ describe('ServiceDocsController (e2e)', () => {
           name: 'test-service',
         })
         .expect(401);
+    });
+
+    it('should be allow jwt access token', async () => {
+      await request(app.getHttpServer())
+        .post('/service-docs')
+        .send({
+          name: 'test-service',
+        })
+        .expect(401);
+    });
+
+    it('should be allow api-key', async () => {
+      const accessToken = await getAccessToken();
+      await request(app.getHttpServer())
+        .post('/service-docs')
+        .auth(accessToken, { type: 'bearer' })
+        .send({
+          name: 'test-service',
+        })
+        .expect(201);
+    });
+
+    it('should be allow api-key', async () => {
+      const accessToken = await getAccessToken();
+      const apiKey = await getApiKey(accessToken);
+      await request(app.getHttpServer())
+        .post('/service-docs')
+        .auth(apiKey, { type: 'bearer' })
+        .send({
+          name: 'test-service',
+        })
+        .expect(201);
     });
 
     it('should create service-doc', async () => {
@@ -138,5 +178,15 @@ describe('ServiceDocsController (e2e)', () => {
         password: '12345',
       });
     return loginResponse.body.access_token;
+  }
+
+  async function getApiKey(accessToken: string): Promise<string> {
+    const apiKeyResponse = await request(app.getHttpServer())
+      .post('/api-keys')
+      .auth(accessToken, { type: 'bearer' })
+      .send({
+        keyName: 'testkey',
+      });
+    return apiKeyResponse.body.apiKey;
   }
 });

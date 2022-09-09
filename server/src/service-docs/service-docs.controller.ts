@@ -8,8 +8,13 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { ApiSecurity } from '@nestjs/swagger';
-import { JwtAccessAuthGuard } from '../auth/jwt-access.guard';
+import { ApiKeyAuthGuardHandle } from '../api-keys/api-key.guard';
+import {
+  JwtAccessAuthGuard,
+  JwtAccessAuthGuardHandle,
+} from '../auth/jwt-access.guard';
 import {
   CreateServiceDocRequest,
   CreateServiceDocResponse,
@@ -23,8 +28,9 @@ import { ServiceDocsService } from './service-docs.service';
 export class ServiceDocsController {
   constructor(private serviceDocsService: ServiceDocsService) {}
 
-  @UseGuards(JwtAccessAuthGuard)
+  @UseGuards(AuthGuard([JwtAccessAuthGuardHandle, ApiKeyAuthGuardHandle]))
   @ApiSecurity('jwt')
+  @ApiSecurity('api-key')
   @Post('/')
   @HttpCode(201)
   async createServiceDoc(
