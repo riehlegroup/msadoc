@@ -49,6 +49,7 @@ Example:
 * The [msadoc-frontend](./ui/README.md) connects to the `msadoc-server` and presents the aggregated documentation to the user. 
 * The [cli](./cli/README.md) allows pushing the `msadoc.json` file to the `msadoc-server`.
 
+![Architecture Diagram](./docs/architecture.png)
 
 ## License
 
