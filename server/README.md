@@ -13,7 +13,7 @@ $ npm install
 
 ```bash
 # Start postgres db
-$ docker compose up
+$ docker compose -f ../deployment/dev/docker-compose.yaml up
 ```
 
 ```bash
@@ -69,3 +69,13 @@ There are the following authentication mechanisms, each represented by an `AuthG
 * Make sure your `.env` file points to the right database.
 * Run `npm run typeorm:generate-migration --name=<MigrationName>` to create a new migration file in `/src/database/migrations`.
 * The next `npm run start` will automatically execute all required db migrations.
+
+### Exploring the database
+
+You can access PGAdmin on `localhost:5433`
+
+Login credentials:
+- Email: `example@example.com`
+- Password: `example`
+
+Database password: `password`

@@ -1,0 +1,13 @@
+{
+  "Servers": {
+    "1": {
+      "Name": "msadoc",
+      "Group": "Servers",
+      "Port": 5432,
+      "Username": "postgres",
+      "Host": "host.docker.internal",
+      "SSLMode": "prefer",
+      "MaintenanceDB": "postgres"
+    }
+  }
+}

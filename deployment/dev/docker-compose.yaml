@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+
+  db:
+    image: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: msadoc
+    ports:
+      - 5432:5432
+
+  pgadmin:
+    image: dpage/pgadmin4:6
+    ports:
+      - '5433:80'
+    environment:
+      PGADMIN_DEFAULT_EMAIL: example@example.com
+      PGADMIN_DEFAULT_PASSWORD: example
+    volumes:
+      - ./pg-admin-servers.json:/pgadmin4/servers.json
