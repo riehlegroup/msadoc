@@ -11,11 +11,6 @@ describe('ServiceDocsService', () => {
 
   const mockedServiceDoc: ServiceDocOrm = {
     name: 'MyTestService',
-    consumedAPIs: [],
-    producedAPIs: [],
-    producedEvents: [],
-    consumedEvents: [],
-    responsibles: [],
     creationTimestamp: new Date(Date.now()),
     updateTimestamp: new Date(Date.now()),
   };
@@ -45,6 +40,7 @@ describe('ServiceDocsService', () => {
   });
 
   it('should create service-doc', async () => {
+    repositoryMock.findBy?.mockReturnValue([mockedServiceDoc]);
     repositoryMock.save?.mockReturnValue(mockedServiceDoc);
 
     const serviceDoc = await service.create(exampleServiceDoc);

@@ -12,9 +12,9 @@ function fromOrm(entity: ServiceDocOrm): ServiceDocModel {
     providedAPIs: entity.producedAPIs ?? undefined,
     consumedEvents: entity.consumedEvents ?? undefined,
     producedEvents: entity.producedEvents ?? undefined,
-    apiDocumentation: entity.apiDocumentation ?? undefined,
     developmentDocumentation: entity.deploymentDocumentation ?? undefined,
     deploymentDocumentation: entity.deploymentDocumentation ?? undefined,
+    apiDocumentation: entity.apiDocumentation ?? undefined,
     repository: entity.repository ?? undefined,
     taskBoard: entity.repository ?? undefined,
     responsibles: entity.responsibles ?? undefined,
@@ -30,6 +30,7 @@ function toOrm(
   return {
     name: model.name,
     consumedAPIs: model.consumedAPIs,
+    providedAPIs: model.providedAPIs,
     consumedEvents: model.consumedEvents,
     producedEvents: model.producedEvents,
     developmentDocumentation: model.developmentDocumentation,
