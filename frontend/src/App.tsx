@@ -1,9 +1,5 @@
 import React from 'react';
 
 export const App: React.FC = () => {
-  return (
-    <div>
-      msadoc
-    </div>
-  );
-}
+  return <div>msadoc</div>;
+};
