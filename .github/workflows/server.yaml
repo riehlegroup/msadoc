@@ -32,8 +32,8 @@ jobs:
 
       - name: Run e2e tests
         run: |
-          docker compose build 
+          docker compose -f docker-compose.ci.yaml build
           cp .env.ci .env
-          docker compose up -d
+          docker compose -f docker-compose.ci.yaml up -d
           npm run test:e2e
-          docker compose down
+          docker compose -f docker-compose.ci.yaml down

@@ -1,4 +1,4 @@
-version: '3.1'
+version: '3.8'
 
 services:
 
@@ -10,10 +10,3 @@ services:
       POSTGRES_DB: msadoc
     ports:
       - 5432:5432
-
-  adminer:
-    # use "db" as host as it uses Docker internal DNS
-    image: adminer
-    restart: always
-    ports:
-      - 5433:8080
