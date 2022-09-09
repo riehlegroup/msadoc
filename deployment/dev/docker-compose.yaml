@@ -19,4 +19,4 @@ services:
       PGADMIN_DEFAULT_EMAIL: example@example.com
       PGADMIN_DEFAULT_PASSWORD: example
     volumes:
-      - ./servers.json:/pgadmin4/servers.json
+      - ./pg-admin-servers.json:/pgadmin4/servers.json
