@@ -8,7 +8,7 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common';
-import { ApiSecurity } from '@nestjs/swagger';
+import { ApiParam, ApiSecurity } from '@nestjs/swagger';
 import { JwtAccessAuthGuard } from '../auth/jwt-access.guard';
 import { ApiKeyAuthGuard } from './api-key.guard';
 import {
@@ -63,6 +63,10 @@ export class ApiKeysController {
   @UseGuards(JwtAccessAuthGuard)
   @ApiSecurity('jwt')
   @Delete('/:keyId')
+  @ApiParam({
+    name: 'keyId',
+    description: 'Id of the api-key to be deleted',
+  })
   @HttpCode(200)
   async deleteApiKey(@Param() params: { keyId: number }): Promise<void> {
     return await this.apiKeysService.delete(params.keyId);

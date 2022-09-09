@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  client-generator:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - OPENAPI_URL=http://172.17.0.1:3000/api-json
+      - GENERATOR=typescript-axios
+      - ADDITIONAL_PROPERTIES=useSingleRequestParameter=true
+    volumes:
+      - .build:/local/out
