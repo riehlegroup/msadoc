@@ -19,10 +19,7 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
       username: this.configService.getOrThrow('db_user'),
       password: this.configService.getOrThrow('db_pw'),
       database: this.configService.getOrThrow('db_db'),
-      entities: [
-        join(__dirname, '**', '*.orm.{ts,js}'),
-        join(__dirname, '**', '*.entity.{ts,js}'),
-      ],
+      autoLoadEntities: true,
       migrationsTableName: 'migrations',
       migrationsRun: true,
       migrations: [join(__dirname, '**', '/migrations/*.{ts,js}')],
