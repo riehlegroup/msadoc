@@ -2,6 +2,13 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+
+## Development Setup
+
+We provide a `settings.json` for **VS Code** that you can use for a seamlesss development workflow with prettier. 
+To use it just `cp .vscode/recommended-settings.json .vscode/settings.json`
+
+
 ## Available Scripts
 
 In the project directory, you can run:
