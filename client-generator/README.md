@@ -4,13 +4,11 @@ This project generates client code from the `MSAdoc server` project using [@open
 
 ## Usage
 
-### TypeScript Code Generation
-
-Edit the environment variables in `docker-compose.yaml`. The checked-in configuration uses `axios` as client library and assumes that the server is running on `localhost:3000`.
+### TypeScript Code Generation (Axios)
 
 ```bash
-# Start the docker container to generate code
-$ docker compose up msadoc-ts-client-generator
+# Generate typescript client
+$ npm run generate:ts-axios
 ```
 
 
