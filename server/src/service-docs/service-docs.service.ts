@@ -8,8 +8,9 @@ function fromOrm(entity: ServiceDocOrm): ServiceDocModel {
   // currently models are the same
   return {
     name: entity.name,
+    tags: entity.tags ?? undefined,
     consumedAPIs: entity.consumedAPIs ?? undefined,
-    providedAPIs: entity.producedAPIs ?? undefined,
+    providedAPIs: entity.providedAPIs ?? undefined,
     consumedEvents: entity.consumedEvents ?? undefined,
     producedEvents: entity.producedEvents ?? undefined,
     developmentDocumentation: entity.deploymentDocumentation ?? undefined,
@@ -29,6 +30,7 @@ function toOrm(
 ): ServiceDocModelWithoutTimestamps {
   return {
     name: model.name,
+    tags: model.tags,
     consumedAPIs: model.consumedAPIs,
     providedAPIs: model.providedAPIs,
     consumedEvents: model.consumedEvents,

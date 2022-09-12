@@ -14,10 +14,21 @@ export class ServiceDocOrm {
   name: string;
 
   @Column('text', { array: true, nullable: true })
+  tags?: string[];
+
+  @Column({ nullable: true })
+  repository?: string;
+
+  @Column({ nullable: true })
+  taskBoard?: string;
+
+  /** Dependencies */
+
+  @Column('text', { array: true, nullable: true })
   consumedAPIs?: string[];
 
   @Column('text', { array: true, nullable: true })
-  producedAPIs?: string[];
+  providedAPIs?: string[];
 
   @Column('text', { array: true, nullable: true })
   producedEvents?: string[];
@@ -25,11 +36,7 @@ export class ServiceDocOrm {
   @Column('text', { array: true, nullable: true })
   consumedEvents?: string[];
 
-  @Column({ nullable: true })
-  repository?: string;
-
-  @Column({ nullable: true })
-  taskBoard?: string;
+  /** Documentation links */
 
   @Column({ nullable: true })
   developmentDocumentation?: string;
@@ -40,11 +47,15 @@ export class ServiceDocOrm {
   @Column({ nullable: true })
   apiDocumentation?: string;
 
+  /** Responsibilities */
+
   @Column({ nullable: true })
   responsibleTeam?: string;
 
   @Column('text', { array: true, nullable: true })
   responsibles?: string[];
+
+  /** Timestamps */
 
   @CreateDateColumn()
   creationTimestamp: Date;
