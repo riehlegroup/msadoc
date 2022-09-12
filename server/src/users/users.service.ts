@@ -17,8 +17,8 @@ export class UsersService {
 
   private addDefaultUser() {
     this.users.push({
-      username: this.configService.get<string>('username', 'admin'),
-      password: this.configService.get<string>('password', 'password'),
+      username: this.configService.get<string>('msadoc_username', 'admin'),
+      password: this.configService.get<string>('msadoc_password', 'password'),
     });
   }
 
