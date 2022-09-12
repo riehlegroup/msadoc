@@ -14,11 +14,11 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
   createTypeOrmOptions(): TypeOrmModuleOptions {
     return {
       type: 'postgres',
-      host: this.configService.getOrThrow('db_host'),
-      port: +this.configService.getOrThrow('db_port'),
-      username: this.configService.getOrThrow('db_user'),
-      password: this.configService.getOrThrow('db_pw'),
-      database: this.configService.getOrThrow('db_db'),
+      host: this.configService.getOrThrow('msadoc_db_host'),
+      port: +this.configService.getOrThrow('msadoc_db_port'),
+      username: this.configService.getOrThrow('msadoc_db_user'),
+      password: this.configService.getOrThrow('msadoc_db_pw'),
+      database: this.configService.getOrThrow('msadoc_db_db'),
       autoLoadEntities: true,
       migrationsTableName: 'migrations',
       migrationsRun: true,

@@ -13,9 +13,9 @@ describe('UsersService', () => {
           provide: ConfigService,
           useValue: {
             get: jest.fn((key: string) => {
-              if (key === 'user_name') {
+              if (key === 'msadoc_username') {
                 return 'admin';
-              } else if (key === 'user_password') {
+              } else if (key === 'msadoc_password') {
                 return 'password';
               }
               return null;

@@ -47,11 +47,11 @@ export class AuthService {
     };
     return {
       access_token: await this.jwtService.signAsync(jwtPayload, {
-        secret: this.configService.getOrThrow('jwt_access_secret'),
+        secret: this.configService.getOrThrow('msadoc_jwt_access_secret'),
         expiresIn: '15m',
       }),
       refresh_token: await this.jwtService.signAsync(jwtPayload, {
-        secret: this.configService.getOrThrow('jwt_refresh_secret'),
+        secret: this.configService.getOrThrow('msadoc_jwt_refresh_secret'),
         expiresIn: '30d',
       }),
     };
@@ -68,7 +68,7 @@ export class AuthService {
       refreshTokenValidation = await this.jwtService.verifyAsync(
         refresh_token,
         {
-          secret: this.configService.getOrThrow('jwt_refresh_secret'),
+          secret: this.configService.getOrThrow('msadoc_jwt_refresh_secret'),
         },
       );
     } catch (err) {
