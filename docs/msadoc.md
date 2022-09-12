@@ -18,6 +18,21 @@ The name of the microservice. The `name` is used as key to identify and referenc
 * Don't use spaces - otherwise API requests filtering by name might not work.
 
 
+### `tags` (string[])
+
+A list of tags for the microservice. The `tag` is used as key to filter services.
+#### Example
+```json
+{
+    "name": "PipelineService",
+    "tags": ["pipeline", "backend"],
+}
+```
+#### Best Practices
+* Use a consistent tagging scheme across all microservices.
+* Don't use spaces - otherwise API requests filtering by name might not work.
+
+
 ### `repository` (string)
 
 The link to the microservice's repository.

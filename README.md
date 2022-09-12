@@ -20,6 +20,7 @@ Example:
 ```json
 {
   "name": "PipelineService",
+  "tags": ["pipeline"],
   "providedAPIs": ["PipelineAPI"],
   "consumedAPIs": ["DatasourceAPI"],
   "repository": "https://github.com/jvalue/ods",
