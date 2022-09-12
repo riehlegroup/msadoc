@@ -14,46 +14,46 @@ export class ServiceDocOrm {
   name: string;
 
   @Column('text', { array: true, nullable: true })
-  tags?: string[];
+  tags: string[] | null;
 
-  @Column({ nullable: true })
-  repository?: string;
+  @Column('character varying', { nullable: true })
+  repository: string | null;
 
-  @Column({ nullable: true })
-  taskBoard?: string;
+  @Column('character varying', { nullable: true })
+  taskBoard: string | null;
 
   /** Dependencies */
 
   @Column('text', { array: true, nullable: true })
-  consumedAPIs?: string[];
+  consumedAPIs: string[] | null;
 
   @Column('text', { array: true, nullable: true })
-  providedAPIs?: string[];
+  providedAPIs: string[] | null;
 
   @Column('text', { array: true, nullable: true })
-  producedEvents?: string[];
+  producedEvents: string[] | null;
 
   @Column('text', { array: true, nullable: true })
-  consumedEvents?: string[];
+  consumedEvents: string[] | null;
 
   /** Documentation links */
 
-  @Column({ nullable: true })
-  developmentDocumentation?: string;
+  @Column('character varying', { nullable: true })
+  developmentDocumentation: string | null;
 
-  @Column({ nullable: true })
-  deploymentDocumentation?: string;
+  @Column('character varying', { nullable: true })
+  deploymentDocumentation: string | null;
 
-  @Column({ nullable: true })
-  apiDocumentation?: string;
+  @Column('character varying', { nullable: true })
+  apiDocumentation: string | null;
 
   /** Responsibilities */
 
-  @Column({ nullable: true })
-  responsibleTeam?: string;
+  @Column('character varying', { nullable: true })
+  responsibleTeam: string | null;
 
   @Column('text', { array: true, nullable: true })
-  responsibles?: string[];
+  responsibles: string[] | null;
 
   /** Timestamps */
 
