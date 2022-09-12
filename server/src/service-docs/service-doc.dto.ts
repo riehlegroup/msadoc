@@ -5,6 +5,17 @@ export class CreateServiceDocRequest {
   name: string;
 
   @ApiProperty()
+  tags?: string[];
+
+  @ApiProperty()
+  repository?: string;
+
+  @ApiProperty()
+  taskBoard?: string;
+
+  /** Dependencies */
+
+  @ApiProperty()
   consumedAPIs?: string[];
 
   @ApiProperty()
@@ -16,11 +27,7 @@ export class CreateServiceDocRequest {
   @ApiProperty()
   consumedEvents?: string[];
 
-  @ApiProperty()
-  repository?: string;
-
-  @ApiProperty()
-  taskBoard?: string;
+  /** Documentation links */
 
   @ApiProperty()
   developmentDocumentation?: string;
@@ -30,6 +37,8 @@ export class CreateServiceDocRequest {
 
   @ApiProperty()
   apiDocumentation?: string;
+
+  /** Responsibilities */
 
   @ApiProperty()
   responsibleTeam?: string;

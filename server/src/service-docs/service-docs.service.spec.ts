@@ -11,9 +11,27 @@ describe('ServiceDocsService', () => {
 
   const mockedServiceDoc: ServiceDocOrm = {
     name: 'MyTestService',
+    tags: null,
+    repository: null,
+    taskBoard: null,
+    consumedAPIs: null,
+    consumedEvents: null,
+    producedEvents: null,
+    providedAPIs: null,
+    apiDocumentation: null,
+    deploymentDocumentation: null,
+    developmentDocumentation: null,
+    responsibles: null,
+    responsibleTeam: null,
     creationTimestamp: new Date(Date.now()),
     updateTimestamp: new Date(Date.now()),
   };
+  const expectedServiceDoc: ServiceDocModel = {
+    name: mockedServiceDoc.name,
+    creationTimestamp: mockedServiceDoc.creationTimestamp,
+    updateTimestamp: mockedServiceDoc.updateTimestamp,
+  };
+
   const exampleServiceDoc: ServiceDocModel = {
     name: mockedServiceDoc.name,
     creationTimestamp: new Date(Date.now()),
@@ -46,7 +64,7 @@ describe('ServiceDocsService', () => {
     const serviceDoc = await service.create(exampleServiceDoc);
 
     expect(repositoryMock.save).toHaveBeenCalledTimes(1);
-    expect(serviceDoc).toEqual(mockedServiceDoc);
+    expect(serviceDoc).toEqual(expectedServiceDoc);
   });
 
   it('should delete service-doc', async () => {
@@ -59,7 +77,7 @@ describe('ServiceDocsService', () => {
     expect(repositoryMock.delete).toHaveBeenCalledWith({
       name: mockedServiceDoc.name,
     });
-    expect(deleted).toEqual(mockedServiceDoc);
+    expect(deleted).toEqual(expectedServiceDoc);
   });
 
   it('should list service-doc', async () => {
@@ -68,7 +86,7 @@ describe('ServiceDocsService', () => {
     const allServiceDocs = await service.getAll();
 
     expect(repositoryMock.find).toHaveBeenCalledTimes(1);
-    expect(allServiceDocs).toContainEqual(mockedServiceDoc);
+    expect(allServiceDocs).toContainEqual(expectedServiceDoc);
   });
 
   it('should get service-doc', async () => {
@@ -80,6 +98,6 @@ describe('ServiceDocsService', () => {
     expect(repositoryMock.findBy).toHaveBeenCalledWith({
       name: mockedServiceDoc.name,
     });
-    expect(found).toEqual(mockedServiceDoc);
+    expect(found).toEqual(expectedServiceDoc);
   });
 });
