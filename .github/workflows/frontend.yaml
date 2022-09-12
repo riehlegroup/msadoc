@@ -1,14 +1,14 @@
-name: CI Pipeline (Server)
+name: CI Pipeline (Frontend)
 
 defaults:
   run:
-    working-directory: server
+    working-directory: frontend
 
 on: [push, pull_request, workflow_dispatch]
 
 jobs:
   ci:
-    name: msadoc server
+    name: msadoc frontend
       
     runs-on: ubuntu-22.04
     steps:
@@ -26,14 +26,3 @@ jobs:
 
       - name: Run the linter
         run: npm run lint
-
-      - name: Run test scripts
-        run: npm run test
-
-      - name: Run e2e tests
-        run: |
-          docker compose -f docker-compose.ci.yaml build
-          cp .env.ci .env
-          docker compose -f docker-compose.ci.yaml up -d
-          npm run test:e2e
-          docker compose -f docker-compose.ci.yaml down
