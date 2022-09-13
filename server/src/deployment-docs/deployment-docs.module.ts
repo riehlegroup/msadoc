@@ -6,6 +6,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
 @Module({
   imports: [TypeOrmModule.forFeature([DeploymentDocOrm])],
+  exports: [DeploymentDocsService],
   controllers: [DeploymentDocsController],
   providers: [DeploymentDocsService],
 })

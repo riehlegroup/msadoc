@@ -9,6 +9,7 @@ import { TypeOrmConfigService } from './database/db-config.service';
 import { DatabaseModule } from './database/database.module';
 import { ServiceDocsModule } from './service-docs/service-docs.module';
 import { DeploymentDocsModule } from './deployment-docs/deployment-docs.module';
+import { DeploymentInfosModule } from './deployment-infos/deployment-infos.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { DeploymentDocsModule } from './deployment-docs/deployment-docs.module';
     DatabaseModule,
     ServiceDocsModule,
     DeploymentDocsModule,
+    DeploymentInfosModule,
   ],
   exports: [ConfigModule],
   controllers: [AppController],
