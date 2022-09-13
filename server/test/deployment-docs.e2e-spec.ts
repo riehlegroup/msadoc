@@ -11,7 +11,6 @@ describe('DeploymentDocsController (e2e)', () => {
     name: 'test-deployment',
     kubernetesUrl: 'test-url',
     kubernetesUser: 'test-user',
-    kubernetesPassword: 'test-pw',
   };
 
   beforeEach(async () => {
@@ -82,8 +81,12 @@ describe('DeploymentDocsController (e2e)', () => {
       const dto: CreateDeploymentDocRequest = {
         name: 'test-deployment',
         kubernetesUrl: 'test-url',
+        kubernetesSkipTlsVerify: true,
+        kubernetesCa: 'ca',
         kubernetesUser: 'test-user',
         kubernetesPassword: 'test-pw',
+        kubernetesUserCert: 'cert',
+        kubernetesUserKey: 'key',
         kubernetesLabels: ['test', 'label'],
       };
 

@@ -5,12 +5,15 @@ import { GetDeploymentDocResponse } from './deployment-doc.dto';
 import { DeploymentDocOrm } from './deployment-doc.orm';
 
 function fromOrm(entity: DeploymentDocOrm): DeploymentDocModel {
-  // currently models are the same
   return {
     name: entity.name,
     kubernetesUrl: entity.kubernetesUrl,
+    kubernetesSkipTlsVerify: entity.kubernetesSkipTlsVerify ?? undefined,
+    kubernetesCa: entity.kubernetesCa ?? undefined,
     kubernetesUser: entity.kubernetesUser,
-    kubernetesPassword: entity.kubernetesPassword,
+    kubernetesPassword: entity.kubernetesPassword ?? undefined,
+    kubernetesUserCert: entity.kubernetesUserCert ?? undefined,
+    kubernetesUserKey: entity.kubernetesUserKey ?? undefined,
     kubernetesLabels: entity.kubernetesLabels ?? undefined,
     creationTimestamp: entity.creationTimestamp,
     updateTimestamp: entity.updateTimestamp,
@@ -23,8 +26,12 @@ function toOrm(
   return {
     name: model.name,
     kubernetesUrl: model.kubernetesUrl,
+    kubernetesSkipTlsVerify: model.kubernetesSkipTlsVerify ?? null,
+    kubernetesCa: model.kubernetesCa ?? null,
     kubernetesUser: model.kubernetesUser,
-    kubernetesPassword: model.kubernetesPassword,
+    kubernetesPassword: model.kubernetesPassword ?? null,
+    kubernetesUserCert: model.kubernetesUserCert ?? null,
+    kubernetesUserKey: model.kubernetesUserKey ?? null,
     kubernetesLabels: model.kubernetesLabels ?? null,
   };
 }

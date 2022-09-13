@@ -15,9 +15,13 @@ describe('DeploymentDocsService', () => {
   const mockedDeploymentDoc: DeploymentDocOrm = {
     name: 'MyTestDeployment',
     kubernetesUrl: 'localhost:12345',
-    kubernetesPassword: '12345',
+    kubernetesSkipTlsVerify: null,
+    kubernetesCa: null,
+    kubernetesPassword: null,
     kubernetesUser: 'k8s-user',
     kubernetesLabels: null,
+    kubernetesUserCert: null,
+    kubernetesUserKey: null,
     creationTimestamp: new Date(Date.now()),
     updateTimestamp: new Date(Date.now()),
   };
@@ -25,7 +29,6 @@ describe('DeploymentDocsService', () => {
     name: mockedDeploymentDoc.name,
     kubernetesUrl: mockedDeploymentDoc.kubernetesUrl,
     kubernetesUser: mockedDeploymentDoc.kubernetesUser,
-    kubernetesPassword: mockedDeploymentDoc.kubernetesPassword,
     creationTimestamp: mockedDeploymentDoc.creationTimestamp,
     updateTimestamp: mockedDeploymentDoc.updateTimestamp,
   };
@@ -34,7 +37,6 @@ describe('DeploymentDocsService', () => {
     name: mockedDeploymentDoc.name,
     kubernetesUrl: mockedDeploymentDoc.kubernetesUrl,
     kubernetesUser: mockedDeploymentDoc.kubernetesUser,
-    kubernetesPassword: mockedDeploymentDoc.kubernetesPassword,
     creationTimestamp: new Date(Date.now()),
     updateTimestamp: new Date(Date.now()),
   };

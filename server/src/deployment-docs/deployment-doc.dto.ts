@@ -8,10 +8,22 @@ export class CreateDeploymentDocRequest {
   kubernetesUrl: string;
 
   @ApiProperty()
+  kubernetesCa?: string;
+
+  @ApiProperty()
+  kubernetesSkipTlsVerify?: boolean;
+
+  @ApiProperty()
   kubernetesUser: string;
 
   @ApiProperty()
-  kubernetesPassword: string;
+  kubernetesPassword?: string;
+
+  @ApiProperty()
+  kubernetesUserCert?: string;
+
+  @ApiProperty()
+  kubernetesUserKey?: string;
 
   @ApiProperty()
   kubernetesLabels?: string[];

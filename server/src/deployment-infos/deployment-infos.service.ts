@@ -31,15 +31,15 @@ export class DeploymentInfosService {
     const cluster: k8s.Cluster = {
       name: `${deploymentDoc.name}-cluster`,
       server: deploymentDoc.kubernetesUrl,
-      skipTLSVerify: false,
-      caData: 'todo', // @TODO
+      skipTLSVerify: deploymentDoc.kubernetesSkipTlsVerify ?? false,
+      caData: deploymentDoc.kubernetesCa,
     };
 
     const user: k8s.User = {
       name: deploymentDoc.kubernetesUser,
       password: deploymentDoc.kubernetesPassword,
-      certData: 'todo', // @TODO
-      keyData: 'todo', // @TODO
+      certData: deploymentDoc.kubernetesUserCert,
+      keyData: deploymentDoc.kubernetesUserKey,
     };
 
     const context: k8s.Context = {
