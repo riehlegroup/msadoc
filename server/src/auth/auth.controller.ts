@@ -7,7 +7,7 @@ import {
   UseGuards,
   Request,
 } from '@nestjs/common';
-import { ApiSecurity } from '@nestjs/swagger';
+import { ApiSecurity, ApiTags } from '@nestjs/swagger';
 import {
   LoginRequestDto,
   LoginResponseDto,
@@ -18,6 +18,7 @@ import { JwtAccessAuthGuard } from './jwt-access.guard';
 import { JwtRefreshAuthGuard } from './jwt-refresh.guard';
 import { UserPasswordAuthGuard } from './user-password.guard';
 
+@ApiTags('auth')
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}

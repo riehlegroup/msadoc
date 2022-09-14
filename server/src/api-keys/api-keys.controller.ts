@@ -8,7 +8,7 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common';
-import { ApiSecurity } from '@nestjs/swagger';
+import { ApiSecurity, ApiTags } from '@nestjs/swagger';
 import { JwtAccessAuthGuard } from '../auth/jwt-access.guard';
 import { ApiKeyAuthGuard } from './api-key.guard';
 import {
@@ -20,6 +20,7 @@ import {
 } from './api-keys.dto';
 import { ApiKeysService } from './api-keys.service';
 
+@ApiTags('api-keys')
 @Controller('api-keys')
 export class ApiKeysController {
   constructor(private apiKeysService: ApiKeysService) {}

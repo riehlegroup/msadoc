@@ -1,8 +1,9 @@
 import { Controller, Get, HttpCode, UseGuards } from '@nestjs/common';
-import { ApiSecurity } from '@nestjs/swagger';
+import { ApiSecurity, ApiTags } from '@nestjs/swagger';
 import { JwtAccessAuthGuard } from '../auth/jwt-access.guard';
 import { ServiceGroupsService } from './service-groups.service';
 
+@ApiTags('service-groups')
 @Controller('service-groups')
 export class ServiceGroupsController {
   constructor(private readonly groupsService: ServiceGroupsService) {}

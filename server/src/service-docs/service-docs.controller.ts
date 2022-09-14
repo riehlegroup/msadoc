@@ -9,7 +9,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { ApiSecurity } from '@nestjs/swagger';
+import { ApiSecurity, ApiTags } from '@nestjs/swagger';
 import { ApiKeyAuthGuardHandle } from '../api-keys/api-key.guard';
 import {
   JwtAccessAuthGuard,
@@ -24,6 +24,7 @@ import {
 } from './service-doc.dto';
 import { ServiceDocsService } from './service-docs.service';
 
+@ApiTags('service-docs')
 @Controller('service-docs')
 export class ServiceDocsController {
   constructor(private serviceDocsService: ServiceDocsService) {}
