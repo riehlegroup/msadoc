@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export class GetDeploymentInfoResponse {
   @ApiProperty()
-  pods: string[];
+  pods: PodInfoResponse[];
 
   @ApiProperty()
   services: string[];
@@ -12,4 +12,21 @@ export class GetDeploymentInfoResponse {
 
   @ApiProperty()
   endponts: string[];
+}
+
+export class PodInfoResponse {
+  @ApiProperty()
+  namespace?: string;
+
+  @ApiProperty()
+  name?: string;
+
+  @ApiProperty()
+  status?: string;
+
+  @ApiProperty()
+  ready?: string;
+
+  @ApiProperty()
+  age?: string;
 }

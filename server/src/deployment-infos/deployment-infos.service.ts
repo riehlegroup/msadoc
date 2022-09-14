@@ -13,14 +13,8 @@ export class DeploymentInfosService {
   ): Promise<DeploymentInfoModel> {
     const k8sApi = this.connect(deploymentDoc);
 
-    const pods = await k8sApi.listPodForAllNamespaces(
-      undefined,
-      undefined,
-      undefined,
-      deploymentDoc.kubernetesLabels?.join(','),
-    );
     return {
-      pods: pods.body.items.map((x) => x.kind ?? 'pod'), // @TODO
+      pods: await this.getPods(k8sApi, deploymentDoc.kubernetesLabels),
       deployments: [],
       endponts: [],
       services: [],
@@ -57,4 +51,74 @@ export class DeploymentInfosService {
     });
     return kc.makeApiClient(k8s.CoreV1Api);
   }
+
+  private async getPods(
+    k8sApi: k8s.CoreV1Api,
+    labels?: string[],
+  ): Promise<PodInfo[]> {
+    const pods = await k8sApi.listPodForAllNamespaces(
+      undefined,
+      undefined,
+      undefined,
+      labels?.join(','),
+    );
+    return pods.body.items.map((pod) => {
+      const readyContainerCount = pod.status?.containerStatuses?.filter(
+        (x) => x.ready === true,
+      ).length;
+      const allContainerCount = pod.status?.containerStatuses?.length;
+
+      const creationTimestamp = pod.metadata?.creationTimestamp;
+
+      return {
+        namespace: pod.metadata?.namespace,
+        name: pod.metadata?.name,
+        status: pod.status?.phase,
+        ready: `${readyContainerCount ?? '?'}/${allContainerCount ?? '?'}`,
+        age:
+          creationTimestamp === undefined
+            ? undefined
+            : this.calculateTimespanString(creationTimestamp, new Date()),
+      };
+    });
+  }
+
+  private calculateTimespanString(before: Date, after: Date): string {
+    let diffMs = after.getTime() - before.getTime();
+
+    const msInSecondsFactor = 1000;
+    const msInMinutesFactor = 60 * msInSecondsFactor;
+    const msInHoursFactor = 60 * msInMinutesFactor;
+    const msInDaysFactor = 24 * msInHoursFactor;
+
+    const days = Math.floor(diffMs / msInDaysFactor);
+    diffMs = diffMs - days * msInDaysFactor;
+    if (days > 0) {
+      return `${days}d`;
+    }
+
+    const hours = Math.floor(diffMs / msInHoursFactor);
+    diffMs = diffMs - hours * msInHoursFactor;
+    if (hours > 0) {
+      return `${hours}h`;
+    }
+
+    const minutes = Math.floor(diffMs / msInMinutesFactor);
+    diffMs = diffMs - minutes * msInMinutesFactor;
+    if (minutes > 0) {
+      return `${minutes}m`;
+    }
+
+    const seconds = Math.floor(diffMs / msInSecondsFactor);
+    diffMs = diffMs - seconds * msInSecondsFactor;
+    return `${seconds}s`;
+  }
+}
+
+interface PodInfo {
+  namespace?: string;
+  name?: string;
+  status?: string;
+  ready?: string;
+  age?: string;
 }
