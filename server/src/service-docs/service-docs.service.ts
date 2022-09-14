@@ -20,6 +20,7 @@ function fromOrm(entity: ServiceDocOrm): ServiceDocModel {
     apiDocumentation: entity.apiDocumentation ?? undefined,
     responsibles: entity.responsibles ?? undefined,
     responsibleTeam: entity.responsibleTeam ?? undefined,
+    kubernetesLabels: entity.kubernetesLabels ?? undefined,
     creationTimestamp: entity.creationTimestamp ?? undefined,
     updateTimestamp: entity.updateTimestamp,
   };
@@ -42,6 +43,7 @@ function toOrm(
     apiDocumentation: model.apiDocumentation ?? null,
     responsibles: model.responsibles ?? null,
     responsibleTeam: model.responsibleTeam ?? null,
+    kubernetesLabels: model.kubernetesLabels ?? null,
   };
 }
 

@@ -23,6 +23,7 @@ describe('ServiceDocsService', () => {
     developmentDocumentation: null,
     responsibles: null,
     responsibleTeam: null,
+    kubernetesLabels: null,
     creationTimestamp: new Date(Date.now()),
     updateTimestamp: new Date(Date.now()),
   };

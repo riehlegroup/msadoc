@@ -96,6 +96,7 @@ describe('ServiceDocsController (e2e)', () => {
         developmentDocumentation: 'develop',
         responsibles: ['r1', 'r2'],
         responsibleTeam: 'team',
+        kubernetesLabels: ['l1', 'l2'],
       };
 
       const creationResponse = await request(app.getHttpServer())
@@ -124,6 +125,9 @@ describe('ServiceDocsController (e2e)', () => {
       expect(creationResponse.body.responsibles).toEqual(dto.responsibles);
       expect(creationResponse.body.responsibleTeam).toEqual(
         dto.responsibleTeam,
+      );
+      expect(creationResponse.body.kubernetesLabels).toEqual(
+        dto.kubernetesLabels,
       );
       expect(creationResponse.body.creationTimestamp).toBeDefined();
       expect(creationResponse.body.updateTimestamp).toBeDefined();

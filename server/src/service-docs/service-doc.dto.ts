@@ -45,6 +45,10 @@ export class CreateServiceDocRequest {
 
   @ApiProperty()
   responsibles?: string[];
+
+  /** Deployment */
+  @ApiProperty()
+  kubernetesLabels?: string[];
 }
 
 export class CreateServiceDocResponse extends CreateServiceDocRequest {

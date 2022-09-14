@@ -55,6 +55,10 @@ export class ServiceDocOrm {
   @Column('text', { array: true, nullable: true })
   responsibles: string[] | null;
 
+  /** Deployments */
+  @Column('text', { array: true, nullable: true })
+  kubernetesLabels: string[] | null;
+
   /** Timestamps */
 
   @CreateDateColumn()
