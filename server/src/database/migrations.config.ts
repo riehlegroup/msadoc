@@ -22,6 +22,6 @@ export default new DataSource({
     join('src', '**', '*.orm.{ts,js}'),
     join('src', '**', '*.entity.{ts,js}'),
   ],
-  migrations: [join('src', 'migrations', '*.{ts,js}')],
+  migrations: [join('src', 'database', 'migrations', '*.{ts,js}')],
   migrationsTableName: 'migrations',
 });

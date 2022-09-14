@@ -84,6 +84,7 @@ describe('ServiceDocsController (e2e)', () => {
       const accessToken = await getAccessToken();
       const dto: CreateServiceDocRequest = {
         name: 'test-service',
+        group: 'test.group',
         tags: ['t', 'es'],
         repository: 'repo',
         taskBoard: 'tasks',

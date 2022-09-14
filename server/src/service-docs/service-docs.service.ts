@@ -8,6 +8,7 @@ function fromOrm(entity: ServiceDocOrm): ServiceDocModel {
   // currently models are the same
   return {
     name: entity.name,
+    group: entity.group ?? undefined,
     tags: entity.tags ?? undefined,
     repository: entity.repository ?? undefined,
     taskBoard: entity.taskBoard ?? undefined,
@@ -30,6 +31,7 @@ function toOrm(
 ): Omit<ServiceDocOrm, 'creationTimestamp' | 'updateTimestamp'> {
   return {
     name: model.name,
+    group: model.group ?? null,
     tags: model.tags ?? null,
     repository: model.repository ?? null,
     taskBoard: model.taskBoard ?? null,

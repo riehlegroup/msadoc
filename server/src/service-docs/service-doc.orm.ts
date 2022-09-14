@@ -13,6 +13,9 @@ export class ServiceDocOrm {
   @PrimaryColumn()
   name: string;
 
+  @Column('character varying', { nullable: true })
+  group: string | null;
+
   @Column('text', { array: true, nullable: true })
   tags: string[] | null;
 

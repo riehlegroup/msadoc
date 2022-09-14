@@ -11,6 +11,7 @@ describe('ServiceDocsService', () => {
 
   const mockedServiceDoc: ServiceDocOrm = {
     name: 'MyTestService',
+    group: null,
     tags: null,
     repository: null,
     taskBoard: null,
