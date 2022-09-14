@@ -34,16 +34,7 @@ describe('ServiceDocsController (e2e)', () => {
         .expect(401);
     });
 
-    it('should be allow jwt access token', async () => {
-      await request(app.getHttpServer())
-        .post('/service-docs')
-        .send({
-          name: 'test-service',
-        })
-        .expect(401);
-    });
-
-    it('should be allow api-key', async () => {
+    it('should allow access by jwt access_token', async () => {
       const accessToken = await getAccessToken();
       await request(app.getHttpServer())
         .post('/service-docs')
@@ -54,7 +45,7 @@ describe('ServiceDocsController (e2e)', () => {
         .expect(201);
     });
 
-    it('should be allow api-key', async () => {
+    it('should allow access by api-key', async () => {
       const accessToken = await getAccessToken();
       const apiKey = await getApiKey(accessToken);
       await request(app.getHttpServer())
@@ -174,6 +165,23 @@ describe('ServiceDocsController (e2e)', () => {
       await request(app.getHttpServer()).get('/service-docs').expect(401);
     });
 
+    it('should allow access by jwt access_token', async () => {
+      const accessToken = await getAccessToken();
+      await request(app.getHttpServer())
+        .get('/service-docs')
+        .auth(accessToken, { type: 'bearer' })
+        .expect(200);
+    });
+
+    it('should allow access by api-key', async () => {
+      const accessToken = await getAccessToken();
+      const apiKey = await getApiKey(accessToken);
+      await request(app.getHttpServer())
+        .get('/service-docs')
+        .auth(apiKey, { type: 'bearer' })
+        .expect(200);
+    });
+
     it('should list service-docs', async () => {
       const accessToken = await getAccessToken();
       const creationResponse = await request(app.getHttpServer())
@@ -201,6 +209,23 @@ describe('ServiceDocsController (e2e)', () => {
       await request(app.getHttpServer())
         .get('/service-docs/test-service')
         .expect(401);
+    });
+
+    it('should allow access by jwt access_token', async () => {
+      const accessToken = await getAccessToken();
+      await request(app.getHttpServer())
+        .get('/service-docs/test-service')
+        .auth(accessToken, { type: 'bearer' })
+        .expect(200);
+    });
+
+    it('should allow access by api-key', async () => {
+      const accessToken = await getAccessToken();
+      const apiKey = await getApiKey(accessToken);
+      await request(app.getHttpServer())
+        .get('/service-docs/test-service')
+        .auth(apiKey, { type: 'bearer' })
+        .expect(200);
     });
 
     it('should fetch service-doc', async () => {
