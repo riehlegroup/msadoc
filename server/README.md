@@ -34,7 +34,8 @@ $ npm run start:dev
 $ npm run start:prod
 ```
 
-The application is available on `localhost:3000`. Swagger UI serves the API documentation on route `/api`.
+* The **server application** is available on `localhost:3000`. 
+* **Swagger** UI serves the API documentation on route `/api`. Password for API sign-in is in your `.env` file.
 
 
 ### Test
