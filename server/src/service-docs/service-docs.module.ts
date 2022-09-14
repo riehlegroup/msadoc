@@ -8,5 +8,6 @@ import { ServiceDocsService } from './service-docs.service';
   imports: [TypeOrmModule.forFeature([ServiceDocOrm])],
   controllers: [ServiceDocsController],
   providers: [ServiceDocsService],
+  exports: [ServiceDocsService],
 })
 export class ServiceDocsModule {}

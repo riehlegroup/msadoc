@@ -10,11 +10,16 @@ type DeploymentInfoModel = GetDeploymentInfoResponse;
 export class DeploymentInfosService {
   async getDeploymentInfo(
     deploymentDoc: DeploymentDocModel,
+    additionalLabels?: string[],
   ): Promise<DeploymentInfoModel> {
     const k8sApi = this.connect(deploymentDoc);
+    const combinedKubernetesLabels = [
+      ...(deploymentDoc.kubernetesLabels ?? []),
+      ...(additionalLabels ?? []),
+    ];
 
     return {
-      pods: await this.getPods(k8sApi, deploymentDoc.kubernetesLabels),
+      pods: await this.getPods(k8sApi, combinedKubernetesLabels),
       deployments: [],
       endponts: [],
       services: [],
