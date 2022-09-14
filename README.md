@@ -38,6 +38,39 @@ Example:
 4. Browse all your microservices on your `msadoc-server` instance.
 
 
+### Enable deployment information (Kubernetes)
+
+5. Add a `deployment.msadoc.json` file to your deployment project for each deployment environment you use (e.g. dev, prod, staging, ...). See the [docs](./docs/deployment-doc.msadoc.md) for more information.
+Example:
+```json
+{
+  "name": "prod",
+  "kubernetesUrl": "https://131.188.64.201:6443",
+  "kubernetesCa": "ca-secret",
+  "kubernetesUser": "my_k8s_user",
+  "kubernetesUserCert": "user-cert",
+  "kubernetesUserKey": "user-key",
+  "kubernetesLabels": [
+    "app=ods",
+    "stage=prod",
+  ]
+}
+```
+7. Enhance your `service.msadoc.json` in order to match Kubernetes resources with your microservices.
+```json
+{
+  "name": "PipelineService",
+  // ...
+  "kubernetesLabels": [
+    "service=pipeline-service"
+  ],
+}
+```
+
+8. Push the `deployment.msadoc.json` file via [CLI](./cli/README.md) to the `msadoc-server` instance via your CI system.  
+9. Browse all your microservices together with their deployment information on your `msadoc-server` instance.
+
+
 ## Docuemtation
 * [Format of service.msadoc.json files](./docs/service-doc.msadoc.md)
 * [Format of deployment.msadoc.json files](./docs/deployment-doc.msadoc.md)
