@@ -6,16 +6,16 @@ import {
   ServiceDocModel,
   ServiceDocsService,
 } from '../service-docs/service-docs.service';
-import { GroupsService } from './groups.service';
+import { ServiceGroupsService } from './service-groups.service';
 
-describe('GroupsService', () => {
-  let service: GroupsService;
+describe('ServiceGroupsService', () => {
+  let service: ServiceGroupsService;
   let serviceDocsService: ServiceDocsService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
-        GroupsService,
+        ServiceGroupsService,
         ServiceDocsService,
         {
           provide: getRepositoryToken(ServiceDocOrm),
@@ -24,7 +24,7 @@ describe('GroupsService', () => {
       ],
     }).compile();
 
-    service = module.get<GroupsService>(GroupsService);
+    service = module.get<ServiceGroupsService>(ServiceGroupsService);
     serviceDocsService = module.get<ServiceDocsService>(ServiceDocsService);
   });
 

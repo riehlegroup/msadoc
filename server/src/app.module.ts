@@ -8,7 +8,7 @@ import { ApiKeysModule } from './api-keys/api-keys.module';
 import { TypeOrmConfigService } from './database/db-config.service';
 import { DatabaseModule } from './database/database.module';
 import { ServiceDocsModule } from './service-docs/service-docs.module';
-import { GroupsModule } from './groups/groups.module';
+import { ServiceGroupsModule } from './service-groups/service-groups.module';
 
 @Module({
   imports: [
@@ -20,7 +20,7 @@ import { GroupsModule } from './groups/groups.module';
     ApiKeysModule,
     DatabaseModule,
     ServiceDocsModule,
-    GroupsModule,
+    ServiceGroupsModule,
   ],
   exports: [ConfigModule],
   controllers: [AppController],

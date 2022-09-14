@@ -1,11 +1,11 @@
 import { Controller, Get, HttpCode, UseGuards } from '@nestjs/common';
 import { ApiSecurity } from '@nestjs/swagger';
 import { JwtAccessAuthGuard } from '../auth/jwt-access.guard';
-import { GroupsService } from './groups.service';
+import { ServiceGroupsService } from './service-groups.service';
 
 @Controller('service-groups')
-export class GroupsController {
-  constructor(private readonly groupsService: GroupsService) {}
+export class ServiceGroupsController {
+  constructor(private readonly groupsService: ServiceGroupsService) {}
 
   @UseGuards(JwtAccessAuthGuard)
   @ApiSecurity('jwt')

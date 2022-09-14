@@ -3,12 +3,12 @@ import {
   ServiceDocModel,
   ServiceDocsService,
 } from '../service-docs/service-docs.service';
-import { GetGroupResponse } from './group.dto';
+import { GetServiceGroupResponse } from './service-group.dto';
 
-export type GroupModel = GetGroupResponse;
+export type GroupModel = GetServiceGroupResponse;
 
 @Injectable()
-export class GroupsService {
+export class ServiceGroupsService {
   constructor(private serviceDocsService: ServiceDocsService) {}
 
   async getAllGroupsHierarchical(): Promise<GroupModel> {

@@ -3,17 +3,17 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { RepositoryMockFactory } from '../repository-factory.mock';
 import { ServiceDocOrm } from '../service-docs/service-doc.orm';
 import { ServiceDocsService } from '../service-docs/service-docs.service';
-import { GroupsController } from './groups.controller';
-import { GroupsService } from './groups.service';
+import { ServiceGroupsController } from './service-groups.controller';
+import { ServiceGroupsService } from './service-groups.service';
 
-describe('GroupsController', () => {
-  let controller: GroupsController;
+describe('ServiceGroupsController', () => {
+  let controller: ServiceGroupsController;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      controllers: [GroupsController],
+      controllers: [ServiceGroupsController],
       providers: [
-        GroupsService,
+        ServiceGroupsService,
         ServiceDocsService,
         {
           provide: getRepositoryToken(ServiceDocOrm),
@@ -22,7 +22,7 @@ describe('GroupsController', () => {
       ],
     }).compile();
 
-    controller = module.get<GroupsController>(GroupsController);
+    controller = module.get<ServiceGroupsController>(ServiceGroupsController);
   });
 
   it('should be defined', () => {
