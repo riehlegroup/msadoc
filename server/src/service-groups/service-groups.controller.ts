@@ -1,17 +1,33 @@
 import { Controller, Get, HttpCode, UseGuards } from '@nestjs/common';
-import { ApiSecurity } from '@nestjs/swagger';
-import { JwtAccessAuthGuard } from '../auth/jwt-access.guard';
+import { ApiResponse, ApiSecurity, ApiTags } from '@nestjs/swagger';
+import { ApiKeyAuthGuardHandle } from '../api-keys/api-key.guard';
+import {
+  JwtAccessAuthGuard,
+  JwtAccessAuthGuardHandle,
+} from '../auth/jwt-access.guard';
+import { GetServiceGroupResponse } from './service-group.dto';
 import { ServiceGroupsService } from './service-groups.service';
 
 @Controller('service-groups')
+@ApiTags('service-groups')
+@UseGuards(JwtAccessAuthGuard)
+@ApiSecurity(JwtAccessAuthGuardHandle)
+@ApiSecurity(ApiKeyAuthGuardHandle)
+@ApiResponse({
+  status: 401,
+  description: 'Unauthorized. Login to get access_token.',
+})
 export class ServiceGroupsController {
   constructor(private readonly groupsService: ServiceGroupsService) {}
 
-  @UseGuards(JwtAccessAuthGuard)
-  @ApiSecurity('jwt')
   @Get()
   @HttpCode(200)
-  getAllGroups() {
-    return this.groupsService.getAllGroupsHierarchical();
+  @ApiResponse({
+    status: 200,
+    description: 'Fetched all services-groups.',
+    type: GetServiceGroupResponse,
+  })
+  async getAllGroups(): Promise<GetServiceGroupResponse> {
+    return await this.groupsService.getAllGroupsHierarchical();
   }
 }
