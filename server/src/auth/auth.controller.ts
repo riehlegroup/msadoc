@@ -7,7 +7,7 @@ import {
   UseGuards,
   Request,
 } from '@nestjs/common';
-import { ApiSecurity, ApiTags } from '@nestjs/swagger';
+import { ApiResponse, ApiSecurity, ApiTags } from '@nestjs/swagger';
 import {
   LoginRequestDto,
   LoginResponseDto,
@@ -26,6 +26,14 @@ export class AuthController {
   @UseGuards(UserPasswordAuthGuard)
   @Post('login')
   @HttpCode(200)
+  @ApiResponse({
+    status: 200,
+    description: 'Successfully signed in.',
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'Unauthorized. Invalid credentials.',
+  })
   async login(@Body() body: LoginRequestDto): Promise<LoginResponseDto> {
     return await this.authService.generateTokens(body.username);
   }
@@ -34,6 +42,14 @@ export class AuthController {
   @ApiSecurity('jwt-refresh')
   @Post('refresh')
   @HttpCode(200)
+  @ApiResponse({
+    status: 200,
+    description: 'Successfully refreshed the access_token.',
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'Unauthorized. Login to get access_token.',
+  })
   async refreshToken(
     @Body() body: RefreshTokenRequestDto,
   ): Promise<LoginResponseDto> {
@@ -43,6 +59,14 @@ export class AuthController {
   @UseGuards(JwtAccessAuthGuard)
   @ApiSecurity('jwt')
   @Get('me')
+  @ApiResponse({
+    status: 200,
+    description: 'Fetched the profile of the signed-in user.',
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'Unauthorized. Login to get access_token.',
+  })
   getMyProfile(@Request() req: any) {
     return req.user;
   }
