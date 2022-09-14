@@ -11,11 +11,11 @@ Microservice-based projects often struggle with documentation. Information is di
 
 <!-- TODO: 2 nice screenshots of UI. -->
 
-## Usage
+## Quickstart
 
 1. [Deploy](./docs/deployment.md) your `msadoc-server` instance on your servers.
 
-2. Add a `msadoc.json` file to your project. See the [docs](./docs/msadoc.md) for more information.
+2. Add a `service.msadoc.json` file to your microservice project. See the [docs](./docs/service-doc.msadoc.md) for more information.
 Example:
 ```json
 {
@@ -31,7 +31,7 @@ Example:
 }
 ```
 
-3. Push the `msadoc.json` file to the `msadoc-server` instance via your CI system.  
+3. Push the `service.msadoc.json` file to the `msadoc-server` instance via your CI system.  
   3.1 Generate an [API key](./docs/api-keys.md) in the `msadoc-server`.  
   3.2 Use the [CLI](./cli/README.md) to push to the `msadoc-server`.
 
@@ -39,16 +39,17 @@ Example:
 
 
 ## Docuemtation
-* [Format of msadoc.json files](./docs/msadoc.md)
+* [Format of service.msadoc.json files](./docs/service-doc.msadoc.md)
+* [Format of deployment.msadoc.json files](./docs/deployment-doc.msadoc.md)
 * [Deployment](./docs/deployment.md)
 * [Tutorial: Generating and using API keys](./docs/api-keys.md)
 
 
 ## Architecture
 
-* The [msadoc-server](./server/README.md) collects the `msadoc.json` files and provides backend functionality to browse the aggregated information.
+* The [msadoc-server](./server/README.md) collects the `*.msadoc.json` files and provides backend functionality to browse the aggregated information.
 * The [msadoc-frontend](./ui/README.md) connects to the `msadoc-server` and presents the aggregated documentation to the user. 
-* The [cli](./cli/README.md) allows pushing the `msadoc.json` file to the `msadoc-server`.
+* The [cli](./cli/README.md) allows pushing the `*.msadoc.json` file to the `msadoc-server`.
 
 ![Architecture Diagram](./docs/architecture.png)
 

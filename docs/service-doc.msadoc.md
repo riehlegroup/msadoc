@@ -1,4 +1,4 @@
-# MSAdoc Format Specification
+# MSAdoc Format Specification (service-doc)
 
 The presented format is currently under development and might change over time.
 
