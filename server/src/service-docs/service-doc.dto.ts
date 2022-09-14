@@ -5,6 +5,9 @@ export class CreateServiceDocRequest {
   name: string;
 
   @ApiProperty()
+  group?: string;
+
+  @ApiProperty()
   tags?: string[];
 
   @ApiProperty()
