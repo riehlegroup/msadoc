@@ -9,7 +9,10 @@ import {
 import { ApiQuery, ApiSecurity } from '@nestjs/swagger';
 import { DeploymentDocsService } from '../deployment-docs/deployment-docs.service';
 import { JwtAccessAuthGuard } from '../auth/jwt-access.guard';
-import { GetDeploymentInfoResponse } from './deployment-info.dto';
+import {
+  GetAllDeploymentInfoResponse,
+  GetDeploymentInfoResponse,
+} from './deployment-info.dto';
 import { DeploymentInfosService } from './deployment-infos.service';
 import { ServiceDocsService } from '../service-docs/service-docs.service';
 
@@ -28,6 +31,37 @@ export class DeploymentInfosController {
     description: 'Service name to filter for',
     required: false,
   })
+  @Get('/deployment')
+  @HttpCode(200)
+  async getAllDeploymentInfos(
+    @Query('service') serviceName?: string,
+  ): Promise<GetAllDeploymentInfoResponse> {
+    const deploymentDocs = await this.deploymentDocsService.getAll();
+
+    const infoMap: GetAllDeploymentInfoResponse = {};
+    await Promise.all(
+      deploymentDocs.map(async (deploymentDoc) => {
+        try {
+          infoMap[deploymentDoc.name] =
+            await this.getDeploymentInfoForDeployment(
+              deploymentDoc.name,
+              serviceName,
+            );
+        } catch (err) {
+          console.error(err);
+        }
+      }),
+    );
+    return infoMap;
+  }
+
+  @UseGuards(JwtAccessAuthGuard)
+  @ApiSecurity('jwt')
+  @ApiQuery({
+    name: 'service',
+    description: 'Service name to filter for',
+    required: false,
+  })
   @Get('/deployment/:deploymentName')
   @HttpCode(200)
   async getDeploymentInfoForDeployment(
@@ -37,14 +71,15 @@ export class DeploymentInfosController {
     const deploymentDoc = await this.deploymentDocsService.getByName(
       deploymentName,
     );
-    if (serviceName === undefined) {
-      return this.deploymentInfosService.getDeploymentInfo(deploymentDoc);
+    const additionalLabels: string[] = [];
+    if (serviceName !== undefined) {
+      const serviceDoc = await this.serviceDocsService.getByName(serviceName);
+      additionalLabels.push(...(serviceDoc.kubernetesLabels ?? []));
     }
 
-    const serviceDoc = await this.serviceDocsService.getByName(serviceName);
     return this.deploymentInfosService.getDeploymentInfo(
       deploymentDoc,
-      serviceDoc.kubernetesLabels,
+      additionalLabels,
     );
   }
 }

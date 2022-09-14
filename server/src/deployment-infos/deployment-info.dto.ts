@@ -30,3 +30,8 @@ export class PodInfoResponse {
   @ApiProperty()
   age?: string;
 }
+
+export type GetAllDeploymentInfoResponse = Record<
+  string,
+  GetDeploymentInfoResponse
+>;
