@@ -5,6 +5,7 @@ import {
   JwtAccessAuthGuard,
   JwtAccessAuthGuardHandle,
 } from '../auth/jwt-access.guard';
+import { GetServiceGroupResponse } from './service-group.dto';
 import { ServiceGroupsService } from './service-groups.service';
 
 @Controller('service-groups')
@@ -24,8 +25,9 @@ export class ServiceGroupsController {
   @ApiResponse({
     status: 200,
     description: 'Fetched all services-groups.',
+    type: GetServiceGroupResponse,
   })
-  getAllGroups() {
-    return this.groupsService.getAllGroupsHierarchical();
+  async getAllGroups(): Promise<GetServiceGroupResponse> {
+    return await this.groupsService.getAllGroupsHierarchical();
   }
 }

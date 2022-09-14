@@ -38,6 +38,7 @@ export class ServiceDocsController {
   @ApiResponse({
     status: 201,
     description: 'Successfully created and returned a service-doc.',
+    type: CreateServiceDocResponse,
   })
   async createServiceDoc(
     @Body() createDto: CreateServiceDocRequest,
@@ -50,6 +51,7 @@ export class ServiceDocsController {
   @ApiResponse({
     status: 200,
     description: 'Fetched all service-docs.',
+    type: ListServiceDocResponse,
   })
   async listAllServiceDocs(): Promise<ListServiceDocResponse> {
     return {
@@ -66,6 +68,7 @@ export class ServiceDocsController {
   @ApiResponse({
     status: 200,
     description: 'Fetched service-docs by given name.',
+    type: GetServiceDocResponse,
   })
   async getServiceDocByName(
     @Param('serviceName') serviceName: string,
@@ -92,6 +95,7 @@ export class ServiceDocsController {
   @ApiResponse({
     status: 200,
     description: 'Deleted service-doc by given name.',
+    type: DeleteServiceDocResponse,
   })
   async deleteServiceDocByName(
     @Param('serviceName') serviceName: string,
