@@ -74,6 +74,10 @@ export class ApiKeysController {
   }
 
   @Delete('/:keyId')
+  @ApiParam({
+    name: 'keyId',
+    description: 'Id of the api-key to be deleted',
+  })
   @HttpCode(200)
   @ApiParam({
     name: 'keyId',
