@@ -4,7 +4,8 @@
   "description": "This project generates client code from the `MSAdoc server` project using [@openapitools/openapi-generator-cli](https://github.com/OpenAPITools/openapi-generator-cli) under the hood.",
   "main": "index.js",
   "scripts": {
-    "generate:ts-axios": "openapi-generator-cli generate --generator-key=ts-axios"
+    "generate": "npm run generate:ts-rxjs",
+    "generate:ts-rxjs": "openapi-generator-cli generate --generator-key=ts-rxjs"
   },
   "author": "",
   "license": "Apache 2.0",
