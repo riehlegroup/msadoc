@@ -8,7 +8,7 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common';
-import { ApiParam, ApiSecurity } from '@nestjs/swagger';
+import { ApiParam, ApiResponse, ApiSecurity, ApiTags } from '@nestjs/swagger';
 import { JwtAccessAuthGuard } from '../auth/jwt-access.guard';
 import { ApiKeyAuthGuard } from './api-key.guard';
 import {
@@ -21,13 +21,22 @@ import {
 import { ApiKeysService } from './api-keys.service';
 
 @Controller('api-keys')
+@ApiTags('api-keys')
+@UseGuards(JwtAccessAuthGuard)
+@ApiSecurity('jwt')
+@ApiResponse({
+  status: 401,
+  description: 'Unauthorized. Login to get access_token.',
+})
 export class ApiKeysController {
   constructor(private apiKeysService: ApiKeysService) {}
 
-  @UseGuards(JwtAccessAuthGuard)
-  @ApiSecurity('jwt')
   @Get('/')
   @HttpCode(200)
+  @ApiResponse({
+    status: 200,
+    description: 'Fetched all existing API keys (without the secret).',
+  })
   async getAllApiKeys(): Promise<GetApiKeysResponseDto> {
     return {
       apiKeys: (await this.apiKeysService.getAll()).map(
@@ -42,40 +51,62 @@ export class ApiKeysController {
     };
   }
 
-  @UseGuards(JwtAccessAuthGuard)
-  @ApiSecurity('jwt')
   @Post('/')
   @HttpCode(201)
+  @ApiResponse({
+    status: 201,
+    description: 'Created and returned an API key (with the secret).',
+  })
   async createApiKey(
     @Body() createApiKeyDto: CreateApiKeyRequestDto,
   ): Promise<CreateApiKeyResponseDto> {
     return await this.apiKeysService.create(createApiKeyDto.keyName);
   }
 
-  @UseGuards(JwtAccessAuthGuard)
-  @ApiSecurity('jwt')
   @Delete('/')
   @HttpCode(200)
+  @ApiResponse({
+    status: 200,
+    description: 'Deleted all API keys.',
+  })
   async deleteAllApiKeys(): Promise<void> {
     return await this.apiKeysService.deleteAll();
   }
 
-  @UseGuards(JwtAccessAuthGuard)
-  @ApiSecurity('jwt')
   @Delete('/:keyId')
   @ApiParam({
     name: 'keyId',
     description: 'Id of the api-key to be deleted',
   })
   @HttpCode(200)
+  @ApiParam({
+    name: 'keyId',
+    description: 'ID of the api key to be deleted',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Deleted an API key by id.',
+  })
   async deleteApiKey(@Param() params: { keyId: number }): Promise<void> {
     return await this.apiKeysService.delete(params.keyId);
   }
+}
 
-  @UseGuards(ApiKeyAuthGuard)
-  @ApiSecurity('api-key')
+@Controller('api-keys')
+@ApiTags('api-keys')
+@ApiSecurity('api-key')
+@UseGuards(ApiKeyAuthGuard)
+@ApiResponse({
+  status: 401,
+  description: 'Unauthorized. Create api-key to access this API.',
+})
+export class ApiKeyTestController {
   @Get('/test')
   @HttpCode(200)
+  @ApiResponse({
+    status: 200,
+    description: 'Successfully tested that provided API key is valid.',
+  })
   testApiKey(): IsApiKeyValidResponseDto {
     return {
       isApiKeyValid: true,

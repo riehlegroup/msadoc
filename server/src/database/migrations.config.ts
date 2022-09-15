@@ -19,9 +19,9 @@ export default new DataSource({
   password: configService.getOrThrow('msadoc_db_pw'),
   database: configService.getOrThrow('msadoc_db_db'),
   entities: [
-    join(__dirname, '**', '*.orm.{ts,js}'),
-    join(__dirname, '**', '*.entity.{ts,js}'),
+    join('src', '**', '*.orm.{ts,js}'),
+    join('src', '**', '*.entity.{ts,js}'),
   ],
-  migrations: [join(__dirname, '**', '/migrations/*.{ts,js}')],
+  migrations: [join('src', 'database', 'migrations', '*.{ts,js}')],
   migrationsTableName: 'migrations',
 });

@@ -9,12 +9,9 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { ApiSecurity } from '@nestjs/swagger';
+import { ApiParam, ApiResponse, ApiSecurity, ApiTags } from '@nestjs/swagger';
 import { ApiKeyAuthGuardHandle } from '../api-keys/api-key.guard';
-import {
-  JwtAccessAuthGuard,
-  JwtAccessAuthGuardHandle,
-} from '../auth/jwt-access.guard';
+import { JwtAccessAuthGuardHandle } from '../auth/jwt-access.guard';
 import {
   CreateServiceDocRequest,
   CreateServiceDocResponse,
@@ -25,52 +22,81 @@ import {
 import { ServiceDocsService } from './service-docs.service';
 
 @Controller('service-docs')
+@ApiTags('service-docs')
+@UseGuards(AuthGuard([JwtAccessAuthGuardHandle, ApiKeyAuthGuardHandle]))
+@ApiSecurity(JwtAccessAuthGuardHandle)
+@ApiSecurity(ApiKeyAuthGuardHandle)
+@ApiResponse({
+  status: 401,
+  description: 'Unauthorized. Login to get access_token or use an api-token.',
+})
 export class ServiceDocsController {
   constructor(private serviceDocsService: ServiceDocsService) {}
 
-  @UseGuards(AuthGuard([JwtAccessAuthGuardHandle, ApiKeyAuthGuardHandle]))
-  @ApiSecurity('jwt')
-  @ApiSecurity('api-key')
   @Post('/')
   @HttpCode(201)
+  @ApiResponse({
+    status: 201,
+    description: 'Successfully created and returned a service-doc.',
+    type: CreateServiceDocResponse,
+  })
   async createServiceDoc(
     @Body() createDto: CreateServiceDocRequest,
   ): Promise<CreateServiceDocResponse> {
     return await this.serviceDocsService.create(createDto);
   }
 
-  @UseGuards(JwtAccessAuthGuard)
-  @ApiSecurity('jwt')
   @Get('/')
   @HttpCode(200)
+  @ApiResponse({
+    status: 200,
+    description: 'Fetched all service-docs.',
+    type: ListServiceDocResponse,
+  })
   async listAllServiceDocs(): Promise<ListServiceDocResponse> {
     return {
       serviceDocs: await this.serviceDocsService.getAll(),
     };
   }
 
-  @UseGuards(JwtAccessAuthGuard)
-  @ApiSecurity('jwt')
   @Get('/:serviceName')
   @HttpCode(200)
+  @ApiParam({
+    name: 'serviceName',
+    description: 'Name of the service-doc to be fetched',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Fetched service-docs by given name.',
+    type: GetServiceDocResponse,
+  })
   async getServiceDocByName(
     @Param('serviceName') serviceName: string,
   ): Promise<GetServiceDocResponse> {
     return await this.serviceDocsService.getByName(serviceName);
   }
 
-  @UseGuards(JwtAccessAuthGuard)
-  @ApiSecurity('jwt')
   @Delete('/')
   @HttpCode(200)
+  @ApiResponse({
+    status: 200,
+    description: 'Deleted all service-docs.',
+  })
   async deleteAllServiceDocs(): Promise<void> {
     await this.serviceDocsService.deleteAll();
   }
 
-  @UseGuards(JwtAccessAuthGuard)
-  @ApiSecurity('jwt')
   @Delete('/:serviceName')
   @HttpCode(200)
+  @ApiParam({
+    name: 'serviceName',
+    description: 'Name of the service-doc to be deleted',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Deleted service-doc by given name.',
+    type: DeleteServiceDocResponse,
+  })
   async deleteServiceDocByName(
     @Param('serviceName') serviceName: string,
   ): Promise<DeleteServiceDocResponse> {

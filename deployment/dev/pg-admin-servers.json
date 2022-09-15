@@ -5,7 +5,7 @@
       "Group": "Servers",
       "Port": 5432,
       "Username": "postgres",
-      "Host": "host.docker.internal",
+      "Host": "db",
       "SSLMode": "prefer",
       "MaintenanceDB": "postgres"
     }

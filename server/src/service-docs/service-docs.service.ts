@@ -8,15 +8,17 @@ function fromOrm(entity: ServiceDocOrm): ServiceDocModel {
   // currently models are the same
   return {
     name: entity.name,
+    group: entity.group ?? undefined,
+    tags: entity.tags ?? undefined,
+    repository: entity.repository ?? undefined,
+    taskBoard: entity.taskBoard ?? undefined,
     consumedAPIs: entity.consumedAPIs ?? undefined,
-    providedAPIs: entity.producedAPIs ?? undefined,
+    providedAPIs: entity.providedAPIs ?? undefined,
     consumedEvents: entity.consumedEvents ?? undefined,
     producedEvents: entity.producedEvents ?? undefined,
-    developmentDocumentation: entity.deploymentDocumentation ?? undefined,
+    developmentDocumentation: entity.developmentDocumentation ?? undefined,
     deploymentDocumentation: entity.deploymentDocumentation ?? undefined,
     apiDocumentation: entity.apiDocumentation ?? undefined,
-    repository: entity.repository ?? undefined,
-    taskBoard: entity.repository ?? undefined,
     responsibles: entity.responsibles ?? undefined,
     responsibleTeam: entity.responsibleTeam ?? undefined,
     creationTimestamp: entity.creationTimestamp ?? undefined,
@@ -26,20 +28,22 @@ function fromOrm(entity: ServiceDocOrm): ServiceDocModel {
 
 function toOrm(
   model: ServiceDocModelWithoutTimestamps,
-): ServiceDocModelWithoutTimestamps {
+): Omit<ServiceDocOrm, 'creationTimestamp' | 'updateTimestamp'> {
   return {
     name: model.name,
-    consumedAPIs: model.consumedAPIs,
-    providedAPIs: model.providedAPIs,
-    consumedEvents: model.consumedEvents,
-    producedEvents: model.producedEvents,
-    developmentDocumentation: model.developmentDocumentation,
-    deploymentDocumentation: model.deploymentDocumentation,
-    apiDocumentation: model.apiDocumentation,
-    repository: model.repository,
-    taskBoard: model.taskBoard,
-    responsibles: model.responsibles,
-    responsibleTeam: model.responsibleTeam,
+    group: model.group ?? null,
+    tags: model.tags ?? null,
+    repository: model.repository ?? null,
+    taskBoard: model.taskBoard ?? null,
+    consumedAPIs: model.consumedAPIs ?? null,
+    providedAPIs: model.providedAPIs ?? null,
+    consumedEvents: model.consumedEvents ?? null,
+    producedEvents: model.producedEvents ?? null,
+    developmentDocumentation: model.developmentDocumentation ?? null,
+    deploymentDocumentation: model.deploymentDocumentation ?? null,
+    apiDocumentation: model.apiDocumentation ?? null,
+    responsibles: model.responsibles ?? null,
+    responsibleTeam: model.responsibleTeam ?? null,
   };
 }
 
@@ -76,7 +80,7 @@ export class ServiceDocsService {
         `Could not find ServiceDoc with name "${serviceName}"`,
       );
     }
-    return results[0];
+    return fromOrm(results[0]);
   }
 
   async delete(serviceName: string): Promise<ServiceDocModel> {

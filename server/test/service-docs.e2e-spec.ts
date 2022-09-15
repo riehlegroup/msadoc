@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
 import { AppModule } from '../src/app.module';
+import { CreateServiceDocRequest } from '../src/service-docs/service-doc.dto';
 
 describe('ServiceDocsController (e2e)', () => {
   let app: INestApplication;
@@ -33,16 +34,7 @@ describe('ServiceDocsController (e2e)', () => {
         .expect(401);
     });
 
-    it('should be allow jwt access token', async () => {
-      await request(app.getHttpServer())
-        .post('/service-docs')
-        .send({
-          name: 'test-service',
-        })
-        .expect(401);
-    });
-
-    it('should be allow api-key', async () => {
+    it('should allow access by jwt access_token', async () => {
       const accessToken = await getAccessToken();
       await request(app.getHttpServer())
         .post('/service-docs')
@@ -53,7 +45,7 @@ describe('ServiceDocsController (e2e)', () => {
         .expect(201);
     });
 
-    it('should be allow api-key', async () => {
+    it('should allow access by api-key', async () => {
       const accessToken = await getAccessToken();
       const apiKey = await getApiKey(accessToken);
       await request(app.getHttpServer())
@@ -65,7 +57,7 @@ describe('ServiceDocsController (e2e)', () => {
         .expect(201);
     });
 
-    it('should create service-doc', async () => {
+    it('should create simple service-doc', async () => {
       const accessToken = await getAccessToken();
       const creationResponse = await request(app.getHttpServer())
         .post('/service-docs')
@@ -75,6 +67,56 @@ describe('ServiceDocsController (e2e)', () => {
         })
         .expect(201);
       expect(creationResponse.body.name).toBeDefined();
+      expect(creationResponse.body.creationTimestamp).toBeDefined();
+      expect(creationResponse.body.updateTimestamp).toBeDefined();
+    });
+
+    it('should create complex service-doc', async () => {
+      const accessToken = await getAccessToken();
+      const dto: CreateServiceDocRequest = {
+        name: 'test-service',
+        group: 'test.group',
+        tags: ['t', 'es'],
+        repository: 'repo',
+        taskBoard: 'tasks',
+        providedAPIs: ['API1', 'API2'],
+        producedEvents: ['event1', 'event2'],
+        consumedAPIs: ['API3', 'API4'],
+        consumedEvents: ['event3', 'event4'],
+        apiDocumentation: 'api',
+        deploymentDocumentation: 'deploy',
+        developmentDocumentation: 'develop',
+        responsibles: ['r1', 'r2'],
+        responsibleTeam: 'team',
+      };
+
+      const creationResponse = await request(app.getHttpServer())
+        .post('/service-docs')
+        .auth(accessToken, { type: 'bearer' })
+        .send(dto)
+        .expect(201);
+
+      expect(creationResponse.body.name).toEqual(dto.name);
+      expect(creationResponse.body.tags).toEqual(dto.tags);
+      expect(creationResponse.body.repository).toEqual(dto.repository);
+      expect(creationResponse.body.taskBoard).toEqual(dto.taskBoard);
+      expect(creationResponse.body.providedAPIs).toEqual(dto.providedAPIs);
+      expect(creationResponse.body.producedEvents).toEqual(dto.producedEvents);
+      expect(creationResponse.body.consumedAPIs).toEqual(dto.consumedAPIs);
+      expect(creationResponse.body.consumedEvents).toEqual(dto.consumedEvents);
+      expect(creationResponse.body.apiDocumentation).toEqual(
+        dto.apiDocumentation,
+      );
+      expect(creationResponse.body.deploymentDocumentation).toEqual(
+        dto.deploymentDocumentation,
+      );
+      expect(creationResponse.body.developmentDocumentation).toEqual(
+        dto.developmentDocumentation,
+      );
+      expect(creationResponse.body.responsibles).toEqual(dto.responsibles);
+      expect(creationResponse.body.responsibleTeam).toEqual(
+        dto.responsibleTeam,
+      );
       expect(creationResponse.body.creationTimestamp).toBeDefined();
       expect(creationResponse.body.updateTimestamp).toBeDefined();
     });
@@ -123,6 +165,23 @@ describe('ServiceDocsController (e2e)', () => {
       await request(app.getHttpServer()).get('/service-docs').expect(401);
     });
 
+    it('should allow access by jwt access_token', async () => {
+      const accessToken = await getAccessToken();
+      await request(app.getHttpServer())
+        .get('/service-docs')
+        .auth(accessToken, { type: 'bearer' })
+        .expect(200);
+    });
+
+    it('should allow access by api-key', async () => {
+      const accessToken = await getAccessToken();
+      const apiKey = await getApiKey(accessToken);
+      await request(app.getHttpServer())
+        .get('/service-docs')
+        .auth(apiKey, { type: 'bearer' })
+        .expect(200);
+    });
+
     it('should list service-docs', async () => {
       const accessToken = await getAccessToken();
       const creationResponse = await request(app.getHttpServer())
@@ -150,6 +209,23 @@ describe('ServiceDocsController (e2e)', () => {
       await request(app.getHttpServer())
         .get('/service-docs/test-service')
         .expect(401);
+    });
+
+    it('should allow access by jwt access_token', async () => {
+      const accessToken = await getAccessToken();
+      await request(app.getHttpServer())
+        .get('/service-docs/test-service')
+        .auth(accessToken, { type: 'bearer' })
+        .expect(200);
+    });
+
+    it('should allow access by api-key', async () => {
+      const accessToken = await getAccessToken();
+      const apiKey = await getApiKey(accessToken);
+      await request(app.getHttpServer())
+        .get('/service-docs/test-service')
+        .auth(apiKey, { type: 'bearer' })
+        .expect(200);
     });
 
     it('should fetch service-doc', async () => {

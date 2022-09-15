@@ -5,6 +5,7 @@ import { ServiceDocsController } from './service-docs.controller';
 import { ServiceDocsService } from './service-docs.service';
 
 @Module({
+  exports: [ServiceDocsService],
   imports: [TypeOrmModule.forFeature([ServiceDocOrm])],
   controllers: [ServiceDocsController],
   providers: [ServiceDocsService],

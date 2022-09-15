@@ -18,6 +18,37 @@ The name of the microservice. The `name` is used as key to identify and referenc
 * Don't use spaces - otherwise API requests filtering by name might not work.
 
 
+### `group` (string)
+
+The group of the microservice. Supports multiple hierarchies seperated by a dot, e.g. `group.sub-group.sub-sub-group`. 
+The `group` name will later be used as key to add more meta-data to the group.
+#### Example
+```json
+{
+    "name": "PipelineService",
+    "group": "etl.pipeline",
+}
+```
+#### Best Practices
+* Use a consistent naming scheme across all groups.
+* Don't use spaces - otherwise API requests filtering by name might not work.
+
+
+### `tags` (string[])
+
+A list of tags for the microservice. The `tag` is used as key to filter services.
+#### Example
+```json
+{
+    "name": "PipelineService",
+    "tags": ["pipeline", "backend"],
+}
+```
+#### Best Practices
+* Use a consistent tagging scheme across all microservices.
+* Don't use spaces - otherwise API requests filtering by name might not work.
+
+
 ### `repository` (string)
 
 The link to the microservice's repository.

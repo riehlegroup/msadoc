@@ -13,38 +13,52 @@ export class ServiceDocOrm {
   @PrimaryColumn()
   name: string;
 
-  @Column('text', { array: true, nullable: true })
-  consumedAPIs?: string[];
+  @Column('character varying', { nullable: true })
+  group: string | null;
 
   @Column('text', { array: true, nullable: true })
-  producedAPIs?: string[];
+  tags: string[] | null;
+
+  @Column('character varying', { nullable: true })
+  repository: string | null;
+
+  @Column('character varying', { nullable: true })
+  taskBoard: string | null;
+
+  /** Dependencies */
 
   @Column('text', { array: true, nullable: true })
-  producedEvents?: string[];
+  consumedAPIs: string[] | null;
 
   @Column('text', { array: true, nullable: true })
-  consumedEvents?: string[];
-
-  @Column({ nullable: true })
-  repository?: string;
-
-  @Column({ nullable: true })
-  taskBoard?: string;
-
-  @Column({ nullable: true })
-  developmentDocumentation?: string;
-
-  @Column({ nullable: true })
-  deploymentDocumentation?: string;
-
-  @Column({ nullable: true })
-  apiDocumentation?: string;
-
-  @Column({ nullable: true })
-  responsibleTeam?: string;
+  providedAPIs: string[] | null;
 
   @Column('text', { array: true, nullable: true })
-  responsibles?: string[];
+  producedEvents: string[] | null;
+
+  @Column('text', { array: true, nullable: true })
+  consumedEvents: string[] | null;
+
+  /** Documentation links */
+
+  @Column('character varying', { nullable: true })
+  developmentDocumentation: string | null;
+
+  @Column('character varying', { nullable: true })
+  deploymentDocumentation: string | null;
+
+  @Column('character varying', { nullable: true })
+  apiDocumentation: string | null;
+
+  /** Responsibilities */
+
+  @Column('character varying', { nullable: true })
+  responsibleTeam: string | null;
+
+  @Column('text', { array: true, nullable: true })
+  responsibles: string[] | null;
+
+  /** Timestamps */
 
   @CreateDateColumn()
   creationTimestamp: Date;
