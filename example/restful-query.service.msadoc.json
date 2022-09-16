@@ -1,0 +1,24 @@
+{
+    "name": "RestfulQueryService",
+    "group": "etl.load.query",
+    "tags": ["app=ods"],
+  
+    "repository": "https://github.com/jvalue/ods.git",
+    "taskBoard": "https://github.com/jvalue/ods/projects",
+  
+    "providedApis": ["/query/restful"],
+
+    "consumedEvents": [
+      "loading.config.created",
+      "loading.config.updated",
+      "loading.config.deleted",
+      "loading.execution.success",
+      "loading.execution.failure"
+    ],
+  
+    "deploymentDocumentation": "https://github.com/jvalue/ods-deployment",
+  
+    "responsibles": ["schwarz@group.riehle.org"],
+    "responsibleTeam": "jvalue-core"
+  }
+  

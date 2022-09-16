@@ -1,0 +1,23 @@
+{
+  "name": "SchedulerService",
+  "group": "etl.extraction",
+  "tags": ["app=ods"],
+
+  "repository": "https://github.com/jvalue/ods.git",
+  "taskBoard": "https://github.com/jvalue/ods/projects",
+
+  "providedApis": ["/scheduler/tasks"],
+
+  "producedEvents": ["extraction.execution.tiggered"],
+  "consumedEvents": [
+    "extraction.config.created",
+    "extraction.config.updated",
+    "extraction.config.deleted"
+  ],
+
+  "deploymentDocumentation": "https://github.com/jvalue/ods-deployment",
+  "developmentDocumentation": "https://github.com/jvalue/ods/blob/main/scheduler/README.md",
+
+  "responsibles": ["schwarz@group.riehle.org"],
+  "responsibleTeam": "jvalue-core"
+}

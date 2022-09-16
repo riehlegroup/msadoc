@@ -1,0 +1,31 @@
+{
+  "name": "TransformationService",
+  "group": "etl",
+  "tags": ["app=ods"],
+
+  "repository": "https://github.com/jvalue/ods.git",
+  "taskBoard": "https://github.com/jvalue/ods/projects",
+
+  "providedApis": ["/transformation/configs", "transformation/execution-stats"],
+
+  "consumedEvents": [
+    "extraction.config.created",
+    "extraction.config.updated",
+    "extraction.config.deleted",
+    "extraction.execution.success",
+    "extraction.execution.failure"
+  ],
+  "producedEvents": [
+    "transformation.execution.success",
+    "transformation.execution.failure",
+    "transformation.config.created",
+    "transformation.config.updated",
+    "transformation.config.deleted"
+  ],
+
+  "deploymentDocumentation": "https://github.com/jvalue/ods-deployment",
+  "developmentDocumentation": "https://github.com/jvalue/ods/blob/main/transformation/README.md",
+
+  "responsibles": ["schwarz@group.riehle.org"],
+  "responsibleTeam": "jvalue-core"
+}
