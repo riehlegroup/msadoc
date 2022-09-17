@@ -10,7 +10,7 @@
   "main": "./dist/index.js",
   "typings": "./dist/index.d.ts",
   "scripts" : {
-    "build": "node_modules/.bin/tsc --outDir dist/",
+    "build": "tsc --outDir dist/",
     "prepare": "npm run build"
   },
   "dependencies": {
