@@ -7,12 +7,15 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "eject": "react-scripts eject",
-    "lint": "eslint src --max-warnings=0"
+    "lint": "eslint src --max-warnings=0",
+    "compile-client-library": "npm install --prefix ../client-generated"
   },
   "dependencies": {
+    "msadoc-client": "file:../client-generated",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-scripts": "5.0.1"
+    "react-scripts": "5.0.1",
+    "rxjs": "^7.5.6"
   },
   "devDependencies": {
     "@jvalue/eslint-config-jvalue": "^1.2.0",

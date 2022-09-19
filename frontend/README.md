@@ -2,12 +2,17 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-
 ## Development Setup
 
-We provide a `settings.json` for **VS Code** that you can use for a seamlesss development workflow with prettier. 
+We provide a `settings.json` for **VS Code** that you can use for a seamless development workflow with Prettier.
 To use it just `cp .vscode/recommended-settings.json .vscode/settings.json`
 
+### Build the client library
+
+Before performing any task on the frontend, make sure to compile the client library first. To do that, simply run the following command:  
+`npm run compile-client-library`
+
+When building the client library, the old library output is always deleted first. This might lead to some "hiccups" in your IDE (i.e. your IDE might insist that the library does not exist, even after the build has finished). If you experience this problem, simply restart your IDE after building the client library. If you are using VSCode, you can alternatively use the "Restart TS server" and "Restart ESLint Server" commands.
 
 ## Available Scripts
 
