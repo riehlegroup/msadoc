@@ -1,5 +1,6 @@
 import { Configuration, DefaultApi } from 'msadoc-client';
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { AjaxConfig } from 'rxjs/ajax';
 
 import { ENVIRONMENT } from '../env';
@@ -29,6 +30,7 @@ interface HttpService {
   >;
 }
 function useHttpService(): HttpService {
+  const navigate = useNavigate();
   const authDataService = useAuthDataServiceContext();
 
   /*
@@ -39,11 +41,18 @@ function useHttpService(): HttpService {
   */
   const [apiWithoutAuth, apiWithAuth] = React.useMemo((): [
     DefaultApi,
-    DefaultApi,
+    DefaultApi | undefined,
   ] => {
     const apiConfigWithoutAuth = new Configuration({
       basePath: ENVIRONMENT.REACT_APP_BACKEND_URL,
     });
+
+    const withoutAuth = new DefaultApi(apiConfigWithoutAuth);
+
+    // No auth tokens available? Then don't create the API for authenticated requests.
+    if (!authDataService.state.accessAndRefreshToken) {
+      return [withoutAuth, undefined];
+    }
 
     const apiConfigWithAuth = new Configuration({
       basePath: ENVIRONMENT.REACT_APP_BACKEND_URL,
@@ -68,13 +77,11 @@ function useHttpService(): HttpService {
       ],
     });
 
-    const withoutAuth = new DefaultApi(apiConfigWithoutAuth);
-
     // It would be pretty elegant to write something like `withoutAuth.withPreMiddleware(...)`. However, due to a bug in the generated client, this is not possible. See https://github.com/OpenAPITools/openapi-generator/issues/9098
     const withAuth = new DefaultApi(apiConfigWithAuth);
 
     return [withoutAuth, withAuth];
-  }, [authDataService.state.accessAndRefreshToken?.accessToken]);
+  }, [authDataService.state.accessAndRefreshToken]);
 
   function performLogin(
     username: string,
@@ -133,6 +140,7 @@ function useHttpService(): HttpService {
       if (
         authDataService.state.accessAndRefreshToken?.refreshToken === undefined
       ) {
+        navigate('/login');
         resolve(false);
         return;
       }
@@ -159,6 +167,7 @@ function useHttpService(): HttpService {
           error: () => {
             // In the future, we might want to distinguish cases like "the client currently has no internet connection" and "the token is invalid". However, the following should be fine for now.
             authDataService.deleteAccessAndRefreshToken();
+            navigate('/login');
             resolve(false);
           },
         });
@@ -176,6 +185,15 @@ function useHttpService(): HttpService {
     const result = new Promise<
       ListAllServiceDocsHttpResponse | UnknownHttpError
     >((resolve) => {
+      if (!apiWithAuth) {
+        navigate('/login');
+        resolve({
+          status: 0,
+          data: undefined,
+        });
+        return;
+      }
+
       apiWithAuth.serviceDocsControllerListAllServiceDocs().subscribe({
         next: (response: unknown) => {
           // This is not ideal since we trust our server to return properly shaped data.
@@ -254,10 +272,10 @@ interface Props {
   children?: React.ReactNode;
 }
 export const HttpServiceContextProvider: React.FC<Props> = (props) => {
-  const kernelService = useHttpService();
+  const httpService = useHttpService();
 
   return (
-    <HttpServiceContext.Provider value={kernelService}>
+    <HttpServiceContext.Provider value={httpService}>
       {props.children}
     </HttpServiceContext.Provider>
   );

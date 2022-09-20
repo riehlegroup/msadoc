@@ -82,10 +82,10 @@ interface Props {
   children?: React.ReactNode;
 }
 export const AuthDataServiceContextProvider: React.FC<Props> = (props) => {
-  const kernelService = useAuthDataService();
+  const authDataService = useAuthDataService();
 
   return (
-    <AuthDataServiceContext.Provider value={kernelService}>
+    <AuthDataServiceContext.Provider value={authDataService}>
       {props.children}
     </AuthDataServiceContext.Provider>
   );
