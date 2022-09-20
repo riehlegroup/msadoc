@@ -15,7 +15,7 @@ interface AuthDataService {
   state: State;
 
   /**
-   * Update the Access and Refresh Token.
+   * Set/Update the Access and Refresh Token.
    * This will not only update our State, but also store these tokens in LocalStorage.
    */
   setAccessAndRefreshToken: (newTokens: AccessAndRefreshToken) => void;
@@ -43,27 +43,33 @@ function useAuthDataService(): AuthDataService {
     };
   });
 
+  // Whenever the Access/Refresh Tokens in our State change, remember this in LocalStorage.
+  React.useEffect(() => {
+    if (!state.accessAndRefreshToken) {
+      localStorage.removeItem(ACCESS_TOKEN_LOCALSTORAGE_KEY);
+      localStorage.removeItem(REFRESH_TOKEN_LOCALSTORAGE_KEY);
+      return;
+    }
+
+    localStorage.setItem(
+      ACCESS_TOKEN_LOCALSTORAGE_KEY,
+      state.accessAndRefreshToken.accessToken,
+    );
+    localStorage.setItem(
+      REFRESH_TOKEN_LOCALSTORAGE_KEY,
+      state.accessAndRefreshToken.refreshToken,
+    );
+  }, [state.accessAndRefreshToken]);
+
   return {
     state: state,
 
     setAccessAndRefreshToken: (newTokens): void => {
       setState((state) => ({ ...state, accessAndRefreshToken: newTokens }));
-
-      localStorage.setItem(
-        ACCESS_TOKEN_LOCALSTORAGE_KEY,
-        newTokens.accessToken,
-      );
-      localStorage.setItem(
-        REFRESH_TOKEN_LOCALSTORAGE_KEY,
-        newTokens.refreshToken,
-      );
     },
 
     deleteAccessAndRefreshToken: (): void => {
       setState((state) => ({ ...state, accessAndRefreshToken: undefined }));
-
-      localStorage.removeItem(ACCESS_TOKEN_LOCALSTORAGE_KEY);
-      localStorage.removeItem(REFRESH_TOKEN_LOCALSTORAGE_KEY);
     },
   };
 }
