@@ -11,9 +11,16 @@
     "compile-client-library": "npm install --prefix ../client-generated"
   },
   "dependencies": {
+    "@emotion/react": "^11.10.4",
+    "@emotion/styled": "^11.10.4",
+    "@fontsource/roboto": "^4.5.8",
+    "@mui/icons-material": "^5.10.6",
+    "@mui/lab": "^5.0.0-alpha.100",
+    "@mui/material": "^5.10.6",
     "msadoc-client": "file:../client-generated",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-router-dom": "^6.4.0",
     "react-scripts": "5.0.1",
     "rxjs": "^7.5.6"
   },
@@ -25,6 +32,7 @@
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-prettier": "^4.2.1",
     "prettier": "^2.7.1",
+    "sass": "^1.54.9",
     "typescript": "^4.8.3"
   }
 }
