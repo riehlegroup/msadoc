@@ -1,3 +1,6 @@
+import { LoadingButton } from '@mui/lab';
+import { Box, Stack, TextField, Typography } from '@mui/material';
+import Grid from '@mui/material/Unstable_Grid2';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -15,35 +18,125 @@ export const LoginPage: React.FC = () => {
 
   return (
     <React.Fragment>
-      <h3>Login Page</h3>
+      <Grid sx={{ height: '100%' }} container>
+        <Grid
+          xs={4}
+          sx={{
+            background: (theme) => theme.palette.primary.dark,
+            padding: 2,
+            display: 'flex',
+            alignItems: 'center',
+          }}
+        >
+          <Box>
+            <Box sx={{ position: 'relative' }}>
+              <Typography
+                variant="h3"
+                sx={{
+                  color: '#ffffff',
+                  fontWeight: 700,
+                  letterSpacing: '0.15em',
+                  marginLeft: '1.5rem',
+                }}
+              >
+                msadoc
+              </Typography>
 
-      {controller.state.viewState === ViewState.IsLoading && (
-        <div>Loading...</div>
-      )}
-      {controller.state.viewState === ViewState.WrongUsernameOrPassword && (
-        <div>Wrong username or password</div>
-      )}
-      {controller.state.viewState === ViewState.UnknownError && (
-        <div>Unknown error, please try again</div>
-      )}
+              {/* A semi-transparent highlight element. */}
+              <Box
+                sx={{
+                  position: 'absolute',
+                  bottom: 0,
+                  left: 0,
+                  display: 'block',
+                  width: '8rem',
+                  height: '1.3rem',
+                  background: 'rgba(255,255,255,0.2)',
+                  pointerEvents: 'none',
+                }}
+              />
+            </Box>
 
-      <input
-        type="text"
-        value={controller.state.username}
-        onChange={(e): void => controller.setUsername(e.target.value)}
-      />
-      <input
-        type="password"
-        value={controller.state.password}
-        onChange={(e): void => controller.setPassword(e.target.value)}
-      />
+            <Box>
+              <Typography
+                variant="h5"
+                sx={{
+                  color: '#ffffff',
+                  fontWeight: 300,
+                  letterSpacing: '0.1em',
+                  marginTop: '1rem',
+                  marginLeft: '1.5rem',
+                }}
+              >
+                Recentralize decentralized documentation!
+              </Typography>
+            </Box>
+          </Box>
+        </Grid>
 
-      <button
-        type="button"
-        onClick={(): void => void controller.performLogin()}
-      >
-        Login
-      </button>
+        <Grid
+          xs={8}
+          sx={{
+            padding: 4,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <Box sx={{ width: '100%', maxWidth: '500px' }}>
+            <form
+              onSubmit={(e): void => {
+                e.preventDefault();
+                void controller.performLogin();
+              }}
+            >
+              <Stack spacing={2}>
+                <Typography variant="h4">Login</Typography>
+
+                {controller.state.viewState ===
+                  ViewState.WrongUsernameOrPassword && (
+                  <Box
+                    sx={{
+                      color: (theme) => theme.palette.error.main,
+                    }}
+                  >
+                    Wrong username or password
+                  </Box>
+                )}
+                {controller.state.viewState === ViewState.UnknownError && (
+                  <Box
+                    sx={{
+                      color: (theme) => theme.palette.error.main,
+                    }}
+                  >
+                    Unknown error, please try again
+                  </Box>
+                )}
+
+                <TextField
+                  label="Username"
+                  value={controller.state.username}
+                  onChange={(e): void => controller.setUsername(e.target.value)}
+                />
+                <TextField
+                  type="password"
+                  label="Password"
+                  value={controller.state.password}
+                  onChange={(e): void => controller.setPassword(e.target.value)}
+                />
+
+                <LoadingButton
+                  variant="contained"
+                  loading={controller.state.viewState === ViewState.IsLoading}
+                  type="submit"
+                >
+                  Login
+                </LoadingButton>
+              </Stack>
+            </form>
+          </Box>
+        </Grid>
+      </Grid>
     </React.Fragment>
   );
 };
