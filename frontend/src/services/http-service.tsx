@@ -13,7 +13,10 @@ import {
   UnknownHttpError,
 } from '../models/api';
 
-import { useAuthDataServiceContext } from './auth-data-service';
+import {
+  AccessAndRefreshToken,
+  useAuthDataServiceContext,
+} from './auth-data-service';
 
 interface HttpService {
   /**
@@ -33,37 +36,32 @@ function useHttpService(): HttpService {
   const navigate = useNavigate();
   const authDataService = useAuthDataServiceContext();
 
-  /*
-    We create two APIs here.
-    The latter always includes the "authorization: Bearer <auth token>" header, the first does not include this header and can thus be used for login and similar actions.
-
-    We need to distinguish these two because, by default, `DefaultApi` is not capable of adding such an auth header. Thus, we add a custom Middleware to it in order to manually add this header.
-  */
-  const [apiWithoutAuth, apiWithAuth] = React.useMemo((): [
-    DefaultApi,
-    DefaultApi | undefined,
-  ] => {
+  /**
+   * Get an API without the `authorization: Bearer <access token>` header (useful for actions like logging in and similar).
+   */
+  function getApiWithoutAuth(): DefaultApi {
     const apiConfigWithoutAuth = new Configuration({
       basePath: ENVIRONMENT.REACT_APP_BACKEND_URL,
     });
 
-    const withoutAuth = new DefaultApi(apiConfigWithoutAuth);
+    return new DefaultApi(apiConfigWithoutAuth);
+  }
 
-    // No auth tokens available? Then don't create the API for authenticated requests.
-    if (!authDataService.state.accessAndRefreshToken) {
-      return [withoutAuth, undefined];
-    }
-
+  /**
+   * Get an API with the `authorization: Bearer <access token>` header.
+   */
+  function getApiWithAuth(accessToken: string): DefaultApi {
     const apiConfigWithAuth = new Configuration({
       basePath: ENVIRONMENT.REACT_APP_BACKEND_URL,
+
+      /*
+        `DefaultApi` is not capable of adding the "authorization: Bearer <access token>" header. 
+        Thus, we add a custom Middleware to it in order to manually add this header.
+      */
       middleware: [
-        // The Middleware that adds the auth header.
         {
           pre: (requestConfig: AjaxConfig): AjaxConfig => {
             const newRequestConfig = { ...requestConfig };
-
-            const accessToken =
-              authDataService.state.accessAndRefreshToken?.accessToken ?? '';
 
             const bearer = `Bearer ${accessToken}`;
             newRequestConfig.headers = {
@@ -77,11 +75,9 @@ function useHttpService(): HttpService {
       ],
     });
 
-    // It would be pretty elegant to write something like `withoutAuth.withPreMiddleware(...)`. However, due to a bug in the generated client, this is not possible. See https://github.com/OpenAPITools/openapi-generator/issues/9098
-    const withAuth = new DefaultApi(apiConfigWithAuth);
-
-    return [withoutAuth, withAuth];
-  }, [authDataService.state.accessAndRefreshToken]);
+    // It would be pretty elegant to write something like `getApiWithoutAuth().withPreMiddleware(...)`. However, due to a bug in the generated client, this is not possible. See https://github.com/OpenAPITools/openapi-generator/issues/9098
+    return new DefaultApi(apiConfigWithAuth);
+  }
 
   function performLogin(
     username: string,
@@ -89,7 +85,7 @@ function useHttpService(): HttpService {
   ): Promise<LoginHttpResponse | UnknownHttpError> {
     const result = new Promise<LoginHttpResponse | UnknownHttpError>(
       (resolve) => {
-        apiWithoutAuth
+        getApiWithoutAuth()
           .authControllerLogin({
             loginRequestDto: {
               username: username,
@@ -131,21 +127,18 @@ function useHttpService(): HttpService {
 
   /**
    * Use the Refresh Token to generate a new Auth Token.
-   *
-   * The returned Promise is resolved to `true` if refreshing succeeded.
-   * Otherwise, the Promise is resolved to `false`.
    */
-  function refreshAuthToken(): Promise<boolean> {
-    const result = new Promise<boolean>((resolve) => {
+  function refreshAuthToken(): Promise<AccessAndRefreshToken | undefined> {
+    const result = new Promise<AccessAndRefreshToken | undefined>((resolve) => {
       if (
         authDataService.state.accessAndRefreshToken?.refreshToken === undefined
       ) {
         navigate('/login');
-        resolve(false);
+        resolve(undefined);
         return;
       }
 
-      apiWithoutAuth
+      getApiWithoutAuth()
         .authControllerRefreshToken({
           refreshTokenRequestDto: {
             refresh_token:
@@ -162,13 +155,16 @@ function useHttpService(): HttpService {
               refreshToken: responseData.refresh_token,
             });
 
-            resolve(true);
+            resolve({
+              accessToken: responseData.access_token,
+              refreshToken: responseData.refresh_token,
+            });
           },
           error: () => {
             // In the future, we might want to distinguish cases like "the client currently has no internet connection" and "the token is invalid". However, the following should be fine for now.
             authDataService.deleteAccessAndRefreshToken();
             navigate('/login');
-            resolve(false);
+            resolve(undefined);
           },
         });
     });
@@ -178,14 +174,20 @@ function useHttpService(): HttpService {
 
   /**
    * @param refreshOn401 Should we try to refresh the Access Token if the server returns 401?
+   * @param accessToken The Access Token to use when performing the request. If no token is specified, the one provided by the AuthDataService is used.
    */
   function listAllServiceDocs(
     refreshOn401: boolean,
+    accessToken?: string,
   ): Promise<ListAllServiceDocsHttpResponse | UnknownHttpError> {
     const result = new Promise<
       ListAllServiceDocsHttpResponse | UnknownHttpError
     >((resolve) => {
-      if (!apiWithAuth) {
+      if (accessToken === undefined) {
+        accessToken = authDataService.state.accessAndRefreshToken?.accessToken;
+      }
+
+      if (accessToken === undefined) {
         navigate('/login');
         resolve({
           status: 0,
@@ -194,60 +196,62 @@ function useHttpService(): HttpService {
         return;
       }
 
-      apiWithAuth.serviceDocsControllerListAllServiceDocs().subscribe({
-        next: (response: unknown) => {
-          // This is not ideal since we trust our server to return properly shaped data.
-          const responseData = response as ListAllServiceDocs200ResponseData;
+      getApiWithAuth(accessToken)
+        .serviceDocsControllerListAllServiceDocs()
+        .subscribe({
+          next: (response: unknown) => {
+            // This is not ideal since we trust our server to return properly shaped data.
+            const responseData = response as ListAllServiceDocs200ResponseData;
 
-          resolve({
-            status: 200,
-            data: responseData,
-          });
-        },
-        error: (error) => {
-          if (!refreshOn401) {
             resolve({
-              status: 0,
-              data: undefined,
+              status: 200,
+              data: responseData,
             });
-            return;
-          }
+          },
+          error: (error) => {
+            if (!refreshOn401) {
+              resolve({
+                status: 0,
+                data: undefined,
+              });
+              return;
+            }
 
-          const errorStatus = getErrorStatus(error);
+            const errorStatus = getErrorStatus(error);
 
-          if (errorStatus !== 401) {
-            resolve({
-              status: 0,
-              data: undefined,
-            });
-            return;
-          }
+            if (errorStatus !== 401) {
+              resolve({
+                status: 0,
+                data: undefined,
+              });
+              return;
+            }
 
-          // We might have an expired Access Token. --> Try refreshing it and then retry.
+            // We might have an expired Access Token. --> Try refreshing it and then retry.
 
-          refreshAuthToken()
-            .then((success) => {
-              if (!success) {
-                resolve({
-                  status: 0,
-                  data: undefined,
-                });
-                return;
-              }
+            refreshAuthToken()
+              .then((refreshResult) => {
+                if (!refreshResult) {
+                  resolve({
+                    status: 0,
+                    data: undefined,
+                  });
+                  return;
+                }
 
-              listAllServiceDocs(false)
-                .then((secondTryResult) => {
-                  resolve(secondTryResult);
-                })
-                .catch(() => {
-                  throw Error('This point should not be reached.');
-                });
-            })
-            .catch(() => {
-              throw Error('This point should not be reached.');
-            });
-        },
-      });
+                listAllServiceDocs(false, refreshResult.accessToken)
+                  .then((secondTryResult) => {
+                    resolve(secondTryResult);
+                  })
+                  .catch(() => {
+                    throw Error('This point should not be reached.');
+                  });
+              })
+              .catch(() => {
+                throw Error('This point should not be reached.');
+              });
+          },
+        });
     });
 
     return result;

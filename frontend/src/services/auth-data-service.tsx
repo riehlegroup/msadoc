@@ -3,7 +3,7 @@ import React from 'react';
 const ACCESS_TOKEN_LOCALSTORAGE_KEY = 'msadoc--access-token';
 const REFRESH_TOKEN_LOCALSTORAGE_KEY = 'msadoc--refresh-token';
 
-interface AccessAndRefreshToken {
+export interface AccessAndRefreshToken {
   accessToken: string;
   refreshToken: string;
 }
