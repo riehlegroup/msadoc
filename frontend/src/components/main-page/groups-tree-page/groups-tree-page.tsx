@@ -1,3 +1,4 @@
+import { Box } from '@mui/material';
 import React from 'react';
 
 import { ListAllServiceDocs200ResponseData } from '../../../models/api';
@@ -6,7 +7,11 @@ import { useServiceDocsServiceContext } from '../services/service-docs-service';
 export const GroupsTreePage: React.FC = () => {
   const controller = useController();
 
-  return <span>{JSON.stringify(controller.serviceDocs)}</span>;
+  return (
+    <Box sx={{ height: '100%', overflowX: 'hidden', overflowY: 'auto' }}>
+      {JSON.stringify(controller.serviceDocs)}
+    </Box>
+  );
 };
 
 interface Controller {
