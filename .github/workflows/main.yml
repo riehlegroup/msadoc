@@ -5,7 +5,7 @@ on: [push, pull_request, workflow_dispatch]
 jobs:
   lint:
     name: Lint everything
-      
+
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -22,7 +22,7 @@ jobs:
 
   build:
     name: Build everything
-      
+
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -39,7 +39,7 @@ jobs:
 
   e2e:
     name: End-to-End Tests
-      
+
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3

@@ -8,7 +8,6 @@ _Note_: This project is currently in developent, this document describes the vis
 
 Microservice-based projects often struggle with documentation. Information is distributed to various places, especially if there is a lack of standard procedures to document the microservices and the architecture. `msadoc` is a tool that allows documenting metadata of each microservice directly in its code base increasing the odds of keeping the documentation consistent. The metadata is collected in a central place serving as an entry point to documentation, increasing documentation's discoverability, and automating the extraction of higher-value documentation.
 
-
 <!-- TODO: 2 nice screenshots of UI. -->
 
 ## Usage
@@ -16,7 +15,8 @@ Microservice-based projects often struggle with documentation. Information is di
 1. [Deploy](./docs/deployment.md) your `msadoc-server` instance on your servers.
 
 2. Add a `msadoc.json` file to your project. See the [docs](./docs/msadoc.md) for more information.
-Example:
+   Example:
+
 ```json
 {
   "name": "PipelineService",
@@ -28,28 +28,27 @@ Example:
   "developmentDocumentation": "https://github.com/jvalue/ods/blob/main/pipeline/README.md",
   "deploymentDocumentation": "https://github.com/jvalue/ods",
   "apiDocumentation": "https://github.com/jvalue/ods/tree/main/pipeline#api",
-  "responsibleTeam": "PipelineTeam",
+  "responsibleTeam": "PipelineTeam"
 }
 ```
 
 3. Push the `msadoc.json` file to the `msadoc-server` instance via your CI system.  
-  3.1 Generate an [API key](./docs/api-keys.md) in the `msadoc-server`.  
-  3.2 Use the [CLI](./cli/README.md) to push to the `msadoc-server`.
+   3.1 Generate an [API key](./docs/api-keys.md) in the `msadoc-server`.  
+   3.2 Use the [CLI](./cli/README.md) to push to the `msadoc-server`.
 
 4. Browse all your microservices on your `msadoc-server` instance.
 
-
 ## Documentation
-* [Format of msadoc.json files](./docs/msadoc.md)
-* [Deployment](./docs/deployment.md)
-* [Tutorial: Generating and using API keys](./docs/api-keys.md)
 
+- [Format of msadoc.json files](./docs/msadoc.md)
+- [Deployment](./docs/deployment.md)
+- [Tutorial: Generating and using API keys](./docs/api-keys.md)
 
 ## Architecture
 
-* The [msadoc-server](./server/README.md) collects the `msadoc.json` files and provides backend functionality to browse the aggregated information.
-* The [msadoc-frontend](./ui/README.md) connects to the `msadoc-server` and presents the aggregated documentation to the user. 
-* The [cli](./cli/README.md) allows pushing the `msadoc.json` file to the `msadoc-server`.
+- The [msadoc-server](./server/README.md) collects the `msadoc.json` files and provides backend functionality to browse the aggregated information.
+- The [msadoc-frontend](./ui/README.md) connects to the `msadoc-server` and presents the aggregated documentation to the user.
+- The [cli](./cli/README.md) allows pushing the `msadoc.json` file to the `msadoc-server`.
 
 ![Architecture Diagram](./docs/architecture.png)
 
@@ -58,6 +57,7 @@ Example:
 ### First steps
 
 To get started, we need to perform the following steps:
+
 1. Install all dependencies
 2. Start the backend
 3. Start the frontend
@@ -65,6 +65,7 @@ To get started, we need to perform the following steps:
 #### 1. Install all dependencies
 
 To install all dependencies, simply run:
+
 ```bash
 $ npm install
 ```
@@ -74,6 +75,7 @@ $ npm install
 #### 2. Start the backend
 
 First, we need to start our Postgres development database using Docker:
+
 ```bash
 $ docker compose -f ./deployment/dev/docker-compose.yaml up
 ```

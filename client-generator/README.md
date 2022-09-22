@@ -12,5 +12,3 @@ The generated client code can be found in `../client-generated`.
 # Generate typescript client
 $ npm run generate
 ```
-
-
