@@ -1,14 +1,16 @@
 {
   "name": "client-generator",
   "version": "1.0.0",
+  "license": "Apache 2.0",
   "description": "This project generates client code from the `MSAdoc server` project using [@openapitools/openapi-generator-cli](https://github.com/OpenAPITools/openapi-generator-cli) under the hood.",
+  "private": true,
   "main": "index.js",
   "scripts": {
     "generate": "npm run generate:ts-rxjs",
-    "generate:ts-rxjs": "openapi-generator-cli generate --generator-key=ts-rxjs"
-  },
-  "author": "",
-  "license": "Apache 2.0",
+    "generate:ts-rxjs": "openapi-generator-cli generate --generator-key=ts-rxjs",
+    "build": "echo 'Ignoring the build command in client-generator'",
+    "lint": "echo 'Ignoring the lint command in client-generator'"
+  },  
   "devDependencies": {
     "@openapitools/openapi-generator-cli": "^2.5.2"
   }

@@ -39,7 +39,7 @@ Example:
 4. Browse all your microservices on your `msadoc-server` instance.
 
 
-## Docuemtation
+## Documentation
 * [Format of msadoc.json files](./docs/msadoc.md)
 * [Deployment](./docs/deployment.md)
 * [Tutorial: Generating and using API keys](./docs/api-keys.md)
@@ -52,6 +52,62 @@ Example:
 * The [cli](./cli/README.md) allows pushing the `msadoc.json` file to the `msadoc-server`.
 
 ![Architecture Diagram](./docs/architecture.png)
+
+## Development Setup
+
+### First steps
+
+To get started, we need to perform the following steps:
+1. Install all dependencies
+2. Start the backend
+3. Start the frontend
+
+#### 1. Install all dependencies
+
+To install all dependencies, simply run:
+```bash
+$ npm install
+```
+
+> Tip for developers: Among others, this command will also build a shared npm library called `msadoc-client`. This library is used in the frontend. When building this library, the old library output is always deleted first. This might lead to some "hiccups" in your IDE (i.e. your IDE might insist that the library does not exist, even after the build has finished). If you experience this problem, simply restart your IDE after building the client library. If you are using VSCode, you can alternatively use the "Restart TS server" and "Restart ESLint Server" commands.
+
+#### 2. Start the backend
+
+First, we need to start our Postgres development database using Docker:
+```bash
+$ docker compose -f ./deployment/dev/docker-compose.yaml up
+```
+
+Then, we need to provide a `.env` file for our backend:
+
+```bash
+$ cp ./server/.env.dev.local ./server/.env
+```
+
+Finally, we can start the server:
+
+```bash
+$ npm run start -w=server
+```
+
+> For more options and further explanations, see the [Server README](./server/README.md).
+
+#### 3. Start the frontend
+
+Simply run the following command to start the frontend:
+
+```bash
+$ npm run start -w=frontend
+```
+
+Open [http://localhost:3001](http://localhost:3001) to view the frontend in your browser.
+
+> For more options and further explanations, see the [Frontend README](./frontend/README.md).
+
+### VSCode settings
+
+We provide a `settings.json` for **VSCode** that you can use for a seamless development workflow with Prettier and ESLint.
+To use it just `cp .vscode/recommended-settings.json .vscode/settings.json`
 
 ## License
 
