@@ -1,0 +1,34 @@
+{
+  // See https://code.visualstudio.com/docs/editor/userdefinedsnippets
+
+  "reactcomponent": {
+    "scope": "typescriptreact",
+    "prefix": "reactcomponent",
+    "body": [
+      "import React from 'react';",
+      "",
+      "interface Props {",
+      "",
+      "}",
+      "export const $1: React.FC<Props> = props => {",
+      "  const controller = useController(props);",
+      "",
+      "  return <React.Fragment></React.Fragment>",
+      "}",
+      "",
+      "interface State {",
+      "",
+      "}",
+      "interface Controller {",
+      "  state: State;",
+      "}",
+      "function useController(props: Props): Controller {",
+      "  const [state, setState] = React.useState<State>({});",
+      "",
+      "  return {",
+      "    state: state,",
+      "  }",
+      "}"
+    ]
+  }
+}

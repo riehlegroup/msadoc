@@ -1,0 +1,33 @@
+{
+  "name": "msadoc",
+  "version": "0.0.1",
+  "license": "Apache-2.0",
+  "private": true,
+  "workspaces": [
+    "client-generated",
+    "client-generator",
+    "frontend",
+    "server"
+  ],
+  "scripts": {
+    "build": "npm run build --workspaces",
+    "lint": "npm run lint --workspaces && npm run lint-additional-files",
+    "lint-additional-files": "prettier --check **/*.{md,json,yaml,yml}"
+  },
+  "dependencies": {
+    "rxjs": "^7.5.6"
+  },
+  "devDependencies": {
+    "@jvalue/eslint-config-jvalue": "^1.2.0",
+    "@types/node": "^18.7.16",
+    "@typescript-eslint/eslint-plugin": "^5.38.0",
+    "@typescript-eslint/parser": "^5.38.0",
+    "eslint": "^8.23.1",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "prettier": "^2.7.1",
+    "rimraf": "^3.0.2",
+    "typescript": "^4.8.3"
+  }
+}

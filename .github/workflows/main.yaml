@@ -1,0 +1,87 @@
+name: CI Pipeline
+
+on: [push, pull_request, workflow_dispatch]
+
+jobs:
+  # The command 'npm ci' already does check whether the dependencies from package-lock.json are up-to-date with the ones from package.json. However, it seems like it ignores certain (small) differences, e.g. if we made small changes to package.json of a linked workspace project that does not influence the dependencies.
+  check-package-lock:
+    name: Check if package-lock.json is up-to-date
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '16'
+
+      - uses: actions/checkout@v2
+
+      - name: Calculate the original hash sum
+        run: echo "original_package_lock_hash_sum=$(sha256sum package-lock.json)" >> $GITHUB_ENV
+
+      - name: Install npm dependencies
+        run: npm install --package-lock-only
+
+      - name: Calculate the new hash sum
+        run: echo "new_package_lock_hash_sum=$(sha256sum package-lock.json)" >> $GITHUB_ENV
+
+      - name: Fail if the old and new hash sums are different
+        if: env.original_package_lock_hash_sum != env.new_package_lock_hash_sum
+        run: |
+          echo "It seems like your package-lock.json file is not up-to-date. Try running 'npm install' and commit the changes."
+          exit 1
+
+  lint:
+    name: Lint everything
+
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16.x
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run the linter
+        run: npm run lint
+
+  build:
+    name: Build everything
+
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16.x
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run build scripts
+        run: npm run build
+
+  e2e:
+    name: End-to-End Tests
+
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16.x
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run e2e tests
+        run: |
+          docker compose -f server/docker-compose.ci.yaml build
+          cp server/.env.ci server/.env
+          docker compose -f server/docker-compose.ci.yaml up -d
+          npm run test:e2e -w=server
+          docker compose -f server/docker-compose.ci.yaml down

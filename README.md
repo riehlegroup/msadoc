@@ -8,7 +8,6 @@ _Note_: This project is currently in developent, this document describes the vis
 
 Microservice-based projects often struggle with documentation. Information is distributed to various places, especially if there is a lack of standard procedures to document the microservices and the architecture. `msadoc` is a tool that allows documenting metadata of each microservice directly in its code base increasing the odds of keeping the documentation consistent. The metadata is collected in a central place serving as an entry point to documentation, increasing documentation's discoverability, and automating the extraction of higher-value documentation.
 
-
 <!-- TODO: 2 nice screenshots of UI. -->
 
 ## Usage
@@ -16,7 +15,8 @@ Microservice-based projects often struggle with documentation. Information is di
 1. [Deploy](./docs/deployment.md) your `msadoc-server` instance on your servers.
 
 2. Add a `msadoc.json` file to your project. See the [docs](./docs/msadoc.md) for more information.
-Example:
+   Example:
+
 ```json
 {
   "name": "PipelineService",
@@ -28,30 +28,90 @@ Example:
   "developmentDocumentation": "https://github.com/jvalue/ods/blob/main/pipeline/README.md",
   "deploymentDocumentation": "https://github.com/jvalue/ods",
   "apiDocumentation": "https://github.com/jvalue/ods/tree/main/pipeline#api",
-  "responsibleTeam": "PipelineTeam",
+  "responsibleTeam": "PipelineTeam"
 }
 ```
 
 3. Push the `msadoc.json` file to the `msadoc-server` instance via your CI system.  
-  3.1 Generate an [API key](./docs/api-keys.md) in the `msadoc-server`.  
-  3.2 Use the [CLI](./cli/README.md) to push to the `msadoc-server`.
+   3.1 Generate an [API key](./docs/api-keys.md) in the `msadoc-server`.  
+   3.2 Use the [CLI](./cli/README.md) to push to the `msadoc-server`.
 
 4. Browse all your microservices on your `msadoc-server` instance.
 
+## Documentation
 
-## Docuemtation
-* [Format of msadoc.json files](./docs/msadoc.md)
-* [Deployment](./docs/deployment.md)
-* [Tutorial: Generating and using API keys](./docs/api-keys.md)
-
+- [Format of msadoc.json files](./docs/msadoc.md)
+- [Deployment](./docs/deployment.md)
+- [Tutorial: Generating and using API keys](./docs/api-keys.md)
 
 ## Architecture
 
-* The [msadoc-server](./server/README.md) collects the `msadoc.json` files and provides backend functionality to browse the aggregated information.
-* The [msadoc-frontend](./ui/README.md) connects to the `msadoc-server` and presents the aggregated documentation to the user. 
-* The [cli](./cli/README.md) allows pushing the `msadoc.json` file to the `msadoc-server`.
+- The [msadoc-server](./server/README.md) collects the `msadoc.json` files and provides backend functionality to browse the aggregated information.
+- The [msadoc-frontend](./ui/README.md) connects to the `msadoc-server` and presents the aggregated documentation to the user.
+- The [cli](./cli/README.md) allows pushing the `msadoc.json` file to the `msadoc-server`.
 
 ![Architecture Diagram](./docs/architecture.png)
+
+## Development Setup
+
+### First steps
+
+To get started, we need to perform the following steps:
+
+1. Install all dependencies
+2. Start the backend
+3. Start the frontend
+
+#### 1. Install all dependencies
+
+To install all dependencies, simply run:
+
+```bash
+$ npm install
+```
+
+> Whenever you checkout a new version of msadoc, make sure to run this command so that your dependencies are up-to-date.
+
+> Tip for developers: Among others, this command will also build a shared npm library called `msadoc-client`. This library is used in the frontend. When building this library, the old library output is always deleted first. This might lead to some "hiccups" in your IDE (i.e. your IDE might insist that the library does not exist, even after the build has finished). If you experience this problem, simply restart your IDE after building the client library. If you are using VSCode, you can alternatively use the "Restart TS server" and "Restart ESLint Server" commands.
+
+#### 2. Start the backend
+
+First, we need to start our Postgres development database using Docker:
+
+```bash
+$ docker compose -f ./deployment/dev/docker-compose.yaml up
+```
+
+Then, we need to provide a `.env` file for our backend:
+
+```bash
+$ cp ./server/.env.dev.local ./server/.env
+```
+
+Finally, we can start the server:
+
+```bash
+$ npm run start -w=server
+```
+
+> For more options and further explanations, see the [Server README](./server/README.md).
+
+#### 3. Start the frontend
+
+Simply run the following command to start the frontend:
+
+```bash
+$ npm run start -w=frontend
+```
+
+Open [http://localhost:3001](http://localhost:3001) to view the frontend in your browser.
+
+> For more options and further explanations, see the [Frontend README](./frontend/README.md).
+
+### VSCode settings
+
+We provide a `settings.json` for **VSCode** that you can use for a seamless development workflow with Prettier and ESLint.
+To use it just `cp .vscode/recommended-settings.json .vscode/settings.json`
 
 ## License
 
