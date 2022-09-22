@@ -11,7 +11,8 @@
   ],
   "scripts": {
     "build": "npm run build --workspaces",
-    "lint": "npm run lint --workspaces"    
+    "lint": "npm run lint --workspaces && npm run lint-additional-files",
+    "lint-additional-files": "prettier --check **/*.{md,json,yaml,yml}"
   },
   "dependencies": {
     "rxjs": "^7.5.6"
