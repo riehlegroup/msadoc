@@ -14,7 +14,7 @@ import { ListAllServiceDocs200ResponseData } from '../../models/api';
 import { useHttpServiceContext } from '../../services/http-service';
 
 import { LeftMenu } from './left-menu';
-import { MainPageRoutes } from './routes';
+import { MainPageRouter } from './router';
 import { ServiceDocsServiceContextProvider } from './services/service-docs-service';
 
 export const MainPage: React.FC = () => {
@@ -75,7 +75,7 @@ export const MainPage: React.FC = () => {
             <ServiceDocsServiceContextProvider
               serviceDocs={controller.state.serviceDocs}
             >
-              <MainPageRoutes />
+              <MainPageRouter />
             </ServiceDocsServiceContextProvider>
           )}
         </Box>

@@ -4,6 +4,7 @@ import Grid from '@mui/material/Unstable_Grid2';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import { APP_ROUTES } from '../../routes';
 import { useHttpServiceContext } from '../../services/http-service';
 
 enum ViewState {
@@ -182,7 +183,7 @@ function useController(): Controller {
       );
 
       if (loginResponse.status === 200) {
-        navigate('/main');
+        navigate(APP_ROUTES.main);
         return;
       }
       if (loginResponse.status === 401) {
