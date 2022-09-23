@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter } from 'react-router-dom';
 
-import { AppRoutes } from './routes';
+import { AppRouter } from './router';
 import { AuthDataServiceContextProvider } from './services/auth-data-service';
 import { HttpServiceContextProvider } from './services/http-service';
 
@@ -10,7 +10,7 @@ export const App: React.FC = () => {
     <BrowserRouter>
       <AuthDataServiceContextProvider>
         <HttpServiceContextProvider>
-          <AppRoutes />
+          <AppRouter />
         </HttpServiceContextProvider>
       </AuthDataServiceContextProvider>
     </BrowserRouter>

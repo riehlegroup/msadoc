@@ -1,21 +1,23 @@
 import React from 'react';
 import { Navigate, RouteObject, useRoutes } from 'react-router-dom';
 
+import { MAIN_PAGE_ROUTES_ABS, MAIN_PAGE_ROUTES_REL } from '../../routes';
+
 import { AuthTokensPage } from './auth-tokens-page';
 import { GroupsTreePage } from './groups-tree-page/groups-tree-page';
 
-export const MainPageRoutes: React.FC = () => {
+export const MainPageRouter: React.FC = () => {
   const routes: RouteObject[] = [
     {
       path: '/',
-      element: <Navigate to="/main/groups-tree" />,
+      element: <Navigate to={MAIN_PAGE_ROUTES_ABS.groupsTree} />,
     },
     {
-      path: '/groups-tree',
+      path: MAIN_PAGE_ROUTES_REL.groupsTree,
       element: <GroupsTreePage />,
     },
     {
-      path: '/auth-tokens',
+      path: MAIN_PAGE_ROUTES_REL.authTokens,
       element: <AuthTokensPage />,
     },
 

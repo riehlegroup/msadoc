@@ -3,6 +3,7 @@ import { Box, IconButton, Stack, Tooltip } from '@mui/material';
 import React from 'react';
 import { useMatch, useNavigate, useResolvedPath } from 'react-router-dom';
 
+import { MAIN_PAGE_ROUTES_ABS } from '../../routes';
 import { useAuthDataServiceContext } from '../../services/auth-data-service';
 
 interface Props {
@@ -23,14 +24,14 @@ export const LeftMenu: React.FC<Props> = (props) => {
     >
       <Stack sx={{ width: '100%' }}>
         <NavButtonWithRouterTarget
-          routerTarget="/main/groups-tree"
+          routerTarget={MAIN_PAGE_ROUTES_ABS.groupsTree}
           tooltipText="Groups Tree"
         >
           <AccountTree fontSize="inherit" />
         </NavButtonWithRouterTarget>
 
         <NavButtonWithRouterTarget
-          routerTarget="/main/auth-tokens"
+          routerTarget={MAIN_PAGE_ROUTES_ABS.authTokens}
           tooltipText="Auth Tokens"
         >
           <Key fontSize="inherit" />

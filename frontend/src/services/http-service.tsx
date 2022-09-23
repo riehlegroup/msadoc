@@ -12,6 +12,7 @@ import {
   LoginHttpResponse,
   UnknownHttpError,
 } from '../models/api';
+import { APP_ROUTES } from '../routes';
 
 import {
   AccessAndRefreshToken,
@@ -133,7 +134,7 @@ function useHttpService(): HttpService {
       if (
         authDataService.state.accessAndRefreshToken?.refreshToken === undefined
       ) {
-        navigate('/login');
+        navigate(APP_ROUTES.login);
         resolve(undefined);
         return;
       }
@@ -163,7 +164,7 @@ function useHttpService(): HttpService {
           error: () => {
             // In the future, we might want to distinguish cases like "the client currently has no internet connection" and "the token is invalid". However, the following should be fine for now.
             authDataService.deleteAccessAndRefreshToken();
-            navigate('/login');
+            navigate(APP_ROUTES.login);
             resolve(undefined);
           },
         });
@@ -188,7 +189,7 @@ function useHttpService(): HttpService {
       }
 
       if (accessToken === undefined) {
-        navigate('/login');
+        navigate(APP_ROUTES.login);
         resolve({
           status: 0,
           data: undefined,
