@@ -1,14 +1,11 @@
-import { Configuration, DefaultApi } from 'msadoc-client';
+import { AuthApi, Configuration, ServiceDocsApi } from 'msadoc-client';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AjaxConfig } from 'rxjs/ajax';
 
 import { ENVIRONMENT } from '../env';
 import {
-  AuthTokenRefresh200ResponseData,
-  ListAllServiceDocs200ResponseData,
   ListAllServiceDocsHttpResponse,
-  Login200ResponseData,
   LoginHttpResponse,
   UnknownHttpError,
 } from '../models/api';
@@ -37,26 +34,20 @@ function useHttpService(): HttpService {
   const navigate = useNavigate();
   const authDataService = useAuthDataServiceContext();
 
-  /**
-   * Get an API without the `authorization: Bearer <access token>` header (useful for actions like logging in and similar).
-   */
-  function getApiWithoutAuth(): DefaultApi {
-    const apiConfigWithoutAuth = new Configuration({
+  function getAuthApi(): AuthApi {
+    const apiConfig = new Configuration({
       basePath: ENVIRONMENT.REACT_APP_BACKEND_URL,
     });
 
-    return new DefaultApi(apiConfigWithoutAuth);
+    return new AuthApi(apiConfig);
   }
 
-  /**
-   * Get an API with the `authorization: Bearer <access token>` header.
-   */
-  function getApiWithAuth(accessToken: string): DefaultApi {
+  function getServiceDocsApi(accessToken: string): ServiceDocsApi {
     const apiConfigWithAuth = new Configuration({
       basePath: ENVIRONMENT.REACT_APP_BACKEND_URL,
 
       /*
-        `DefaultApi` is not capable of adding the "authorization: Bearer <access token>" header. 
+        `ServiceDocsApi` is not capable of adding the "authorization: Bearer <access token>" header. 
         Thus, we add a custom Middleware to it in order to manually add this header.
       */
       middleware: [
@@ -76,8 +67,7 @@ function useHttpService(): HttpService {
       ],
     });
 
-    // It would be pretty elegant to write something like `getApiWithoutAuth().withPreMiddleware(...)`. However, due to a bug in the generated client, this is not possible. See https://github.com/OpenAPITools/openapi-generator/issues/9098
-    return new DefaultApi(apiConfigWithAuth);
+    return new ServiceDocsApi(apiConfigWithAuth);
   }
 
   function performLogin(
@@ -86,7 +76,7 @@ function useHttpService(): HttpService {
   ): Promise<LoginHttpResponse | UnknownHttpError> {
     const result = new Promise<LoginHttpResponse | UnknownHttpError>(
       (resolve) => {
-        getApiWithoutAuth()
+        getAuthApi()
           .authControllerLogin({
             loginRequestDto: {
               username: username,
@@ -94,18 +84,15 @@ function useHttpService(): HttpService {
             },
           })
           .subscribe({
-            next: (response: unknown) => {
-              // This is not ideal since we trust our server to return properly shaped data.
-              const responseData = response as Login200ResponseData;
-
+            next: (response) => {
               authDataService.setAccessAndRefreshToken({
-                accessToken: responseData.access_token,
-                refreshToken: responseData.refresh_token,
+                accessToken: response.access_token,
+                refreshToken: response.refresh_token,
               });
 
               resolve({
                 status: 200,
-                data: responseData,
+                data: response,
               });
             },
             error: (error) => {
@@ -139,7 +126,7 @@ function useHttpService(): HttpService {
         return;
       }
 
-      getApiWithoutAuth()
+      getAuthApi()
         .authControllerRefreshToken({
           refreshTokenRequestDto: {
             refresh_token:
@@ -147,18 +134,15 @@ function useHttpService(): HttpService {
           },
         })
         .subscribe({
-          next: (response: unknown) => {
-            // This is not ideal since we trust our server to return properly shaped data.
-            const responseData = response as AuthTokenRefresh200ResponseData;
-
+          next: (response) => {
             authDataService.setAccessAndRefreshToken({
-              accessToken: responseData.access_token,
-              refreshToken: responseData.refresh_token,
+              accessToken: response.access_token,
+              refreshToken: response.refresh_token,
             });
 
             resolve({
-              accessToken: responseData.access_token,
-              refreshToken: responseData.refresh_token,
+              accessToken: response.access_token,
+              refreshToken: response.refresh_token,
             });
           },
           error: () => {
@@ -197,16 +181,13 @@ function useHttpService(): HttpService {
         return;
       }
 
-      getApiWithAuth(accessToken)
+      getServiceDocsApi(accessToken)
         .serviceDocsControllerListAllServiceDocs()
         .subscribe({
-          next: (response: unknown) => {
-            // This is not ideal since we trust our server to return properly shaped data.
-            const responseData = response as ListAllServiceDocs200ResponseData;
-
+          next: (response) => {
             resolve({
               status: 200,
-              data: responseData,
+              data: response,
             });
           },
           error: (error) => {

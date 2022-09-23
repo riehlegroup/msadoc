@@ -1,7 +1,7 @@
 import { Box } from '@mui/material';
+import { GetServiceDocResponse } from 'msadoc-client';
 import React from 'react';
 
-import { ListAllServiceDocs200ResponseData } from '../../../models/api';
 import { useServiceDocsServiceContext } from '../services/service-docs-service';
 
 export const GroupsTreePage: React.FC = () => {
@@ -15,7 +15,7 @@ export const GroupsTreePage: React.FC = () => {
 };
 
 interface Controller {
-  serviceDocs: ListAllServiceDocs200ResponseData;
+  serviceDocs: GetServiceDocResponse[];
 }
 function useController(): Controller {
   const serviceDocsService = useServiceDocsServiceContext();
