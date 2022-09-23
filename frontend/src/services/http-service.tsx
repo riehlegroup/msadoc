@@ -1,6 +1,7 @@
 import { AuthApi, Configuration, ServiceDocsApi } from 'msadoc-client';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { firstValueFrom } from 'rxjs';
 import { AjaxConfig } from 'rxjs/ajax';
 
 import { ENVIRONMENT } from '../env';
@@ -70,173 +71,142 @@ function useHttpService(): HttpService {
     return new ServiceDocsApi(apiConfigWithAuth);
   }
 
-  function performLogin(
+  async function performLogin(
     username: string,
     password: string,
   ): Promise<LoginHttpResponse | UnknownHttpError> {
-    const result = new Promise<LoginHttpResponse | UnknownHttpError>(
-      (resolve) => {
-        getAuthApi()
-          .authControllerLogin({
-            loginRequestDto: {
-              username: username,
-              password: password,
-            },
-          })
-          .subscribe({
-            next: (response) => {
-              authDataService.setAccessAndRefreshToken({
-                accessToken: response.access_token,
-                refreshToken: response.refresh_token,
-              });
+    try {
+      const response = await firstValueFrom(
+        getAuthApi().authControllerLogin({
+          loginRequestDto: {
+            username: username,
+            password: password,
+          },
+        }),
+      );
 
-              resolve({
-                status: 200,
-                data: response,
-              });
-            },
-            error: (error) => {
-              let status: 0 | 401 = 0;
-              const errorStatus = getErrorStatus(error);
-              if (errorStatus === 401) {
-                status = 401;
-              }
-              resolve({
-                status: status,
-                data: undefined,
-              });
-            },
-          });
-      },
-    );
+      authDataService.setAccessAndRefreshToken({
+        accessToken: response.access_token,
+        refreshToken: response.refresh_token,
+      });
 
-    return result;
+      return {
+        status: 200,
+        data: response,
+      };
+    } catch (error) {
+      let status: 0 | 401 = 0;
+      const errorStatus = getErrorStatus(error);
+      if (errorStatus === 401) {
+        status = 401;
+      }
+
+      return {
+        status: status,
+        data: undefined,
+      };
+    }
   }
 
   /**
    * Use the Refresh Token to generate a new Auth Token.
    */
-  function refreshAuthToken(): Promise<AccessAndRefreshToken | undefined> {
-    const result = new Promise<AccessAndRefreshToken | undefined>((resolve) => {
-      if (
-        authDataService.state.accessAndRefreshToken?.refreshToken === undefined
-      ) {
-        navigate(APP_ROUTES.login);
-        resolve(undefined);
-        return;
-      }
+  async function refreshAuthToken(): Promise<
+    AccessAndRefreshToken | undefined
+  > {
+    if (
+      authDataService.state.accessAndRefreshToken?.refreshToken === undefined
+    ) {
+      navigate(APP_ROUTES.login);
+      return undefined;
+    }
 
-      getAuthApi()
-        .authControllerRefreshToken({
+    try {
+      const response = await firstValueFrom(
+        getAuthApi().authControllerRefreshToken({
           refreshTokenRequestDto: {
             refresh_token:
               authDataService.state.accessAndRefreshToken.refreshToken,
           },
-        })
-        .subscribe({
-          next: (response) => {
-            authDataService.setAccessAndRefreshToken({
-              accessToken: response.access_token,
-              refreshToken: response.refresh_token,
-            });
+        }),
+      );
 
-            resolve({
-              accessToken: response.access_token,
-              refreshToken: response.refresh_token,
-            });
-          },
-          error: () => {
-            // In the future, we might want to distinguish cases like "the client currently has no internet connection" and "the token is invalid". However, the following should be fine for now.
-            authDataService.deleteAccessAndRefreshToken();
-            navigate(APP_ROUTES.login);
-            resolve(undefined);
-          },
-        });
-    });
+      authDataService.setAccessAndRefreshToken({
+        accessToken: response.access_token,
+        refreshToken: response.refresh_token,
+      });
 
-    return result;
+      return {
+        accessToken: response.access_token,
+        refreshToken: response.refresh_token,
+      };
+    } catch (error) {
+      // In the future, we might want to distinguish cases like "the client currently has no internet connection" and "the token is invalid". However, the following should be fine for now.
+      authDataService.deleteAccessAndRefreshToken();
+      navigate(APP_ROUTES.login);
+      return undefined;
+    }
   }
 
   /**
    * @param refreshOn401 Should we try to refresh the Access Token if the server returns 401?
    * @param accessToken The Access Token to use when performing the request. If no token is specified, the one provided by the AuthDataService is used.
    */
-  function listAllServiceDocs(
+  async function listAllServiceDocs(
     refreshOn401: boolean,
     accessToken?: string,
   ): Promise<ListAllServiceDocsHttpResponse | UnknownHttpError> {
-    const result = new Promise<
-      ListAllServiceDocsHttpResponse | UnknownHttpError
-    >((resolve) => {
-      if (accessToken === undefined) {
-        accessToken = authDataService.state.accessAndRefreshToken?.accessToken;
-      }
+    if (accessToken === undefined) {
+      accessToken = authDataService.state.accessAndRefreshToken?.accessToken;
+    }
+    if (accessToken === undefined) {
+      navigate(APP_ROUTES.login);
+      return {
+        status: 0,
+        data: undefined,
+      };
+    }
 
-      if (accessToken === undefined) {
-        navigate(APP_ROUTES.login);
-        resolve({
+    try {
+      const response = await firstValueFrom(
+        getServiceDocsApi(
+          accessToken,
+        ).serviceDocsControllerListAllServiceDocs(),
+      );
+
+      return {
+        status: 200,
+        data: response,
+      };
+    } catch (error) {
+      if (!refreshOn401) {
+        return {
           status: 0,
           data: undefined,
-        });
-        return;
+        };
       }
 
-      getServiceDocsApi(accessToken)
-        .serviceDocsControllerListAllServiceDocs()
-        .subscribe({
-          next: (response) => {
-            resolve({
-              status: 200,
-              data: response,
-            });
-          },
-          error: (error) => {
-            if (!refreshOn401) {
-              resolve({
-                status: 0,
-                data: undefined,
-              });
-              return;
-            }
+      const errorStatus = getErrorStatus(error);
 
-            const errorStatus = getErrorStatus(error);
+      if (errorStatus !== 401) {
+        return {
+          status: 0,
+          data: undefined,
+        };
+      }
 
-            if (errorStatus !== 401) {
-              resolve({
-                status: 0,
-                data: undefined,
-              });
-              return;
-            }
+      // We might have an expired Access Token. --> Try refreshing it and then retry.
 
-            // We might have an expired Access Token. --> Try refreshing it and then retry.
+      const refreshResult = await refreshAuthToken();
+      if (!refreshResult) {
+        return {
+          status: 0,
+          data: undefined,
+        };
+      }
 
-            refreshAuthToken()
-              .then((refreshResult) => {
-                if (!refreshResult) {
-                  resolve({
-                    status: 0,
-                    data: undefined,
-                  });
-                  return;
-                }
-
-                listAllServiceDocs(false, refreshResult.accessToken)
-                  .then((secondTryResult) => {
-                    resolve(secondTryResult);
-                  })
-                  .catch(() => {
-                    throw Error('This point should not be reached.');
-                  });
-              })
-              .catch(() => {
-                throw Error('This point should not be reached.');
-              });
-          },
-        });
-    });
-
-    return result;
+      return await listAllServiceDocs(false, refreshResult.accessToken);
+    }
   }
 
   return {
