@@ -29,6 +29,7 @@ export class AuthController {
   @ApiResponse({
     status: 200,
     description: 'Successfully signed in.',
+    type: LoginResponseDto,
   })
   @ApiResponse({
     status: 401,
@@ -45,6 +46,7 @@ export class AuthController {
   @ApiResponse({
     status: 200,
     description: 'Successfully refreshed the access_token.',
+    type: LoginResponseDto,
   })
   @ApiResponse({
     status: 401,

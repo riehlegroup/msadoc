@@ -8,9 +8,9 @@ import {
   CircularProgress,
   Typography,
 } from '@mui/material';
+import { GetServiceDocResponse } from 'msadoc-client';
 import React from 'react';
 
-import { ListAllServiceDocs200ResponseData } from '../../models/api';
 import { useHttpServiceContext } from '../../services/http-service';
 
 import { LeftMenu } from './left-menu';
@@ -87,7 +87,7 @@ export const MainPage: React.FC = () => {
 interface State {
   isLoading: boolean;
   error: boolean;
-  serviceDocs: ListAllServiceDocs200ResponseData | undefined;
+  serviceDocs: GetServiceDocResponse[] | undefined;
 }
 interface Controller {
   state: State;
@@ -105,14 +105,14 @@ function useController(): Controller {
 
   async function loadServiceDocs(): Promise<void> {
     setState((state) => ({ ...state, isLoading: true, error: false }));
-    const serviceDocs = await httpService.listAllServiceDocs();
+    const serviceDocsResponse = await httpService.listAllServiceDocs();
     setState((state) => ({ ...state, isLoading: false }));
 
-    if (serviceDocs.status === 200) {
+    if (serviceDocsResponse.status === 200) {
       setState((state) => ({
         ...state,
         error: false,
-        serviceDocs: serviceDocs.data,
+        serviceDocs: serviceDocsResponse.data.serviceDocs,
       }));
       return;
     }

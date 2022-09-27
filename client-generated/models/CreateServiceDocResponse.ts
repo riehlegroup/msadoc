@@ -13,91 +13,101 @@
 
 /**
  * @export
- * @interface CreateServiceDocRequest
+ * @interface CreateServiceDocResponse
  */
-export interface CreateServiceDocRequest {
+export interface CreateServiceDocResponse {
     /**
      * Name of the service. Used as identifier.
      * @type {string}
-     * @memberof CreateServiceDocRequest
+     * @memberof CreateServiceDocResponse
      */
     name: string;
     /**
      * Name of the group. Used as identifier to match with group meta-data. Hierarchical groups separated by a dot, e.g. \"group.sub-group.sub-sub-group\"
      * @type {string}
-     * @memberof CreateServiceDocRequest
+     * @memberof CreateServiceDocResponse
      */
     group: string;
     /**
      * List of tags used to filter.
      * @type {Array<string>}
-     * @memberof CreateServiceDocRequest
+     * @memberof CreateServiceDocResponse
      */
     tags: Array<string>;
     /**
      * URL to code repository.
      * @type {string}
-     * @memberof CreateServiceDocRequest
+     * @memberof CreateServiceDocResponse
      */
     repository: string;
     /**
      * URL to task board.
      * @type {string}
-     * @memberof CreateServiceDocRequest
+     * @memberof CreateServiceDocResponse
      */
     taskBoard: string;
     /**
      * List of consumed API identifiers. API identifier matched for dependency analysis.
      * @type {Array<string>}
-     * @memberof CreateServiceDocRequest
+     * @memberof CreateServiceDocResponse
      */
     consumedAPIs: Array<string>;
     /**
      * List of provided API identifiers. API identifier matched for dependency analysis.
      * @type {Array<string>}
-     * @memberof CreateServiceDocRequest
+     * @memberof CreateServiceDocResponse
      */
     providedAPIs: Array<string>;
     /**
      * List of produced event identifiers. Event identifier matched for dependency analysis.
      * @type {Array<string>}
-     * @memberof CreateServiceDocRequest
+     * @memberof CreateServiceDocResponse
      */
     producedEvents: Array<string>;
     /**
      * List of consumed event identifiers. Event identifier matched for dependency analysis.
      * @type {Array<string>}
-     * @memberof CreateServiceDocRequest
+     * @memberof CreateServiceDocResponse
      */
     consumedEvents: Array<string>;
     /**
      * URL to development documentation.
      * @type {string}
-     * @memberof CreateServiceDocRequest
+     * @memberof CreateServiceDocResponse
      */
     developmentDocumentation: string;
     /**
      * URL to deployment documentation.
      * @type {string}
-     * @memberof CreateServiceDocRequest
+     * @memberof CreateServiceDocResponse
      */
     deploymentDocumentation: string;
     /**
      * URL to API documentation.
      * @type {string}
-     * @memberof CreateServiceDocRequest
+     * @memberof CreateServiceDocResponse
      */
     apiDocumentation: string;
     /**
      * Responsible team identifier. Used for matching multiple services to teams
      * @type {string}
-     * @memberof CreateServiceDocRequest
+     * @memberof CreateServiceDocResponse
      */
     responsibleTeam: string;
     /**
      * List of responsible person identifiers.
      * @type {Array<string>}
-     * @memberof CreateServiceDocRequest
+     * @memberof CreateServiceDocResponse
      */
     responsibles: Array<string>;
+    /**
+     * @type {string}
+     * @memberof CreateServiceDocResponse
+     */
+    creationTimestamp: string;
+    /**
+     * @type {string}
+     * @memberof CreateServiceDocResponse
+     */
+    updateTimestamp: string;
 }

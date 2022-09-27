@@ -1,12 +1,11 @@
+import { GetServiceDocResponse } from 'msadoc-client';
 import React from 'react';
 
-import { ListAllServiceDocs200ResponseData } from '../../../models/api';
-
 interface ServiceDocsService {
-  serviceDocs: ListAllServiceDocs200ResponseData;
+  serviceDocs: GetServiceDocResponse[];
 }
 function useServiceDocsService(
-  serviceDocs: ListAllServiceDocs200ResponseData,
+  serviceDocs: GetServiceDocResponse[],
 ): ServiceDocsService {
   return {
     serviceDocs: serviceDocs,
@@ -18,7 +17,7 @@ const AuthDataServiceContext = React.createContext<
 >(undefined);
 
 interface Props {
-  serviceDocs: ListAllServiceDocs200ResponseData;
+  serviceDocs: GetServiceDocResponse[];
   children?: React.ReactNode;
 }
 export const ServiceDocsServiceContextProvider: React.FC<Props> = (props) => {
