@@ -27,79 +27,79 @@ export interface CreateServiceDocResponse {
      * @type {string}
      * @memberof CreateServiceDocResponse
      */
-    group: string;
+    group?: string;
     /**
      * List of tags used to filter.
      * @type {Array<string>}
      * @memberof CreateServiceDocResponse
      */
-    tags: Array<string>;
+    tags?: Array<string>;
     /**
      * URL to code repository.
      * @type {string}
      * @memberof CreateServiceDocResponse
      */
-    repository: string;
+    repository?: string;
     /**
      * URL to task board.
      * @type {string}
      * @memberof CreateServiceDocResponse
      */
-    taskBoard: string;
+    taskBoard?: string;
     /**
      * List of consumed API identifiers. API identifier matched for dependency analysis.
      * @type {Array<string>}
      * @memberof CreateServiceDocResponse
      */
-    consumedAPIs: Array<string>;
+    consumedAPIs?: Array<string>;
     /**
      * List of provided API identifiers. API identifier matched for dependency analysis.
      * @type {Array<string>}
      * @memberof CreateServiceDocResponse
      */
-    providedAPIs: Array<string>;
+    providedAPIs?: Array<string>;
     /**
      * List of produced event identifiers. Event identifier matched for dependency analysis.
      * @type {Array<string>}
      * @memberof CreateServiceDocResponse
      */
-    producedEvents: Array<string>;
+    producedEvents?: Array<string>;
     /**
      * List of consumed event identifiers. Event identifier matched for dependency analysis.
      * @type {Array<string>}
      * @memberof CreateServiceDocResponse
      */
-    consumedEvents: Array<string>;
+    consumedEvents?: Array<string>;
     /**
      * URL to development documentation.
      * @type {string}
      * @memberof CreateServiceDocResponse
      */
-    developmentDocumentation: string;
+    developmentDocumentation?: string;
     /**
      * URL to deployment documentation.
      * @type {string}
      * @memberof CreateServiceDocResponse
      */
-    deploymentDocumentation: string;
+    deploymentDocumentation?: string;
     /**
      * URL to API documentation.
      * @type {string}
      * @memberof CreateServiceDocResponse
      */
-    apiDocumentation: string;
+    apiDocumentation?: string;
     /**
      * Responsible team identifier. Used for matching multiple services to teams
      * @type {string}
      * @memberof CreateServiceDocResponse
      */
-    responsibleTeam: string;
+    responsibleTeam?: string;
     /**
      * List of responsible person identifiers.
      * @type {Array<string>}
      * @memberof CreateServiceDocResponse
      */
-    responsibles: Array<string>;
+    responsibles?: Array<string>;
     /**
      * @type {string}
      * @memberof CreateServiceDocResponse
