@@ -22,6 +22,16 @@ export const MAIN_PAGE_ROUTES_ABS = buildAbsoluteRoutes(
   APP_ROUTES.main,
 );
 
+export const GROUPS_TREE_ROUTES_REL = {
+  root: '/root',
+  group: '/group/:group',
+  service: '/service/:service',
+} as const;
+export const GROUPS_TREE_ROUTES_ABS = buildAbsoluteRoutes(
+  GROUPS_TREE_ROUTES_REL,
+  MAIN_PAGE_ROUTES_ABS.groupsTree,
+);
+
 /**
  * A helper function that converts a relative route object to an absolute one.
  * Technically, all it does is to build a new object where all values are prefixed with the prefix provided as second parameter. The return type is properly inferred (i.e. it has the actual string literal types instead of just being typed as "string"). This makes it easier and more type-safe to work with the router.

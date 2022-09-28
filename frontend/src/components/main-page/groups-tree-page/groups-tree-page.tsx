@@ -1,26 +1,27 @@
 import { Box } from '@mui/material';
-import { GetServiceDocResponse } from 'msadoc-client';
 import React from 'react';
 
-import { useServiceDocsServiceContext } from '../services/service-docs-service';
+import { GroupsTreePageRouter } from './router';
+import { Tree } from './tree';
 
 export const GroupsTreePage: React.FC = () => {
-  const controller = useController();
-
   return (
-    <Box sx={{ height: '100%', overflowX: 'hidden', overflowY: 'auto' }}>
-      {JSON.stringify(controller.serviceDocs)}
+    <Box sx={{ height: '100%', overflow: 'hidden', display: 'flex' }}>
+      <Box
+        sx={{
+          height: '100%',
+          overflow: 'auto',
+          width: '300px',
+          flexShrink: 0,
+          background: (theme) => theme.palette.grey[100],
+        }}
+      >
+        <Tree />
+      </Box>
+
+      <Box sx={{ height: '100%', overflow: 'auto', flexGrow: 1 }}>
+        <GroupsTreePageRouter />
+      </Box>
     </Box>
   );
 };
-
-interface Controller {
-  serviceDocs: GetServiceDocResponse[];
-}
-function useController(): Controller {
-  const serviceDocsService = useServiceDocsServiceContext();
-
-  return {
-    serviceDocs: serviceDocsService.serviceDocs,
-  };
-}

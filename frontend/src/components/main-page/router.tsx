@@ -13,7 +13,7 @@ export const MainPageRouter: React.FC = () => {
       element: <Navigate to={MAIN_PAGE_ROUTES_ABS.groupsTree} />,
     },
     {
-      path: MAIN_PAGE_ROUTES_REL.groupsTree,
+      path: MAIN_PAGE_ROUTES_REL.groupsTree + '/*',
       element: <GroupsTreePage />,
     },
     {
@@ -24,7 +24,7 @@ export const MainPageRouter: React.FC = () => {
     // Fallback route in case an unknown route has been navigated to.
     {
       path: '*',
-      element: <Navigate to="/" />,
+      element: <Navigate to={MAIN_PAGE_ROUTES_ABS.groupsTree} />,
     },
   ];
   const routeElement = useRoutes(routes);
