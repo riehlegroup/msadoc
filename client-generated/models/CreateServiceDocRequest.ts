@@ -27,77 +27,77 @@ export interface CreateServiceDocRequest {
      * @type {string}
      * @memberof CreateServiceDocRequest
      */
-    group: string;
+    group?: string;
     /**
      * List of tags used to filter.
      * @type {Array<string>}
      * @memberof CreateServiceDocRequest
      */
-    tags: Array<string>;
+    tags?: Array<string>;
     /**
      * URL to code repository.
      * @type {string}
      * @memberof CreateServiceDocRequest
      */
-    repository: string;
+    repository?: string;
     /**
      * URL to task board.
      * @type {string}
      * @memberof CreateServiceDocRequest
      */
-    taskBoard: string;
+    taskBoard?: string;
     /**
      * List of consumed API identifiers. API identifier matched for dependency analysis.
      * @type {Array<string>}
      * @memberof CreateServiceDocRequest
      */
-    consumedAPIs: Array<string>;
+    consumedAPIs?: Array<string>;
     /**
      * List of provided API identifiers. API identifier matched for dependency analysis.
      * @type {Array<string>}
      * @memberof CreateServiceDocRequest
      */
-    providedAPIs: Array<string>;
+    providedAPIs?: Array<string>;
     /**
      * List of produced event identifiers. Event identifier matched for dependency analysis.
      * @type {Array<string>}
      * @memberof CreateServiceDocRequest
      */
-    producedEvents: Array<string>;
+    producedEvents?: Array<string>;
     /**
      * List of consumed event identifiers. Event identifier matched for dependency analysis.
      * @type {Array<string>}
      * @memberof CreateServiceDocRequest
      */
-    consumedEvents: Array<string>;
+    consumedEvents?: Array<string>;
     /**
      * URL to development documentation.
      * @type {string}
      * @memberof CreateServiceDocRequest
      */
-    developmentDocumentation: string;
+    developmentDocumentation?: string;
     /**
      * URL to deployment documentation.
      * @type {string}
      * @memberof CreateServiceDocRequest
      */
-    deploymentDocumentation: string;
+    deploymentDocumentation?: string;
     /**
      * URL to API documentation.
      * @type {string}
      * @memberof CreateServiceDocRequest
      */
-    apiDocumentation: string;
+    apiDocumentation?: string;
     /**
      * Responsible team identifier. Used for matching multiple services to teams
      * @type {string}
      * @memberof CreateServiceDocRequest
      */
-    responsibleTeam: string;
+    responsibleTeam?: string;
     /**
      * List of responsible person identifiers.
      * @type {Array<string>}
      * @memberof CreateServiceDocRequest
      */
-    responsibles: Array<string>;
+    responsibles?: Array<string>;
 }
