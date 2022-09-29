@@ -1,14 +1,26 @@
 import { GetServiceDocResponse } from 'msadoc-client';
 import React from 'react';
 
+import {
+  ServiceDocsRootGroup,
+  buildGroupsTree,
+} from '../utils/service-docs-utils';
+
 interface ServiceDocsService {
   serviceDocs: GetServiceDocResponse[];
+  groupsTree: ServiceDocsRootGroup;
 }
 function useServiceDocsService(
   serviceDocs: GetServiceDocResponse[],
 ): ServiceDocsService {
+  const groupsTree = React.useMemo(
+    (): ServiceDocsRootGroup => buildGroupsTree(serviceDocs),
+    [serviceDocs],
+  );
+
   return {
     serviceDocs: serviceDocs,
+    groupsTree: groupsTree,
   };
 }
 
