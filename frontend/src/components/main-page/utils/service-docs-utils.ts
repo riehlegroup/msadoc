@@ -74,14 +74,14 @@ function addGroupIfNotExists(
 ): ServiceDocsGroup | ServiceDocsRootGroup {
   const splitGroupIdentifier = groupIdentifier.split('.');
   if (splitGroupIdentifier[0] === undefined) {
-    // This should not happen.
+    console.warn('This point should not be reached.');
     return rootGroup;
   }
   let currentGroup = rootGroup;
   for (let i = 0; i < splitGroupIdentifier.length; i++) {
     const groupName = splitGroupIdentifier[i];
     if (groupName === undefined) {
-      // This should not happen.
+      console.warn('This point should not be reached.');
       continue;
     }
 
