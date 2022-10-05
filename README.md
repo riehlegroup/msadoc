@@ -111,7 +111,7 @@ Open [http://localhost:3001](http://localhost:3001) to view the frontend in your
 ### VSCode settings
 
 We provide a `settings.json` for **VSCode** that you can use for a seamless development workflow with Prettier and ESLint.
-To use it just `cp .vscode/recommended-settings.json .vscode/settings.json`
+To use it just `cp .vscode/settings-recommended.json .vscode/settings.json`
 
 ## License
 
