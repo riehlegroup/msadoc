@@ -1,0 +1,42 @@
+version: '3.7'
+
+services:
+  msadoc-server:
+    image: msadoc-server
+    build:
+      context: .
+      dockerfile: server.Dockerfile
+    environment:
+      msadoc_username: 'myuser'
+      msadoc_password: '12345'
+      msadoc_jwt_access_secret: 'mGbDyb$o2!KSYt%XCB8TGKcuK7XfH6Nf@44xg853MFrGRqV7CG'
+      msadoc_jwt_refresh_secret: 'o*S5rzMzav5T9tniPYAq3e2V8V5ESY%pV8%3%2Q28MQVw49jGU'
+
+      msadoc_db_host: 'msadoc-db'
+      msadoc_db_port: '5432'
+      msadoc_db_user: 'postgres'
+      msadoc_db_pw: 'password'
+      msadoc_db_db: 'msadoc'
+
+      msadoc_frontend_url: 'http://localhost:3001'
+    ports:
+      - 3000:3000
+
+  msadoc-frontend:
+    image: msadoc-frontend
+    build:
+      context: .
+      dockerfile: frontend.Dockerfile
+    environment:
+      DISABLE_ESLINT_PLUGIN: true
+      PORT: 80
+      REACT_APP_BACKEND_URL: 'msadoc-server'
+    ports:
+      - 80:80
+
+  msadoc-db:
+    image: postgres
+    environment:
+      POSTGRES_USER: 'postgres'
+      POSTGRES_PASSWORD: 'password'
+      POSTGRES_DB: 'msadoc'
