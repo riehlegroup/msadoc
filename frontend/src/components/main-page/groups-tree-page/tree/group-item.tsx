@@ -6,15 +6,19 @@ import {
   ListItemText,
 } from '@mui/material';
 import React from 'react';
-import { generatePath, useMatch, useNavigate } from 'react-router-dom';
+import { generatePath, useNavigate } from 'react-router-dom';
 
 import { GROUPS_TREE_ROUTES_ABS } from '../../../../routes';
-import { ServiceDocsGroup } from '../../utils/service-docs-utils';
+import { useSelectedTreeItem } from '../../utils/router-utils';
+import {
+  ServiceDocsRegularGroupTreeItem,
+  ServiceDocsTreeItemType,
+} from '../../utils/service-docs-utils';
 
 import { ServiceItem } from './service-item';
 
 interface Props {
-  group: ServiceDocsGroup;
+  group: ServiceDocsRegularGroupTreeItem;
 
   /**
    * How deep is this item in the tree?
@@ -112,17 +116,20 @@ interface Controller {
 }
 function useController(props: Props): Controller {
   const navigate = useNavigate();
-  const routeMatch = useMatch(GROUPS_TREE_ROUTES_ABS.group);
+  const selectedTreeItem = useSelectedTreeItem();
 
   const [state, setState] = React.useState<State>({
     isCollapsed: true,
   });
 
   const isSelected = ((): boolean => {
-    if (!routeMatch) {
+    if (
+      !selectedTreeItem ||
+      selectedTreeItem.treeItemType !== ServiceDocsTreeItemType.RegularGroup
+    ) {
       return false;
     }
-    if (routeMatch.params.group !== props.group.identifier) {
+    if (selectedTreeItem.identifier !== props.group.identifier) {
       return false;
     }
     return true;
