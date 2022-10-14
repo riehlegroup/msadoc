@@ -1,16 +1,20 @@
 import { DatasetOutlined } from '@mui/icons-material';
 import { ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
 import React from 'react';
-import { useMatch, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import { GROUPS_TREE_ROUTES_ABS } from '../../../../routes';
-import { ServiceDocsRootGroup } from '../../utils/service-docs-utils';
+import { useSelectedTreeItem } from '../../utils/router-utils';
+import {
+  ServiceDocsRootTreeItem,
+  ServiceDocsTreeItemType,
+} from '../../utils/service-docs-utils';
 
 import { GroupItem } from './group-item';
 import { ServiceItem } from './service-item';
 
 interface Props {
-  rootGroup: ServiceDocsRootGroup;
+  rootGroup: ServiceDocsRootTreeItem;
 }
 export const RootItem: React.FC<Props> = (props) => {
   const controller = useController();
@@ -60,10 +64,13 @@ interface Controller {
 }
 function useController(): Controller {
   const navigate = useNavigate();
-  const routeMatch = useMatch(GROUPS_TREE_ROUTES_ABS.root);
+  const selectedTreeItem = useSelectedTreeItem();
 
   const isSelected = ((): boolean => {
-    if (!routeMatch) {
+    if (
+      !selectedTreeItem ||
+      selectedTreeItem.treeItemType !== ServiceDocsTreeItemType.RootGroup
+    ) {
       return false;
     }
     return true;
