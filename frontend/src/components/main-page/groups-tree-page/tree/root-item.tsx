@@ -22,6 +22,7 @@ export const RootItem: React.FC<Props> = (props) => {
   return (
     <React.Fragment>
       <ListItemButton
+        ref={controller.buttonRef}
         sx={{
           background: (theme) =>
             controller.isSelected ? theme.palette.primary.main : undefined,
@@ -60,11 +61,15 @@ export const RootItem: React.FC<Props> = (props) => {
 interface Controller {
   isSelected: boolean;
 
+  buttonRef: React.RefObject<HTMLDivElement>;
+
   navigateToRoot: () => void;
 }
 function useController(): Controller {
   const navigate = useNavigate();
   const selectedTreeItem = useSelectedTreeItem();
+
+  const buttonRef = React.useRef<HTMLDivElement>(null);
 
   const isSelected = ((): boolean => {
     if (
@@ -76,8 +81,19 @@ function useController(): Controller {
     return true;
   })();
 
+  // Whenever the item gets selected, scroll it into our viewport.
+  React.useEffect(() => {
+    if (!isSelected || !buttonRef.current) {
+      return;
+    }
+
+    buttonRef.current.scrollIntoView({ behavior: 'smooth' });
+  }, [isSelected]);
+
   return {
     isSelected: isSelected,
+
+    buttonRef: buttonRef,
 
     navigateToRoot: (): void => {
       navigate(GROUPS_TREE_ROUTES_ABS.root);
