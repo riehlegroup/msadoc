@@ -15,6 +15,8 @@ import {
   ServiceDocsTreeItemType,
 } from '../../utils/service-docs-utils';
 
+import { Dependencies } from './dependencies';
+
 export const ServiceDetails: React.FC = () => {
   const controller = useController();
 
@@ -78,6 +80,10 @@ export const ServiceDetails: React.FC = () => {
               </ListItem>
             )}
           </List>
+
+          <Box sx={{ marginTop: 3 }}>
+            <Dependencies service={controller.service} />
+          </Box>
         </Box>
       )}
     </React.Fragment>
