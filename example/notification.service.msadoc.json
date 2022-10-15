@@ -5,7 +5,7 @@
   "repository": "https://github.com/jvalue/ods.git",
   "taskBoard": "https://github.com/jvalue/ods/projects",
 
-  "providedApis": ["/notifications/configs", "/notifications/execution-stats"],
+  "providedAPIs": ["/notifications/configs", "/notifications/execution-stats"],
 
   "producedEvents": [
     "notification.config.created",

@@ -6,7 +6,7 @@
   "repository": "https://github.com/jvalue/ods.git",
   "taskBoard": "https://github.com/jvalue/ods/projects",
 
-  "providedApis": ["/transformation/configs", "transformation/execution-stats"],
+  "providedAPIs": ["/transformation/configs", "transformation/execution-stats"],
 
   "consumedEvents": [
     "extraction.config.created",
