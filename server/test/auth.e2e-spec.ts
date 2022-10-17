@@ -62,7 +62,7 @@ describe('AuthController (e2e)', () => {
       const refreshToken = loginResponse.body.refresh_token;
       expect(refreshToken).toBeDefined();
 
-      const profileResponse = await request(app.getHttpServer())
+      const refreshResponse = await request(app.getHttpServer())
         .post('/auth/refresh')
         .auth(refreshToken, { type: 'bearer' })
         .send({
@@ -70,8 +70,17 @@ describe('AuthController (e2e)', () => {
         })
         .expect(200);
 
-      expect(profileResponse.body.access_token).toBeDefined();
-      expect(profileResponse.body.refresh_token).toBeDefined();
+      expect(refreshResponse.body.access_token).toBeDefined();
+      expect(refreshResponse.body.refresh_token).toBeDefined();
+
+      const newRefreshToken = refreshResponse.body.refresh_token;
+      await request(app.getHttpServer())
+        .post('/auth/refresh')
+        .auth(refreshToken, { type: 'bearer' })
+        .send({
+          refresh_token: newRefreshToken,
+        })
+        .expect(200);
     });
 
     it('should fail if refresh uses access token', async () => {
