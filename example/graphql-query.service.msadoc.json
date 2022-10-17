@@ -6,7 +6,7 @@
   "repository": "https://github.com/jvalue/ods.git",
   "taskBoard": "https://github.com/jvalue/ods/projects",
 
-  "providedApis": ["/query/graphql"],
+  "providedAPIs": ["/query/graphql"],
 
   "consumedEvents": [
     "loading.config.created",

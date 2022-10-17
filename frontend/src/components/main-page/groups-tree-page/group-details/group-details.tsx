@@ -13,14 +13,12 @@ import {
   Typography,
 } from '@mui/material';
 import React from 'react';
-import { useMatch } from 'react-router-dom';
 
-import { GROUPS_TREE_ROUTES_ABS } from '../../../../routes';
-import { useServiceDocsServiceContext } from '../../services/service-docs-service';
+import { useSelectedTreeItem } from '../../utils/router-utils';
 import {
-  ServiceDocsGroup,
-  ServiceDocsRootGroup,
-  getGroupByIdentifier,
+  ServiceDocsRegularGroupTreeItem,
+  ServiceDocsRootTreeItem,
+  ServiceDocsTreeItemType,
 } from '../../utils/service-docs-utils';
 
 export const GroupDetails: React.FC = () => {
@@ -28,7 +26,7 @@ export const GroupDetails: React.FC = () => {
 
   return (
     <React.Fragment>
-      {controller.groupWithType !== undefined && (
+      {controller.group !== undefined && (
         <Box
           sx={{
             overflowX: 'hidden',
@@ -39,28 +37,30 @@ export const GroupDetails: React.FC = () => {
         >
           <Typography variant="h3">Group Information</Typography>
 
-          {controller.groupWithType.type === 'regular-group' && (
+          {controller.group.treeItemType ===
+            ServiceDocsTreeItemType.RegularGroup && (
             <List>
               <ListItem divider>
                 <ListItemIcon>
                   <Badge />
                 </ListItemIcon>
                 <ListItemText
-                  primary={controller.groupWithType.group.name}
+                  primary={controller.group.name}
                   secondary="Name"
                 />
               </ListItem>
             </List>
           )}
 
-          {controller.groupWithType.type === 'regular-group' && (
+          {controller.group.treeItemType ===
+            ServiceDocsTreeItemType.RegularGroup && (
             <List>
               <ListItem divider>
                 <ListItemIcon>
                   <Group />
                 </ListItemIcon>
                 <ListItemText
-                  primary={controller.groupWithType.group.identifier}
+                  primary={controller.group.identifier}
                   secondary="Full identifier"
                 />
               </ListItem>
@@ -73,8 +73,8 @@ export const GroupDetails: React.FC = () => {
                 <CenterFocusStrongOutlined />
               </ListItemIcon>
               <ListItemText
-                primary={`${controller.groupWithType.group.services.length} ${
-                  controller.groupWithType.group.services.length === 1
+                primary={`${controller.group.services.length} ${
+                  controller.group.services.length === 1
                     ? 'Service'
                     : 'Services'
                 }`}
@@ -89,11 +89,8 @@ export const GroupDetails: React.FC = () => {
                 <DatasetOutlined />
               </ListItemIcon>
               <ListItemText
-                primary={`${
-                  Object.keys(controller.groupWithType.group.childGroups).length
-                } ${
-                  Object.keys(controller.groupWithType.group.childGroups)
-                    .length === 1
+                primary={`${Object.keys(controller.group.childGroups).length} ${
+                  Object.keys(controller.group.childGroups).length === 1
                     ? 'Group'
                     : 'Groups'
                 }`}
@@ -107,46 +104,25 @@ export const GroupDetails: React.FC = () => {
   );
 };
 
-type GroupWithType = RootGroupWithType | RegularGroupWithType;
-interface RootGroupWithType {
-  type: 'root-group';
-  group: ServiceDocsRootGroup;
-}
-interface RegularGroupWithType {
-  type: 'regular-group';
-  group: ServiceDocsGroup;
-}
-
 interface Controller {
-  groupWithType: GroupWithType | undefined;
+  group: ServiceDocsRegularGroupTreeItem | ServiceDocsRootTreeItem | undefined;
 }
-
 function useController(): Controller {
-  const groupRouterMatch = useMatch(GROUPS_TREE_ROUTES_ABS.group);
-  const rootRouterMatch = useMatch(GROUPS_TREE_ROUTES_ABS.root);
-  const serviceDocsService = useServiceDocsServiceContext();
+  const selectedTreeItem = useSelectedTreeItem();
 
-  const groupWithType = React.useMemo((): GroupWithType | undefined => {
-    if (groupRouterMatch && groupRouterMatch.params.group !== undefined) {
-      const theGroup = getGroupByIdentifier(
-        groupRouterMatch.params.group,
-        serviceDocsService.groupsTree,
-      );
-      if (!theGroup) {
-        return undefined;
-      }
-      return { type: 'regular-group', group: theGroup };
-    }
+  let group:
+    | ServiceDocsRegularGroupTreeItem
+    | ServiceDocsRootTreeItem
+    | undefined = undefined;
+  if (
+    selectedTreeItem &&
+    (selectedTreeItem.treeItemType === ServiceDocsTreeItemType.RootGroup ||
+      selectedTreeItem.treeItemType === ServiceDocsTreeItemType.RegularGroup)
+  ) {
+    group = selectedTreeItem;
+  }
 
-    if (rootRouterMatch) {
-      return { type: 'root-group', group: serviceDocsService.groupsTree };
-    }
-
-    console.warn(
-      'Neither the group route nor the root route matched. This should not happen.',
-    );
-    return undefined;
-  }, [groupRouterMatch, rootRouterMatch, serviceDocsService.groupsTree]);
-
-  return { groupWithType: groupWithType };
+  return {
+    group: group,
+  };
 }

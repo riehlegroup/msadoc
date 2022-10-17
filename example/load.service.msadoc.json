@@ -6,7 +6,7 @@
   "repository": "https://github.com/jvalue/ods.git",
   "taskBoard": "https://github.com/jvalue/ods/projects",
 
-  "providedApis": ["/load/configs", "/load/execution-stats"],
+  "providedAPIs": ["/load/configs", "/load/execution-stats"],
 
   "producedEvents": [
     "load.config.created",

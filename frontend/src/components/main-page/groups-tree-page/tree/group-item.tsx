@@ -6,15 +6,20 @@ import {
   ListItemText,
 } from '@mui/material';
 import React from 'react';
-import { generatePath, useMatch, useNavigate } from 'react-router-dom';
+import { generatePath, useNavigate } from 'react-router-dom';
 
 import { GROUPS_TREE_ROUTES_ABS } from '../../../../routes';
-import { ServiceDocsGroup } from '../../utils/service-docs-utils';
+import { useSelectedTreeItem } from '../../utils/router-utils';
+import {
+  ServiceDocsRegularGroupTreeItem,
+  ServiceDocsTreeItem,
+  ServiceDocsTreeItemType,
+} from '../../utils/service-docs-utils';
 
 import { ServiceItem } from './service-item';
 
 interface Props {
-  group: ServiceDocsGroup;
+  group: ServiceDocsRegularGroupTreeItem;
 
   /**
    * How deep is this item in the tree?
@@ -28,6 +33,7 @@ export const GroupItem: React.FC<Props> = (props) => {
   return (
     <React.Fragment>
       <ListItemButton
+        ref={controller.buttonRef}
         sx={{
           pl: props.depth * 4,
           background: (theme) =>
@@ -74,7 +80,7 @@ export const GroupItem: React.FC<Props> = (props) => {
 
       {!controller.state.isCollapsed && (
         <React.Fragment>
-          <List disablePadding>
+          <List component="div" disablePadding>
             {Object.values(props.group.childGroups).map((childGroup) => (
               <GroupItem
                 key={childGroup.identifier}
@@ -107,31 +113,60 @@ interface Controller {
 
   isSelected: boolean;
 
+  buttonRef: React.RefObject<HTMLDivElement>;
+
   navigateToThisGroup: () => void;
   toggleIsCollapsed: () => void;
 }
 function useController(props: Props): Controller {
   const navigate = useNavigate();
-  const routeMatch = useMatch(GROUPS_TREE_ROUTES_ABS.group);
+  const selectedTreeItem = useSelectedTreeItem();
+
+  const buttonRef = React.useRef<HTMLDivElement>(null);
 
   const [state, setState] = React.useState<State>({
     isCollapsed: true,
   });
 
   const isSelected = ((): boolean => {
-    if (!routeMatch) {
+    if (
+      !selectedTreeItem ||
+      selectedTreeItem.treeItemType !== ServiceDocsTreeItemType.RegularGroup
+    ) {
       return false;
     }
-    if (routeMatch.params.group !== props.group.identifier) {
+    if (selectedTreeItem.identifier !== props.group.identifier) {
       return false;
     }
     return true;
   })();
 
+  // Whenever the item gets selected, scroll it into our viewport.
+  React.useEffect(() => {
+    if (!isSelected || !buttonRef.current) {
+      return;
+    }
+
+    buttonRef.current.scrollIntoView({ behavior: 'smooth' });
+  }, [isSelected]);
+
+  // Automatically un-collapse this group if a child tree item gets selected using the Router.
+  React.useEffect(() => {
+    if (!selectedTreeItem) {
+      return;
+    }
+    if (!isXDescendantOfY({ x: selectedTreeItem, y: props.group })) {
+      return;
+    }
+    setState((state) => ({ ...state, isCollapsed: false }));
+  }, [props.group, selectedTreeItem]);
+
   return {
     state: state,
 
     isSelected: isSelected,
+
+    buttonRef: buttonRef,
 
     navigateToThisGroup: (): void => {
       navigate(
@@ -144,4 +179,75 @@ function useController(props: Props): Controller {
       setState((state) => ({ ...state, isCollapsed: !state.isCollapsed }));
     },
   };
+}
+
+/**
+ * Is `x` a descendant (i.e. child, or child of child, or ...) of `y`?
+ */
+function isXDescendantOfY(params: {
+  x: ServiceDocsTreeItem;
+  y: ServiceDocsTreeItem;
+}): boolean {
+  // The root group cannot be a child of anyone.
+  if (params.x.treeItemType === ServiceDocsTreeItemType.RootGroup) {
+    return false;
+  }
+
+  // A service cannot be the parent of anyone.
+  if (params.y.treeItemType === ServiceDocsTreeItemType.Service) {
+    return false;
+  }
+
+  // The root group is the parent of everyone.
+  if (params.y.treeItemType === ServiceDocsTreeItemType.RootGroup) {
+    return false;
+  }
+
+  if (params.x.treeItemType === ServiceDocsTreeItemType.Service) {
+    // A service with no group is only the descendant of the root group. But we have already covered the case where y=RootGroup before.
+    if (params.x.group === undefined) {
+      return false;
+    }
+
+    if (params.x.group === params.y.identifier) {
+      return true;
+    }
+    return isGroupXDescendantOfGroupY({
+      xIdentifier: params.x.group,
+      yIdentifier: params.y.identifier,
+    });
+  }
+
+  return isGroupXDescendantOfGroupY({
+    xIdentifier: params.y.identifier,
+    yIdentifier: params.y.identifier,
+  });
+}
+
+function isGroupXDescendantOfGroupY(params: {
+  xIdentifier: string;
+  yIdentifier: string;
+}): boolean {
+  /*  
+    A trick: We use the identifiers of the two groups in order to determine whether X is the descendant of Y.
+
+    Example: 
+    `XIdentifier`: "foo.bar.baz"
+    `YIdentifier`: "foo.bar"
+
+    Now, we simply check if `XIdentifier` starts with `YIdentifier`.
+
+    There is one edge case. Imagine the following:
+    `XIdentifier`: "foo.bars"
+    `YIdentifier`: "foo.bar"
+    Now, the check would return `true`, because `XIdentifier` starts with `YIdentifier`.
+    Because of this, we add a group delimiter (".") to `YIdentifier` before checking.
+  */
+
+  const yIdentifierForChecking = params.yIdentifier + '.';
+
+  if (params.xIdentifier.startsWith(yIdentifierForChecking)) {
+    return true;
+  }
+  return false;
 }

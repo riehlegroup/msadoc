@@ -2,7 +2,7 @@ import { List } from '@mui/material';
 import React from 'react';
 
 import { useServiceDocsServiceContext } from '../../services/service-docs-service';
-import { ServiceDocsRootGroup } from '../../utils/service-docs-utils';
+import { ServiceDocsRootTreeItem } from '../../utils/service-docs-utils';
 
 import { RootItem } from './root-item';
 
@@ -17,7 +17,7 @@ export const Tree: React.FC = () => {
 };
 
 interface Controller {
-  rootGroup: ServiceDocsRootGroup;
+  rootGroup: ServiceDocsRootTreeItem;
 }
 function useController(): Controller {
   const serviceDocsService = useServiceDocsServiceContext();
