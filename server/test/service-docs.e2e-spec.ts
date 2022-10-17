@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { INestApplication } from '@nestjs/common';
+import { INestApplication, ValidationPipe } from '@nestjs/common';
 import * as request from 'supertest';
 import { AppModule } from '../src/app.module';
 import { CreateServiceDocRequest } from '../src/service-docs/service-doc.dto';
@@ -13,6 +13,7 @@ describe('ServiceDocsController (e2e)', () => {
     }).compile();
 
     app = moduleFixture.createNestApplication();
+    app.useGlobalPipes(new ValidationPipe()); // enable model validation
     await app.init();
   });
 
@@ -69,6 +70,59 @@ describe('ServiceDocsController (e2e)', () => {
       expect(creationResponse.body.name).toBeDefined();
       expect(creationResponse.body.creationTimestamp).toBeDefined();
       expect(creationResponse.body.updateTimestamp).toBeDefined();
+    });
+
+    describe('should validate service-doc model', () => {
+      it('name is required', async () => {
+        const accessToken = await getAccessToken();
+        await request(app.getHttpServer())
+          .post('/service-docs')
+          .auth(accessToken, { type: 'bearer' })
+          .send({})
+          .expect(400);
+      });
+
+      it.each([
+        'group',
+        'repository',
+        'taskBoard',
+        'developmentDocumentation',
+        'deploymentDocumentation',
+        'apiDocumentation',
+        'responsibleTeam',
+      ])('no empty string in parameter %s', async (paramName: string) => {
+        const body: Record<string, string> = {
+          name: 'test',
+        };
+        body[paramName] = '';
+
+        const accessToken = await getAccessToken();
+        await request(app.getHttpServer())
+          .post('/service-docs')
+          .auth(accessToken, { type: 'bearer' })
+          .send(body)
+          .expect(400);
+      });
+
+      it.each([
+        'consumedAPIs',
+        'providedAPIs',
+        'producedEvents',
+        'consumedEvents',
+        'responsibles',
+      ])('no empty string in list-parameter %s', async (paramName: string) => {
+        const body: Record<string, string | string[]> = {
+          name: 'test',
+        };
+        body[paramName] = [''];
+
+        const accessToken = await getAccessToken();
+        await request(app.getHttpServer())
+          .post('/service-docs')
+          .auth(accessToken, { type: 'bearer' })
+          .send(body)
+          .expect(400);
+      });
     });
 
     it('should create complex service-doc', async () => {

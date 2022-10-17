@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { INestApplication } from '@nestjs/common';
+import { INestApplication, ValidationPipe } from '@nestjs/common';
 import * as request from 'supertest';
 import { AppModule } from './../src/app.module';
 
@@ -12,6 +12,7 @@ describe('ApiKeysController (e2e)', () => {
     }).compile();
 
     app = moduleFixture.createNestApplication();
+    app.useGlobalPipes(new ValidationPipe()); // enable model validation
     await app.init();
   });
 
@@ -37,6 +38,17 @@ describe('ApiKeysController (e2e)', () => {
       expect(apiKeyResponse.body.id).toBeDefined();
       expect(apiKeyResponse.body.apiKey).toBeDefined();
       expect(apiKeyResponse.body.creationTimestamp).toBeDefined();
+    });
+
+    it('should validate model', async () => {
+      const accessToken = await getAccessToken();
+      await request(app.getHttpServer())
+        .post('/api-keys')
+        .auth(accessToken, { type: 'bearer' })
+        .send({
+          // missing required property "keyName"
+        })
+        .expect(400);
     });
   });
 

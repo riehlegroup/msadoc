@@ -35,20 +35,18 @@ function useHttpService(): HttpService {
   const navigate = useNavigate();
   const authDataService = useAuthDataServiceContext();
 
-  function getAuthApi(): AuthApi {
-    const apiConfig = new Configuration({
-      basePath: ENVIRONMENT.REACT_APP_BACKEND_URL,
-    });
+  function createConfiguration(accessToken?: string): Configuration {
+    if (accessToken === undefined) {
+      return new Configuration({
+        basePath: ENVIRONMENT.REACT_APP_BACKEND_URL,
+      });
+    }
 
-    return new AuthApi(apiConfig);
-  }
-
-  function getServiceDocsApi(accessToken: string): ServiceDocsApi {
-    const apiConfigWithAuth = new Configuration({
+    return new Configuration({
       basePath: ENVIRONMENT.REACT_APP_BACKEND_URL,
 
       /*
-        `ServiceDocsApi` is not capable of adding the "authorization: Bearer <access token>" header. 
+        The generated client is not capable of adding the "authorization: Bearer <access token>" header. 
         Thus, we add a custom Middleware to it in order to manually add this header.
       */
       middleware: [
@@ -67,8 +65,6 @@ function useHttpService(): HttpService {
         },
       ],
     });
-
-    return new ServiceDocsApi(apiConfigWithAuth);
   }
 
   async function performLogin(
@@ -77,7 +73,7 @@ function useHttpService(): HttpService {
   ): Promise<LoginHttpResponse | UnknownHttpError> {
     try {
       const response = await firstValueFrom(
-        getAuthApi().authControllerLogin({
+        new AuthApi(createConfiguration()).authControllerLogin({
           loginRequestDto: {
             username: username,
             password: password,
@@ -123,7 +119,11 @@ function useHttpService(): HttpService {
 
     try {
       const response = await firstValueFrom(
-        getAuthApi().authControllerRefreshToken({
+        new AuthApi(
+          createConfiguration(
+            authDataService.state.accessAndRefreshToken.refreshToken,
+          ),
+        ).authControllerRefreshToken({
           refreshTokenRequestDto: {
             refresh_token:
               authDataService.state.accessAndRefreshToken.refreshToken,
@@ -169,8 +169,8 @@ function useHttpService(): HttpService {
 
     try {
       const response = await firstValueFrom(
-        getServiceDocsApi(
-          accessToken,
+        new ServiceDocsApi(
+          createConfiguration(accessToken),
         ).serviceDocsControllerListAllServiceDocs(),
       );
 
