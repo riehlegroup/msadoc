@@ -36,9 +36,6 @@ export function useSelectedTreeItem(): ServiceDocsTreeItem | undefined {
     if (rootRouterMatch) {
       return serviceDocsService.groupsTree;
     }
-    console.warn(
-      'The service, group, and root routes did not match. This should not happen.',
-    );
     return undefined;
   }, [
     groupRouterMatch,
