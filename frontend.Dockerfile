@@ -15,6 +15,7 @@ COPY *.js ./
 COPY frontend/tsconfig* ./frontend/
 COPY frontend/*.js ./frontend/
 COPY frontend/public ./frontend/public/
+COPY frontend/.env* ./frontend/
 COPY frontend/src ./frontend/src/
 
 RUN npm ci
