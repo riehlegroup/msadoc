@@ -1,4 +1,3 @@
-import { Badge, Code, Group, TaskAlt } from '@mui/icons-material';
 import {
   Box,
   List,
@@ -9,6 +8,7 @@ import {
 } from '@mui/material';
 import React from 'react';
 
+import { Icons } from '../../../../icons';
 import { useSelectedTreeItem } from '../../utils/router-utils';
 import {
   ServiceDocsServiceTreeItem,
@@ -36,7 +36,7 @@ export const ServiceDetails: React.FC = () => {
           <List>
             <ListItem divider>
               <ListItemIcon>
-                <Badge />
+                <Icons.Badge />
               </ListItemIcon>
               <ListItemText
                 primary={controller.service.name}
@@ -47,7 +47,7 @@ export const ServiceDetails: React.FC = () => {
             {controller.service.group !== undefined && (
               <ListItem divider>
                 <ListItemIcon>
-                  <Group />
+                  <Icons.Group />
                 </ListItemIcon>
                 <ListItemText
                   primary={controller.service.group}
@@ -59,7 +59,7 @@ export const ServiceDetails: React.FC = () => {
             {controller.service.repository !== undefined && (
               <ListItem divider>
                 <ListItemIcon>
-                  <Code />
+                  <Icons.Code />
                 </ListItemIcon>
                 <ListItemText
                   primary={controller.service.repository}
@@ -71,7 +71,7 @@ export const ServiceDetails: React.FC = () => {
             {controller.service.taskBoard !== undefined && (
               <ListItem divider>
                 <ListItemIcon>
-                  <TaskAlt />
+                  <Icons.TaskAlt />
                 </ListItemIcon>
                 <ListItemText
                   primary={controller.service.taskBoard}

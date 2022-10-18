@@ -1,9 +1,9 @@
-import { CenterFocusStrongOutlined } from '@mui/icons-material';
 import { ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
 import { GetServiceDocResponse } from 'msadoc-client';
 import React from 'react';
 import { generatePath, useNavigate } from 'react-router-dom';
 
+import { Icons } from '../../../../icons';
 import { GROUPS_TREE_ROUTES_ABS } from '../../../../routes';
 import { useSelectedTreeItem } from '../../utils/router-utils';
 import { ServiceDocsTreeItemType } from '../../utils/service-docs-utils';
@@ -43,7 +43,7 @@ export const ServiceItem: React.FC<Props> = (props) => {
       onClick={(): void => controller.navigateToThisService()}
     >
       <ListItemIcon sx={{ color: 'inherit' }}>
-        <CenterFocusStrongOutlined />
+        <Icons.CenterFocusStrongOutlined />
       </ListItemIcon>
       <ListItemText primary={props.service.name} />
     </ListItemButton>

@@ -1,8 +1,8 @@
-import { DatasetOutlined } from '@mui/icons-material';
 import { ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import { Icons } from '../../../../icons';
 import { GROUPS_TREE_ROUTES_ABS } from '../../../../routes';
 import { useSelectedTreeItem } from '../../utils/router-utils';
 import {
@@ -42,7 +42,7 @@ export const RootItem: React.FC<Props> = (props) => {
         onClick={(): void => controller.navigateToRoot()}
       >
         <ListItemIcon sx={{ color: 'inherit' }}>
-          <DatasetOutlined />
+          <Icons.DatasetOutlined />
         </ListItemIcon>
         <ListItemText primary="Root" />
       </ListItemButton>

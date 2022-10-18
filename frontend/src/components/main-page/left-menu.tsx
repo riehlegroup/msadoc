@@ -1,8 +1,8 @@
-import { AccountTree, Key, Logout, Refresh } from '@mui/icons-material';
 import { Box, IconButton, Stack, Tooltip } from '@mui/material';
 import React from 'react';
 import { useMatch, useNavigate, useResolvedPath } from 'react-router-dom';
 
+import { Icons } from '../../icons';
 import { MAIN_PAGE_ROUTES_ABS } from '../../routes';
 import { useAuthDataServiceContext } from '../../services/auth-data-service';
 
@@ -27,14 +27,14 @@ export const LeftMenu: React.FC<Props> = (props) => {
           routerTarget={MAIN_PAGE_ROUTES_ABS.groupsTree}
           tooltipText="Groups Tree"
         >
-          <AccountTree fontSize="inherit" />
+          <Icons.AccountTree fontSize="inherit" />
         </NavButtonWithRouterTarget>
 
         <NavButtonWithRouterTarget
           routerTarget={MAIN_PAGE_ROUTES_ABS.authTokens}
           tooltipText="Auth Tokens"
         >
-          <Key fontSize="inherit" />
+          <Icons.Key fontSize="inherit" />
         </NavButtonWithRouterTarget>
       </Stack>
 
@@ -44,14 +44,14 @@ export const LeftMenu: React.FC<Props> = (props) => {
             tooltipText="Reload Service Docs"
             onClick={(): void => props.reloadServiceDocs()}
           >
-            <Refresh fontSize="inherit" />
+            <Icons.Refresh fontSize="inherit" />
           </NavButton>
 
           <NavButton
             tooltipText="Logout"
             onClick={(): void => controller.performLogout()}
           >
-            <Logout fontSize="inherit" />
+            <Icons.Logout fontSize="inherit" />
           </NavButton>
         </Stack>
       </Box>
