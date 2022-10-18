@@ -1,10 +1,4 @@
 import {
-  Badge,
-  CenterFocusStrongOutlined,
-  DatasetOutlined,
-  Group,
-} from '@mui/icons-material';
-import {
   Box,
   List,
   ListItem,
@@ -14,6 +8,7 @@ import {
 } from '@mui/material';
 import React from 'react';
 
+import { Icons } from '../../../../icons';
 import { useSelectedTreeItem } from '../../utils/router-utils';
 import {
   ServiceDocsRegularGroupTreeItem,
@@ -42,7 +37,7 @@ export const GroupDetails: React.FC = () => {
             <List>
               <ListItem divider>
                 <ListItemIcon>
-                  <Badge />
+                  <Icons.Badge />
                 </ListItemIcon>
                 <ListItemText
                   primary={controller.group.name}
@@ -57,7 +52,7 @@ export const GroupDetails: React.FC = () => {
             <List>
               <ListItem divider>
                 <ListItemIcon>
-                  <Group />
+                  <Icons.Group />
                 </ListItemIcon>
                 <ListItemText
                   primary={controller.group.identifier}
@@ -70,7 +65,7 @@ export const GroupDetails: React.FC = () => {
           <List>
             <ListItem divider>
               <ListItemIcon sx={{ color: 'inherit' }}>
-                <CenterFocusStrongOutlined />
+                <Icons.CenterFocusStrongOutlined />
               </ListItemIcon>
               <ListItemText
                 primary={`${controller.group.services.length} ${
@@ -86,7 +81,7 @@ export const GroupDetails: React.FC = () => {
           <List>
             <ListItem divider>
               <ListItemIcon sx={{ color: 'inherit' }}>
-                <DatasetOutlined />
+                <Icons.DatasetOutlined />
               </ListItemIcon>
               <ListItemText
                 primary={`${Object.keys(controller.group.childGroups).length} ${

@@ -1,4 +1,3 @@
-import { CenterFocusStrongOutlined } from '@mui/icons-material';
 import {
   Alert,
   Dialog,
@@ -11,6 +10,7 @@ import {
 } from '@mui/material';
 import React from 'react';
 
+import { Icons } from '../../../../icons';
 import { useServiceDocsServiceContext } from '../../services/service-docs-service';
 import { ServiceDocsServiceTreeItem } from '../../utils/service-docs-utils';
 
@@ -72,7 +72,7 @@ export const DependencyDetails: React.FC<Props> = (props) => {
                     onClick={(): void => props.goToService(service.name)}
                   >
                     <ListItemIcon>
-                      <CenterFocusStrongOutlined />
+                      <Icons.CenterFocusStrongOutlined />
                     </ListItemIcon>
                     <ListItemText>{service.name}</ListItemText>
                   </ListItemButton>

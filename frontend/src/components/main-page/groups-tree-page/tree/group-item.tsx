@@ -1,4 +1,3 @@
-import { ChevronRight, ExpandMore } from '@mui/icons-material';
 import {
   List,
   ListItemButton,
@@ -8,6 +7,7 @@ import {
 import React from 'react';
 import { generatePath, useNavigate } from 'react-router-dom';
 
+import { Icons } from '../../../../icons';
 import { GROUPS_TREE_ROUTES_ABS } from '../../../../routes';
 import { useSelectedTreeItem } from '../../utils/router-utils';
 import {
@@ -73,7 +73,11 @@ export const GroupItem: React.FC<Props> = (props) => {
             controller.toggleIsCollapsed();
           }}
         >
-          {controller.state.isCollapsed ? <ChevronRight /> : <ExpandMore />}
+          {controller.state.isCollapsed ? (
+            <Icons.ChevronRight />
+          ) : (
+            <Icons.ExpandMore />
+          )}
         </ListItemIcon>
         <ListItemText primary={props.group.name} />
       </ListItemButton>

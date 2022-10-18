@@ -1,10 +1,4 @@
 import {
-  ArchiveOutlined,
-  CloudDownloadOutlined,
-  CloudUploadOutlined,
-  UnarchiveOutlined,
-} from '@mui/icons-material';
-import {
   Alert,
   Card,
   CardContent,
@@ -17,6 +11,7 @@ import {
 import React from 'react';
 import { generatePath, useNavigate } from 'react-router-dom';
 
+import { Icons } from '../../../../icons';
 import { GROUPS_TREE_ROUTES_ABS } from '../../../../routes';
 import { ServiceDocsServiceTreeItem } from '../../utils/service-docs-utils';
 
@@ -67,16 +62,16 @@ export const Dependencies: React.FC<Props> = (props) => {
                   >
                     <ListItemIcon>
                       {dependencyItem.type === 'provided-apis' && (
-                        <CloudUploadOutlined />
+                        <Icons.CloudUploadOutlined />
                       )}
                       {dependencyItem.type === 'consumed-apis' && (
-                        <CloudDownloadOutlined />
+                        <Icons.CloudDownloadOutlined />
                       )}
                       {dependencyItem.type === 'produced-events' && (
-                        <UnarchiveOutlined />
+                        <Icons.UnarchiveOutlined />
                       )}
                       {dependencyItem.type === 'consumed-events' && (
-                        <ArchiveOutlined />
+                        <Icons.ArchiveOutlined />
                       )}
                     </ListItemIcon>
                     <ListItemText>{apiOrEventName}</ListItemText>
