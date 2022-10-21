@@ -1,7 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
+  IsNonEmptyOptionalString,
+  IsNonEmptyOptionalStringArray,
   IsNonEmptyString,
-  IsNonEmptyStringArray,
 } from '../utils/class-validators';
 
 export class CreateServiceDocRequest {
@@ -16,28 +17,28 @@ export class CreateServiceDocRequest {
       'Name of the group. Used as identifier to match with group meta-data. Hierarchical groups separated by a dot, e.g. "group.sub-group.sub-sub-group"',
     required: false,
   })
-  @IsNonEmptyString({ isOptional: true })
+  @IsNonEmptyOptionalString()
   group?: string;
 
   @ApiProperty({
     description: 'List of tags used to filter.',
     required: false,
   })
-  @IsNonEmptyStringArray({ isOptional: true })
+  @IsNonEmptyOptionalStringArray()
   tags?: string[];
 
   @ApiProperty({
     description: 'URL to code repository.',
     required: false,
   })
-  @IsNonEmptyString({ isOptional: true })
+  @IsNonEmptyOptionalString()
   repository?: string;
 
   @ApiProperty({
     description: 'URL to task board.',
     required: false,
   })
-  @IsNonEmptyString({ isOptional: true })
+  @IsNonEmptyOptionalString()
   taskBoard?: string;
 
   /** Dependencies */
@@ -47,7 +48,7 @@ export class CreateServiceDocRequest {
       'List of consumed API identifiers. API identifier matched for dependency analysis.',
     required: false,
   })
-  @IsNonEmptyStringArray({ isOptional: true })
+  @IsNonEmptyOptionalStringArray()
   consumedAPIs?: string[];
 
   @ApiProperty({
@@ -55,7 +56,7 @@ export class CreateServiceDocRequest {
       'List of provided API identifiers. API identifier matched for dependency analysis.',
     required: false,
   })
-  @IsNonEmptyStringArray({ isOptional: true })
+  @IsNonEmptyOptionalStringArray()
   providedAPIs?: string[];
 
   @ApiProperty({
@@ -63,7 +64,7 @@ export class CreateServiceDocRequest {
       'List of produced event identifiers. Event identifier matched for dependency analysis.',
     required: false,
   })
-  @IsNonEmptyStringArray({ isOptional: true })
+  @IsNonEmptyOptionalStringArray()
   producedEvents?: string[];
 
   @ApiProperty({
@@ -71,7 +72,7 @@ export class CreateServiceDocRequest {
       'List of consumed event identifiers. Event identifier matched for dependency analysis.',
     required: false,
   })
-  @IsNonEmptyStringArray({ isOptional: true })
+  @IsNonEmptyOptionalStringArray()
   consumedEvents?: string[];
 
   /** Documentation links */
@@ -80,21 +81,21 @@ export class CreateServiceDocRequest {
     description: 'URL to development documentation.',
     required: false,
   })
-  @IsNonEmptyString({ isOptional: true })
+  @IsNonEmptyOptionalString()
   developmentDocumentation?: string;
 
   @ApiProperty({
     description: 'URL to deployment documentation.',
     required: false,
   })
-  @IsNonEmptyString({ isOptional: true })
+  @IsNonEmptyOptionalString()
   deploymentDocumentation?: string;
 
   @ApiProperty({
     description: 'URL to API documentation.',
     required: false,
   })
-  @IsNonEmptyString({ isOptional: true })
+  @IsNonEmptyOptionalString()
   apiDocumentation?: string;
 
   /** Responsibilities */
@@ -104,14 +105,14 @@ export class CreateServiceDocRequest {
       'Responsible team identifier. Used for matching multiple services to teams',
     required: false,
   })
-  @IsNonEmptyString({ isOptional: true })
+  @IsNonEmptyOptionalString()
   responsibleTeam?: string;
 
   @ApiProperty({
     description: 'List of responsible person identifiers.',
     required: false,
   })
-  @IsNonEmptyStringArray({ isOptional: true })
+  @IsNonEmptyOptionalStringArray()
   responsibles?: string[];
 }
 
