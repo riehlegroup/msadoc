@@ -82,7 +82,7 @@ describe('ServiceDocsController (e2e)', () => {
           .expect(400);
       });
 
-      it.each([
+      const optionalStringParameters = [
         'group',
         'repository',
         'taskBoard',
@@ -90,39 +90,149 @@ describe('ServiceDocsController (e2e)', () => {
         'deploymentDocumentation',
         'apiDocumentation',
         'responsibleTeam',
-      ])('no empty string in parameter %s', async (paramName: string) => {
-        const body: Record<string, string> = {
-          name: 'test',
-        };
-        body[paramName] = '';
+      ];
+      it.each(optionalStringParameters)(
+        'no empty string in string parameter %s',
+        async (paramName: string) => {
+          const body: Record<string, string> = {
+            name: 'test',
+          };
+          body[paramName] = '';
 
-        const accessToken = await getAccessToken();
-        await request(app.getHttpServer())
-          .post('/service-docs')
-          .auth(accessToken, { type: 'bearer' })
-          .send(body)
-          .expect(400);
-      });
+          const accessToken = await getAccessToken();
+          await request(app.getHttpServer())
+            .post('/service-docs')
+            .auth(accessToken, { type: 'bearer' })
+            .send(body)
+            .expect(400);
+        },
+      );
 
-      it.each([
+      it.each(optionalStringParameters)(
+        'no number type in string parameter %s',
+        async (paramName: string) => {
+          const body: Record<string, string | number> = {
+            name: 'test',
+          };
+          body[paramName] = 123;
+
+          const accessToken = await getAccessToken();
+          await request(app.getHttpServer())
+            .post('/service-docs')
+            .auth(accessToken, { type: 'bearer' })
+            .send(body)
+            .expect(400);
+        },
+      );
+
+      it.each(optionalStringParameters)(
+        'no object type in string parameter %s',
+        async (paramName: string) => {
+          const body: Record<string, string | object> = {
+            name: 'test',
+          };
+          body[paramName] = { test: 'test' };
+
+          const accessToken = await getAccessToken();
+          await request(app.getHttpServer())
+            .post('/service-docs')
+            .auth(accessToken, { type: 'bearer' })
+            .send(body)
+            .expect(400);
+        },
+      );
+
+      it.each(optionalStringParameters)(
+        'no array type in string parameter %s',
+        async (paramName: string) => {
+          const body: Record<string, string | string[]> = {
+            name: 'test',
+          };
+          body[paramName] = ['test1', 'test2'];
+
+          const accessToken = await getAccessToken();
+          await request(app.getHttpServer())
+            .post('/service-docs')
+            .auth(accessToken, { type: 'bearer' })
+            .send(body)
+            .expect(400);
+        },
+      );
+
+      const optionalListParameters = [
         'consumedAPIs',
         'providedAPIs',
         'producedEvents',
         'consumedEvents',
         'responsibles',
-      ])('no empty string in list-parameter %s', async (paramName: string) => {
-        const body: Record<string, string | string[]> = {
-          name: 'test',
-        };
-        body[paramName] = [''];
+      ];
+      it.each(optionalListParameters)(
+        'no empty string in list-parameter %s',
+        async (paramName: string) => {
+          const body: Record<string, string | string[]> = {
+            name: 'test',
+          };
+          body[paramName] = [''];
 
-        const accessToken = await getAccessToken();
-        await request(app.getHttpServer())
-          .post('/service-docs')
-          .auth(accessToken, { type: 'bearer' })
-          .send(body)
-          .expect(400);
-      });
+          const accessToken = await getAccessToken();
+          await request(app.getHttpServer())
+            .post('/service-docs')
+            .auth(accessToken, { type: 'bearer' })
+            .send(body)
+            .expect(400);
+        },
+      );
+
+      it.each(optionalListParameters)(
+        'no number in list-parameter %s',
+        async (paramName: string) => {
+          const body: Record<string, string | number> = {
+            name: 'test',
+          };
+          body[paramName] = 1234;
+
+          const accessToken = await getAccessToken();
+          await request(app.getHttpServer())
+            .post('/service-docs')
+            .auth(accessToken, { type: 'bearer' })
+            .send(body)
+            .expect(400);
+        },
+      );
+
+      it.each(optionalListParameters)(
+        'no object in list-parameter %s',
+        async (paramName: string) => {
+          const body: Record<string, string | object> = {
+            name: 'test',
+          };
+          body[paramName] = { test: 'tests' };
+
+          const accessToken = await getAccessToken();
+          await request(app.getHttpServer())
+            .post('/service-docs')
+            .auth(accessToken, { type: 'bearer' })
+            .send(body)
+            .expect(400);
+        },
+      );
+
+      it.each(optionalListParameters)(
+        'no number list in list-parameter %s',
+        async (paramName: string) => {
+          const body: Record<string, string | number[]> = {
+            name: 'test',
+          };
+          body[paramName] = [1234];
+
+          const accessToken = await getAccessToken();
+          await request(app.getHttpServer())
+            .post('/service-docs')
+            .auth(accessToken, { type: 'bearer' })
+            .send(body)
+            .expect(400);
+        },
+      );
     });
 
     it('should create complex service-doc', async () => {
