@@ -47,7 +47,7 @@ fi
 
 if [ -z "$filepath" ]
 then
-   echo "[INFO] ApiKey parameter defaults to './msadoc.json'";
+   echo "[INFO] Filepath parameter defaults to './msadoc.json'";
    filepath="./msadoc.json"
 fi
 
