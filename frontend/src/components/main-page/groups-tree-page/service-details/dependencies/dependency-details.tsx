@@ -10,9 +10,9 @@ import {
 } from '@mui/material';
 import React from 'react';
 
-import { Icons } from '../../../../icons';
-import { useServiceDocsServiceContext } from '../../services/service-docs-service';
-import { ServiceDocsServiceTreeItem } from '../../utils/service-docs-utils';
+import { Icons } from '../../../../../icons';
+import { useServiceDocsServiceContext } from '../../../services/service-docs-service';
+import { ServiceDocsServiceTreeItem } from '../../../utils/service-docs-utils';
 
 interface Props {
   dependencyType: 'api' | 'event';
