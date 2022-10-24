@@ -67,6 +67,7 @@ export const VisualizationModal: React.FC<Props> = (props) => {
           sx={{
             height: '100%',
             flexGrow: 1,
+            overflowX: 'hidden',
             overflowY: 'auto',
             padding: 3,
           }}
