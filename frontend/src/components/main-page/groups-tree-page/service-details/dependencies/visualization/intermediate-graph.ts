@@ -81,46 +81,48 @@ export function convertServiceDocsToIntermediateGraph(
   const result: IntermediateGraphLink[] = [];
 
   for (const singleIntermediateNode of intermediateNodes) {
-    // Event flow visualization from producer to consumer
-    // => all provided events are to the right, all consumed are to the left
-    for (const providedAPIOrProducedEvent of [
-      ...Array.from(singleIntermediateNode.producedEvents),
-    ]) {
+    /*
+      The "natural" flow of Events if from producer to consumer:
+
+      (SomeProducer) --> (Event) --> (SomeConsumer)
+    */
+    for (const producedEvent of Array.from(
+      singleIntermediateNode.producedEvents,
+    )) {
       result.push({
         type: 'from-service',
         from: singleIntermediateNode,
-        to: providedAPIOrProducedEvent,
+        to: producedEvent,
       });
     }
 
-    for (const consumedAPIOrEvent of [
-      ...Array.from(singleIntermediateNode.consumedEvents),
-    ]) {
+    for (const consumedEvent of Array.from(
+      singleIntermediateNode.consumedEvents,
+    )) {
       result.push({
         type: 'to-service',
-        from: consumedAPIOrEvent,
+        from: consumedEvent,
         to: singleIntermediateNode,
       });
     }
 
-    // APIs flow visualization from consumer to provider
-    // => all provided APIs are to the left, all consumed are to the right
-    for (const consumedAPIOrEvent of [
-      ...Array.from(singleIntermediateNode.consumedAPIs),
-    ]) {
+    /*
+      The "natural" flow of APIs is from consumer to provider:
+
+      (SomeConsumer) --> (API) --> (SomeProducer)
+    */
+    for (const consumedAPI of Array.from(singleIntermediateNode.consumedAPIs)) {
       result.push({
         type: 'from-service',
         from: singleIntermediateNode,
-        to: consumedAPIOrEvent,
+        to: consumedAPI,
       });
     }
 
-    for (const providedAPIOrProducedEvent of [
-      ...Array.from(singleIntermediateNode.providedAPIs),
-    ]) {
+    for (const providedAPI of Array.from(singleIntermediateNode.providedAPIs)) {
       result.push({
         type: 'to-service',
-        from: providedAPIOrProducedEvent,
+        from: providedAPI,
         to: singleIntermediateNode,
       });
     }
