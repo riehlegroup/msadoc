@@ -81,8 +81,9 @@ export function convertServiceDocsToIntermediateGraph(
   const result: IntermediateGraphLink[] = [];
 
   for (const singleIntermediateNode of intermediateNodes) {
+    // Event flow visualization from producer to consumer
+    // => all provided events are to the right, all consumed are to the left
     for (const providedAPIOrProducedEvent of [
-      ...Array.from(singleIntermediateNode.providedAPIs),
       ...Array.from(singleIntermediateNode.producedEvents),
     ]) {
       result.push({
@@ -93,12 +94,33 @@ export function convertServiceDocsToIntermediateGraph(
     }
 
     for (const consumedAPIOrEvent of [
-      ...Array.from(singleIntermediateNode.consumedAPIs),
       ...Array.from(singleIntermediateNode.consumedEvents),
     ]) {
       result.push({
         type: 'to-service',
         from: consumedAPIOrEvent,
+        to: singleIntermediateNode,
+      });
+    }
+
+    // APIs flow visualization from consumer to provider
+    // => all provided APIs are to the left, all consumed are to the right
+    for (const consumedAPIOrEvent of [
+      ...Array.from(singleIntermediateNode.consumedAPIs),
+    ]) {
+      result.push({
+        type: 'from-service',
+        from: singleIntermediateNode,
+        to: consumedAPIOrEvent,
+      });
+    }
+
+    for (const providedAPIOrProducedEvent of [
+      ...Array.from(singleIntermediateNode.providedAPIs),
+    ]) {
+      result.push({
+        type: 'to-service',
+        from: providedAPIOrProducedEvent,
         to: singleIntermediateNode,
       });
     }
