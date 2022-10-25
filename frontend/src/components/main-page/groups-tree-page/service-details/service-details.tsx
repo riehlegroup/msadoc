@@ -57,7 +57,12 @@ export const ServiceDetails: React.FC = () => {
             )}
 
             {controller.service.repository !== undefined && (
-              <ListItem divider>
+              <ListItemButton
+                divider
+                onClick={(): void =>
+                  openURLIfPossible(controller.service?.repository)
+                }
+              >
                 <ListItemIcon>
                   <Icons.Code />
                 </ListItemIcon>
@@ -65,11 +70,16 @@ export const ServiceDetails: React.FC = () => {
                   primary={controller.service.repository}
                   secondary="Repository"
                 />
-              </ListItem>
+              </ListItemButton>
             )}
 
             {controller.service.taskBoard !== undefined && (
-              <ListItem divider>
+              <ListItemButton
+                divider
+                onClick={(): void =>
+                  openURLIfPossible(controller.service?.taskBoard)
+                }
+              >
                 <ListItemIcon>
                   <Icons.TaskAlt />
                 </ListItemIcon>
@@ -77,7 +87,7 @@ export const ServiceDetails: React.FC = () => {
                   primary={controller.service.taskBoard}
                   secondary="Task Board"
                 />
-              </ListItem>
+              </ListItemButton>
             )}
           </List>
 
@@ -107,4 +117,21 @@ function useController(): Controller {
   return {
     service: service,
   };
+}
+
+/**
+ * If the given URL is (probably) a valid web URL, open it in a new tab.
+ * Otherwise, do nothing.
+ *
+ * (We allow `undefined` to be passed as well, because this is needed in our template pretty often.)
+ */
+function openURLIfPossible(linkUrl: string | undefined): void {
+  if (
+    linkUrl === undefined ||
+    (!linkUrl.startsWith('http://') && !linkUrl.startsWith('https://'))
+  ) {
+    return;
+  }
+
+  window.open(linkUrl, '_blank');
 }
