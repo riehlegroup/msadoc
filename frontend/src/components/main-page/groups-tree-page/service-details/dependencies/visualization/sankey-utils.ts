@@ -162,11 +162,11 @@ function getOrCreateNode(
       nodePosition = NodePosition.Right;
     }
   } else if (correspondingIntermediateNode.type === 'api') {
-    nodeName = correspondingIntermediateNode.name;
+    nodeName = `[API] ${correspondingIntermediateNode.name}`;
     nodeType = 'APINodes';
     nodePosition = NodePosition.Middle;
   } else {
-    nodeName = correspondingIntermediateNode.name;
+    nodeName = `[Event] ${correspondingIntermediateNode.name}`;
     nodeType = 'eventNodes';
     nodePosition = NodePosition.Middle;
   }
