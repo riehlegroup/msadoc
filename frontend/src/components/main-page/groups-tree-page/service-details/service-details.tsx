@@ -2,6 +2,7 @@ import {
   Box,
   List,
   ListItem,
+  ListItemButton,
   ListItemIcon,
   ListItemText,
   Typography,
@@ -33,8 +34,8 @@ export const ServiceDetails: React.FC = () => {
         >
           <Typography variant="h3">Base Information</Typography>
 
-          <List>
-            <ListItem divider>
+          <List component="div">
+            <ListItem component="div" divider>
               <ListItemIcon>
                 <Icons.Badge />
               </ListItemIcon>
@@ -45,7 +46,7 @@ export const ServiceDetails: React.FC = () => {
             </ListItem>
 
             {controller.service.group !== undefined && (
-              <ListItem divider>
+              <ListItem component="div" divider>
                 <ListItemIcon>
                   <Icons.Group />
                 </ListItemIcon>
