@@ -1,5 +1,10 @@
 #!/bin/bash
 
+COLOR_RED='\033[0;31m'
+COLOR_GREEN='\033[0;32m'
+COLOR_BLUE='\033[0;34m' 
+COLOR_RESET='\033[0m'
+
 printHelp()
 {
    echo ""
@@ -14,12 +19,19 @@ printHelp()
 printConfiguration()
 {
     echo ""
-    echo "------- Configuration -------"
-    echo "Server IP: $server";
-    echo "Api key: $apikey";
-    echo "File path: $filepath";
-    echo "-----------------------------"
+    printInfo "------- Configuration -------"
+    printInfo "Server IP: $server";
+    printInfo "Api key: $apikey";
+    printInfo "File path: $filepath";
+    printInfo "-----------------------------"
     echo ""
+}
+
+printInfo()
+{
+    echo -en "${COLOR_BLUE}" 
+    echo -e "[INFO] $1"   
+    echo -en "${COLOR_RESET}"
 }
 
 while getopts ":s:k:f:" opt;
@@ -47,7 +59,7 @@ fi
 
 if [ -z "$filepath" ]
 then
-   echo "[INFO] Filepath parameter defaults to './msadoc.json'";
+   printInfo "Filepath parameter defaults to './msadoc.json'";
    filepath="./msadoc.json"
 fi
 
@@ -63,4 +75,15 @@ response_code="$(
     --silent \
     --output /dev/null
 )"
-echo "[INFO] Finished with status code ${response_code}!"
+
+if [[ "$response_code" -ne 201 ]] ; then
+  echo -en "${COLOR_RED}"
+  echo -e "[FAILURE] Failed with status code ${response_code}!"
+  echo -en "${COLOR_RESET}"
+  exit 2
+fi
+
+echo -en "${COLOR_GREEN}"
+echo -e "[SUCCESS] Succeeded with status code ${response_code}!"
+echo -en "${COLOR_RESET}"
+exit 0
