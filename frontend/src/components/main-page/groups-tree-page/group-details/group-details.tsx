@@ -32,10 +32,10 @@ export const GroupDetails: React.FC = () => {
         >
           <Typography variant="h3">Group Information</Typography>
 
-          {controller.group.treeItemType ===
-            ServiceDocsTreeItemType.RegularGroup && (
-            <List>
-              <ListItem divider>
+          <List component="div">
+            {controller.group.treeItemType ===
+              ServiceDocsTreeItemType.RegularGroup && (
+              <ListItem component="div" divider>
                 <ListItemIcon>
                   <Icons.Badge />
                 </ListItemIcon>
@@ -44,13 +44,11 @@ export const GroupDetails: React.FC = () => {
                   secondary="Name"
                 />
               </ListItem>
-            </List>
-          )}
+            )}
 
-          {controller.group.treeItemType ===
-            ServiceDocsTreeItemType.RegularGroup && (
-            <List>
-              <ListItem divider>
+            {controller.group.treeItemType ===
+              ServiceDocsTreeItemType.RegularGroup && (
+              <ListItem component="div" divider>
                 <ListItemIcon>
                   <Icons.Group />
                 </ListItemIcon>
@@ -59,11 +57,9 @@ export const GroupDetails: React.FC = () => {
                   secondary="Full identifier"
                 />
               </ListItem>
-            </List>
-          )}
+            )}
 
-          <List>
-            <ListItem divider>
+            <ListItem component="div" divider>
               <ListItemIcon sx={{ color: 'inherit' }}>
                 <Icons.CenterFocusStrongOutlined />
               </ListItemIcon>
@@ -76,10 +72,8 @@ export const GroupDetails: React.FC = () => {
                 secondary="Number of owned services"
               />
             </ListItem>
-          </List>
 
-          <List>
-            <ListItem divider>
+            <ListItem component="div" divider>
               <ListItemIcon sx={{ color: 'inherit' }}>
                 <Icons.DatasetOutlined />
               </ListItemIcon>
