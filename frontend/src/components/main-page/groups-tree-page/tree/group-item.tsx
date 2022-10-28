@@ -9,17 +9,18 @@ import { generatePath, useNavigate } from 'react-router-dom';
 
 import { Icons } from '../../../../icons';
 import { GROUPS_TREE_ROUTES_ABS } from '../../../../routes';
-import { useSelectedTreeItem } from '../../utils/router-utils';
 import {
-  ServiceDocsRegularGroupTreeItem,
-  ServiceDocsTreeItem,
-  ServiceDocsTreeItemType,
-} from '../../utils/service-docs-utils';
+  ServiceDocsTreeMainNode,
+  ServiceDocsTreeNodeType,
+  ServiceDocsTreeRegularGroup,
+} from '../../service-docs-tree';
+import { useSelectedTreeItem } from '../../utils/router-utils';
+import { isGroupXDescendantOfGroupY } from '../../utils/service-docs-tree-utils';
 
 import { ServiceItem } from './service-item';
 
 interface Props {
-  group: ServiceDocsRegularGroupTreeItem;
+  group: ServiceDocsTreeRegularGroup;
 
   /**
    * How deep is this item in the tree?
@@ -135,7 +136,7 @@ function useController(props: Props): Controller {
   const isSelected = ((): boolean => {
     if (
       !selectedTreeItem ||
-      selectedTreeItem.treeItemType !== ServiceDocsTreeItemType.RegularGroup
+      selectedTreeItem.type !== ServiceDocsTreeNodeType.RegularGroup
     ) {
       return false;
     }
@@ -189,69 +190,41 @@ function useController(props: Props): Controller {
  * Is `x` a descendant (i.e. child, or child of child, or ...) of `y`?
  */
 function isXDescendantOfY(params: {
-  x: ServiceDocsTreeItem;
-  y: ServiceDocsTreeItem;
+  x: ServiceDocsTreeMainNode;
+  y: ServiceDocsTreeMainNode;
 }): boolean {
   // The root group cannot be a child of anyone.
-  if (params.x.treeItemType === ServiceDocsTreeItemType.RootGroup) {
+  if (params.x.type === ServiceDocsTreeNodeType.RootGroup) {
     return false;
   }
 
   // A service cannot be the parent of anyone.
-  if (params.y.treeItemType === ServiceDocsTreeItemType.Service) {
+  if (params.y.type === ServiceDocsTreeNodeType.Service) {
     return false;
   }
 
   // The root group is the parent of everyone.
-  if (params.y.treeItemType === ServiceDocsTreeItemType.RootGroup) {
+  if (params.y.type === ServiceDocsTreeNodeType.RootGroup) {
     return false;
   }
 
-  if (params.x.treeItemType === ServiceDocsTreeItemType.Service) {
-    // A service with no group is only the descendant of the root group. But we have already covered the case where y=RootGroup before.
-    if (params.x.group === undefined) {
+  if (params.x.type === ServiceDocsTreeNodeType.Service) {
+    // A service belonging to the root group is, of course, only the descendant of the root group. But we have already covered the case where y=RootGroup before.
+    if (params.x.group.type === ServiceDocsTreeNodeType.RootGroup) {
       return false;
     }
 
-    if (params.x.group === params.y.identifier) {
+    if (params.x.group === params.y) {
       return true;
     }
     return isGroupXDescendantOfGroupY({
-      xIdentifier: params.x.group,
-      yIdentifier: params.y.identifier,
+      xGroup: params.x.group,
+      yGroup: params.y,
     });
   }
 
   return isGroupXDescendantOfGroupY({
-    xIdentifier: params.y.identifier,
-    yIdentifier: params.y.identifier,
+    xGroup: params.x,
+    yGroup: params.y,
   });
-}
-
-function isGroupXDescendantOfGroupY(params: {
-  xIdentifier: string;
-  yIdentifier: string;
-}): boolean {
-  /*  
-    A trick: We use the identifiers of the two groups in order to determine whether X is the descendant of Y.
-
-    Example: 
-    `XIdentifier`: "foo.bar.baz"
-    `YIdentifier`: "foo.bar"
-
-    Now, we simply check if `XIdentifier` starts with `YIdentifier`.
-
-    There is one edge case. Imagine the following:
-    `XIdentifier`: "foo.bars"
-    `YIdentifier`: "foo.bar"
-    Now, the check would return `true`, because `XIdentifier` starts with `YIdentifier`.
-    Because of this, we add a group delimiter (".") to `YIdentifier` before checking.
-  */
-
-  const yIdentifierForChecking = params.yIdentifier + '.';
-
-  if (params.xIdentifier.startsWith(yIdentifierForChecking)) {
-    return true;
-  }
-  return false;
 }

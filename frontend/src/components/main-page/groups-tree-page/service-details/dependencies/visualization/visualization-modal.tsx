@@ -10,8 +10,8 @@ import { ResponsiveSankey, SankeyLinkDatum } from '@nivo/sankey';
 import React from 'react';
 
 import { Icons } from '../../../../../../icons';
+import { ServiceDocsTreeServiceNode } from '../../../../service-docs-tree';
 import { useServiceDocsServiceContext } from '../../../../services/service-docs-service';
-import { ServiceDocsServiceTreeItem } from '../../../../utils/service-docs-utils';
 
 import {
   CustomSankeyLink,
@@ -19,12 +19,12 @@ import {
   NodePosition,
   SankeyConfig,
   SankeyData,
-  convertServiceDocsToSankeyData,
+  buildSankeyData,
 } from './sankey-utils';
 import { VisualizationConfig } from './visualization-config';
 
 interface Props {
-  pivotService: ServiceDocsServiceTreeItem;
+  pivotService: ServiceDocsTreeServiceNode;
 
   close: () => void;
 }
@@ -145,12 +145,8 @@ function useController(props: Props): Controller {
   });
 
   const sankeyData = React.useMemo(
-    () =>
-      convertServiceDocsToSankeyData(
-        serviceDocsService.serviceDocs,
-        state.sankeyConfig,
-      ),
-    [serviceDocsService.serviceDocs, state.sankeyConfig],
+    () => buildSankeyData(serviceDocsService.groupsTree, state.sankeyConfig),
+    [serviceDocsService.groupsTree, state.sankeyConfig],
   );
 
   return {
