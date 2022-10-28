@@ -9,12 +9,12 @@ import {
 import React from 'react';
 
 import { Icons } from '../../../../icons';
-import { useSelectedTreeItem } from '../../utils/router-utils';
 import {
-  ServiceDocsRegularGroupTreeItem,
-  ServiceDocsRootTreeItem,
-  ServiceDocsTreeItemType,
-} from '../../utils/service-docs-utils';
+  ServiceDocsTreeNodeType,
+  ServiceDocsTreeRegularGroup,
+  ServiceDocsTreeRootNode,
+} from '../../service-docs-tree';
+import { useSelectedTreeItem } from '../../utils/router-utils';
 
 export const GroupDetails: React.FC = () => {
   const controller = useController();
@@ -33,8 +33,7 @@ export const GroupDetails: React.FC = () => {
           <Typography variant="h3">Group Information</Typography>
 
           <List component="div">
-            {controller.group.treeItemType ===
-              ServiceDocsTreeItemType.RegularGroup && (
+            {controller.group.type === ServiceDocsTreeNodeType.RegularGroup && (
               <ListItem component="div" divider>
                 <ListItemIcon>
                   <Icons.Badge />
@@ -46,8 +45,7 @@ export const GroupDetails: React.FC = () => {
               </ListItem>
             )}
 
-            {controller.group.treeItemType ===
-              ServiceDocsTreeItemType.RegularGroup && (
+            {controller.group.type === ServiceDocsTreeNodeType.RegularGroup && (
               <ListItem component="div" divider>
                 <ListItemIcon>
                   <Icons.Group />
@@ -94,19 +92,17 @@ export const GroupDetails: React.FC = () => {
 };
 
 interface Controller {
-  group: ServiceDocsRegularGroupTreeItem | ServiceDocsRootTreeItem | undefined;
+  group: ServiceDocsTreeRegularGroup | ServiceDocsTreeRootNode | undefined;
 }
 function useController(): Controller {
   const selectedTreeItem = useSelectedTreeItem();
 
-  let group:
-    | ServiceDocsRegularGroupTreeItem
-    | ServiceDocsRootTreeItem
-    | undefined = undefined;
+  let group: ServiceDocsTreeRegularGroup | ServiceDocsTreeRootNode | undefined =
+    undefined;
   if (
     selectedTreeItem &&
-    (selectedTreeItem.treeItemType === ServiceDocsTreeItemType.RootGroup ||
-      selectedTreeItem.treeItemType === ServiceDocsTreeItemType.RegularGroup)
+    (selectedTreeItem.type === ServiceDocsTreeNodeType.RootGroup ||
+      selectedTreeItem.type === ServiceDocsTreeNodeType.RegularGroup)
   ) {
     group = selectedTreeItem;
   }

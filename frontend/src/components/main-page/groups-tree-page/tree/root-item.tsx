@@ -4,17 +4,17 @@ import { useNavigate } from 'react-router-dom';
 
 import { Icons } from '../../../../icons';
 import { GROUPS_TREE_ROUTES_ABS } from '../../../../routes';
-import { useSelectedTreeItem } from '../../utils/router-utils';
 import {
-  ServiceDocsRootTreeItem,
-  ServiceDocsTreeItemType,
-} from '../../utils/service-docs-utils';
+  ServiceDocsTreeNodeType,
+  ServiceDocsTreeRootNode,
+} from '../../service-docs-tree';
+import { useSelectedTreeItem } from '../../utils/router-utils';
 
 import { GroupItem } from './group-item';
 import { ServiceItem } from './service-item';
 
 interface Props {
-  rootGroup: ServiceDocsRootTreeItem;
+  rootGroup: ServiceDocsTreeRootNode;
 }
 export const RootItem: React.FC<Props> = (props) => {
   const controller = useController();
@@ -74,7 +74,7 @@ function useController(): Controller {
   const isSelected = ((): boolean => {
     if (
       !selectedTreeItem ||
-      selectedTreeItem.treeItemType !== ServiceDocsTreeItemType.RootGroup
+      selectedTreeItem.type !== ServiceDocsTreeNodeType.RootGroup
     ) {
       return false;
     }

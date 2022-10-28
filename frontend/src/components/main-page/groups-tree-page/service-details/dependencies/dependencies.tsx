@@ -15,13 +15,17 @@ import { generatePath, useNavigate } from 'react-router-dom';
 
 import { Icons } from '../../../../../icons';
 import { GROUPS_TREE_ROUTES_ABS } from '../../../../../routes';
-import { ServiceDocsServiceTreeItem } from '../../../utils/service-docs-utils';
+import {
+  ServiceDocsTreeAPINode,
+  ServiceDocsTreeEventNode,
+  ServiceDocsTreeServiceNode,
+} from '../../../service-docs-tree';
 
 import { DependencyDetails } from './dependency-details';
 import { VisualizationModal } from './visualization/visualization-modal';
 
 interface Props {
-  service: ServiceDocsServiceTreeItem;
+  service: ServiceDocsTreeServiceNode;
 }
 export const Dependencies: React.FC<Props> = (props) => {
   const controller = useController(props);
@@ -62,14 +66,11 @@ export const Dependencies: React.FC<Props> = (props) => {
 
             {dependencyItem.data.length > 0 && (
               <List component="div">
-                {dependencyItem.data.map((apiOrEventName) => (
+                {dependencyItem.data.map((apiOrEvent) => (
                   <ListItemButton
-                    key={apiOrEventName}
+                    key={apiOrEvent.name}
                     onClick={(): void =>
-                      controller.showDependencyDialog({
-                        dependencyType: dependencyItem.type,
-                        itemName: apiOrEventName,
-                      })
+                      controller.showDependencyDialog(apiOrEvent)
                     }
                   >
                     <ListItemIcon>
@@ -86,7 +87,7 @@ export const Dependencies: React.FC<Props> = (props) => {
                         <Icons.ArchiveOutlined />
                       )}
                     </ListItemIcon>
-                    <ListItemText>{apiOrEventName}</ListItemText>
+                    <ListItemText>{apiOrEvent.name}</ListItemText>
                   </ListItemButton>
                 ))}
               </List>
@@ -97,15 +98,7 @@ export const Dependencies: React.FC<Props> = (props) => {
 
       {controller.state.dependencyDialogData && (
         <DependencyDetails
-          dependencyType={
-            controller.state.dependencyDialogData.dependencyType ===
-              'provided-apis' ||
-            controller.state.dependencyDialogData.dependencyType ===
-              'consumed-apis'
-              ? 'api'
-              : 'event'
-          }
-          dependencyName={controller.state.dependencyDialogData.itemName}
+          dependency={controller.state.dependencyDialogData}
           currentService={props.service}
           close={(): void => controller.hideDependencyDialog()}
           goToService={(serviceName: string): void => {
@@ -132,16 +125,14 @@ type DependencyType =
   | 'consumed-events';
 interface DependencyItem {
   type: DependencyType;
-  data: string[];
-}
-
-interface DependencyDialogData {
-  dependencyType: DependencyType;
-  itemName: string;
+  data: ServiceDocsTreeAPINode[] | ServiceDocsTreeEventNode[];
 }
 
 interface State {
-  dependencyDialogData: DependencyDialogData | undefined;
+  dependencyDialogData:
+    | ServiceDocsTreeAPINode
+    | ServiceDocsTreeEventNode
+    | undefined;
 
   showVisualization: boolean;
 }
@@ -150,7 +141,9 @@ interface Controller {
 
   dependencyItems: DependencyItem[];
 
-  showDependencyDialog: (data: DependencyDialogData) => void;
+  showDependencyDialog: (
+    data: ServiceDocsTreeAPINode | ServiceDocsTreeEventNode,
+  ) => void;
   hideDependencyDialog: () => void;
 
   setShowVisualization: (show: boolean) => void;
@@ -169,19 +162,19 @@ function useController(props: Props): Controller {
   const dataToShow: DependencyItem[] = [
     {
       type: 'provided-apis',
-      data: props.service.providedAPIs ?? [],
+      data: props.service.providedAPIs,
     },
     {
       type: 'consumed-apis',
-      data: props.service.consumedAPIs ?? [],
+      data: props.service.consumedAPIs,
     },
     {
       type: 'produced-events',
-      data: props.service.producedEvents ?? [],
+      data: props.service.producedEvents,
     },
     {
       type: 'consumed-events',
-      data: props.service.consumedEvents ?? [],
+      data: props.service.consumedEvents,
     },
   ];
 

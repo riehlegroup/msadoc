@@ -10,11 +10,11 @@ import {
 import React from 'react';
 
 import { Icons } from '../../../../icons';
-import { useSelectedTreeItem } from '../../utils/router-utils';
 import {
-  ServiceDocsServiceTreeItem,
-  ServiceDocsTreeItemType,
-} from '../../utils/service-docs-utils';
+  ServiceDocsTreeNodeType,
+  ServiceDocsTreeServiceNode,
+} from '../../service-docs-tree';
+import { useSelectedTreeItem } from '../../utils/router-utils';
 
 import { Dependencies } from './dependencies';
 
@@ -45,13 +45,14 @@ export const ServiceDetails: React.FC = () => {
               />
             </ListItem>
 
-            {controller.service.group !== undefined && (
+            {controller.service.group.type ===
+              ServiceDocsTreeNodeType.RegularGroup && (
               <ListItem component="div" divider>
                 <ListItemIcon>
                   <Icons.Group />
                 </ListItemIcon>
                 <ListItemText
-                  primary={controller.service.group}
+                  primary={controller.service.group.name}
                   secondary="Group"
                 />
               </ListItem>
@@ -102,15 +103,15 @@ export const ServiceDetails: React.FC = () => {
 };
 
 interface Controller {
-  service: ServiceDocsServiceTreeItem | undefined;
+  service: ServiceDocsTreeServiceNode | undefined;
 }
 function useController(): Controller {
   const selectedTreeItem = useSelectedTreeItem();
 
-  let service: ServiceDocsServiceTreeItem | undefined = undefined;
+  let service: ServiceDocsTreeServiceNode | undefined = undefined;
   if (
     selectedTreeItem &&
-    selectedTreeItem.treeItemType === ServiceDocsTreeItemType.Service
+    selectedTreeItem.type === ServiceDocsTreeNodeType.Service
   ) {
     service = selectedTreeItem;
   }
