@@ -22,7 +22,7 @@ export type ServiceDocsTreeNode =
  */
 export type ServiceDocsTreeMainNode =
   | ServiceDocsTreeRootNode
-  | ServiceDocsTreeRegularGroup
+  | ServiceDocsTreeRegularGroupNode
   | ServiceDocsTreeServiceNode;
 
 /**
@@ -44,7 +44,7 @@ export interface ServiceDocsTreeServiceNode
   > {
   type: ServiceDocsTreeNodeType.Service;
 
-  group: ServiceDocsTreeRegularGroup | ServiceDocsTreeRootNode;
+  group: ServiceDocsTreeRegularGroupNode | ServiceDocsTreeRootNode;
 
   providedAPIs: ServiceDocsTreeAPINode[];
   consumedAPIs: ServiceDocsTreeAPINode[];
@@ -52,7 +52,7 @@ export interface ServiceDocsTreeServiceNode
   consumedEvents: ServiceDocsTreeEventNode[];
 }
 
-export interface ServiceDocsTreeRegularGroup {
+export interface ServiceDocsTreeRegularGroupNode {
   type: ServiceDocsTreeNodeType.RegularGroup;
 
   /**
@@ -72,9 +72,9 @@ export interface ServiceDocsTreeRegularGroup {
    * The object keys are the names of the respective child group.
    * (Compared to just using an array, this enables a faster lookup of groups.)
    */
-  childGroups: { [groupName: string]: ServiceDocsTreeRegularGroup };
+  childGroups: { [groupName: string]: ServiceDocsTreeRegularGroupNode };
 
-  parent: ServiceDocsTreeRegularGroup | ServiceDocsTreeRootNode;
+  parent: ServiceDocsTreeRegularGroupNode | ServiceDocsTreeRootNode;
 
   /**
    * The services that belong to this group.
@@ -84,7 +84,7 @@ export interface ServiceDocsTreeRegularGroup {
 // Basically the same as a regular group, but without a name, identifier, or parent.
 export interface ServiceDocsTreeRootNode
   extends Omit<
-    ServiceDocsTreeRegularGroup,
+    ServiceDocsTreeRegularGroupNode,
     'name' | 'identifier' | 'parent' | 'type'
   > {
   type: ServiceDocsTreeNodeType.RootGroup;
@@ -150,13 +150,13 @@ function buildGroups(groupIdentifiers: Set<string>): ServiceDocsTreeRootNode {
 function createGroupIfNotExists(
   groupIdentifier: string,
   rootGroup: ServiceDocsTreeRootNode,
-): ServiceDocsTreeRegularGroup | ServiceDocsTreeRootNode {
+): ServiceDocsTreeRegularGroupNode | ServiceDocsTreeRootNode {
   const splitGroupIdentifier = groupIdentifier.split('.');
   if (splitGroupIdentifier[0] === undefined) {
     console.warn('This point should not be reached.');
     return rootGroup;
   }
-  let currentGroup: ServiceDocsTreeRootNode | ServiceDocsTreeRegularGroup =
+  let currentGroup: ServiceDocsTreeRootNode | ServiceDocsTreeRegularGroupNode =
     rootGroup;
   for (let i = 0; i < splitGroupIdentifier.length; i++) {
     const groupName = splitGroupIdentifier[i];
@@ -165,7 +165,7 @@ function createGroupIfNotExists(
       continue;
     }
 
-    let childGroup: ServiceDocsTreeRegularGroup | undefined =
+    let childGroup: ServiceDocsTreeRegularGroupNode | undefined =
       currentGroup.childGroups[groupName];
     if (!childGroup) {
       const identifier = splitGroupIdentifier.slice(0, i + 1).join('.');
@@ -200,7 +200,7 @@ function buildAndInsertServiceItems(
   const eventNodesMap: Record<string, ServiceDocsTreeEventNode> = {};
 
   for (const singleServiceDoc of serviceDocs) {
-    let group: ServiceDocsTreeRootNode | ServiceDocsTreeRegularGroup;
+    let group: ServiceDocsTreeRootNode | ServiceDocsTreeRegularGroupNode;
 
     if (singleServiceDoc.group === undefined) {
       // If the group is missing, add this service to the root group.
@@ -322,17 +322,17 @@ function getOrCreateEventNode(
 export function getGroupByIdentifier(
   groupIdentifier: string,
   groupsTree: ServiceDocsTreeRootNode,
-): ServiceDocsTreeRegularGroup | undefined {
+): ServiceDocsTreeRegularGroupNode | undefined {
   const splitGroupIdentifier = groupIdentifier.split('.');
-  let currentGroup: ServiceDocsTreeRootNode | ServiceDocsTreeRegularGroup =
+  let currentGroup: ServiceDocsTreeRootNode | ServiceDocsTreeRegularGroupNode =
     groupsTree;
   for (const identifierPart of splitGroupIdentifier) {
-    const nextGroup: ServiceDocsTreeRegularGroup | undefined =
+    const nextGroup: ServiceDocsTreeRegularGroupNode | undefined =
       currentGroup.childGroups[identifierPart];
     if (!nextGroup) {
       return undefined;
     }
     currentGroup = nextGroup;
   }
-  return currentGroup as ServiceDocsTreeRegularGroup;
+  return currentGroup as ServiceDocsTreeRegularGroupNode;
 }

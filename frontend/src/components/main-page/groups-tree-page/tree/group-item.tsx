@@ -12,7 +12,7 @@ import { GROUPS_TREE_ROUTES_ABS } from '../../../../routes';
 import {
   ServiceDocsTreeMainNode,
   ServiceDocsTreeNodeType,
-  ServiceDocsTreeRegularGroup,
+  ServiceDocsTreeRegularGroupNode,
 } from '../../service-docs-tree';
 import { useSelectedTreeItem } from '../../utils/router-utils';
 import { isGroupXDescendantOfGroupY } from '../../utils/service-docs-tree-utils';
@@ -20,7 +20,7 @@ import { isGroupXDescendantOfGroupY } from '../../utils/service-docs-tree-utils'
 import { ServiceItem } from './service-item';
 
 interface Props {
-  group: ServiceDocsTreeRegularGroup;
+  group: ServiceDocsTreeRegularGroupNode;
 
   /**
    * How deep is this item in the tree?

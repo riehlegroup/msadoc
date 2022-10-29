@@ -15,8 +15,7 @@ import {
   ServiceDocsTreeServiceNode,
 } from '../../service-docs-tree';
 import { useSelectedTreeItem } from '../../utils/router-utils';
-
-import { Dependencies } from './dependencies';
+import { Dependencies } from '../common/dependencies';
 
 export const ServiceDetails: React.FC = () => {
   const controller = useController();
@@ -94,7 +93,7 @@ export const ServiceDetails: React.FC = () => {
           </List>
 
           <Box sx={{ marginTop: 3 }}>
-            <Dependencies service={controller.service} />
+            <Dependencies showDependenciesFor={controller.service} />
           </Box>
         </Box>
       )}

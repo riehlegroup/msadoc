@@ -4,8 +4,8 @@ import React from 'react';
 import {
   ServiceDocsTreeAPINode,
   ServiceDocsTreeEventNode,
+  ServiceDocsTreeMainNode,
   ServiceDocsTreeNodeType,
-  ServiceDocsTreeServiceNode,
 } from '../../../service-docs-tree';
 
 import { DependencyDetailsItem } from './dependency-details-item';
@@ -13,7 +13,7 @@ import { DependencyDetailsItem } from './dependency-details-item';
 interface Props {
   dependency: ServiceDocsTreeAPINode | ServiceDocsTreeEventNode;
 
-  currentService: ServiceDocsTreeServiceNode;
+  currentServiceOrGroup: ServiceDocsTreeMainNode;
 
   close: () => void;
   goToService: (serviceName: string) => void;
@@ -39,13 +39,13 @@ export const DependencyDetails: React.FC<Props> = (props) => {
             <DependencyDetailsItem
               dependency={props.dependency}
               mode="providers"
-              currentService={props.currentService}
+              currentServiceOrGroup={props.currentServiceOrGroup}
               goToService={props.goToService}
             />
             <DependencyDetailsItem
               dependency={props.dependency}
               mode="consumers"
-              currentService={props.currentService}
+              currentServiceOrGroup={props.currentServiceOrGroup}
               goToService={props.goToService}
             />
           </React.Fragment>
@@ -56,13 +56,13 @@ export const DependencyDetails: React.FC<Props> = (props) => {
             <DependencyDetailsItem
               dependency={props.dependency}
               mode="producers"
-              currentService={props.currentService}
+              currentServiceOrGroup={props.currentServiceOrGroup}
               goToService={props.goToService}
             />
             <DependencyDetailsItem
               dependency={props.dependency}
               mode="consumers"
-              currentService={props.currentService}
+              currentServiceOrGroup={props.currentServiceOrGroup}
               goToService={props.goToService}
             />
           </React.Fragment>

@@ -10,7 +10,7 @@ import { ResponsiveSankey, SankeyLinkDatum } from '@nivo/sankey';
 import React from 'react';
 
 import { Icons } from '../../../../../../icons';
-import { ServiceDocsTreeServiceNode } from '../../../../service-docs-tree';
+import { ServiceDocsTreeMainNode } from '../../../../service-docs-tree';
 import { useServiceDocsServiceContext } from '../../../../services/service-docs-service';
 
 import {
@@ -20,11 +20,11 @@ import {
   SankeyConfig,
   SankeyData,
   buildSankeyData,
-} from './sankey-utils';
+} from './sankey-data';
 import { VisualizationConfig } from './visualization-config';
 
 interface Props {
-  pivotService: ServiceDocsTreeServiceNode;
+  pivotNode: ServiceDocsTreeMainNode;
 
   close: () => void;
 }
@@ -137,7 +137,7 @@ function useController(props: Props): Controller {
 
   const [state, setState] = React.useState<State>({
     sankeyConfig: {
-      pivotService: props.pivotService,
+      pivotNode: props.pivotNode,
 
       includeAPIs: true,
       includeEvents: true,
