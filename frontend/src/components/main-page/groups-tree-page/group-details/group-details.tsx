@@ -11,10 +11,11 @@ import React from 'react';
 import { Icons } from '../../../../icons';
 import {
   ServiceDocsTreeNodeType,
-  ServiceDocsTreeRegularGroup,
+  ServiceDocsTreeRegularGroupNode,
   ServiceDocsTreeRootNode,
 } from '../../service-docs-tree';
 import { useSelectedTreeItem } from '../../utils/router-utils';
+import { Dependencies } from '../common/dependencies';
 
 export const GroupDetails: React.FC = () => {
   const controller = useController();
@@ -85,6 +86,10 @@ export const GroupDetails: React.FC = () => {
               />
             </ListItem>
           </List>
+
+          <Box sx={{ marginTop: 3 }}>
+            <Dependencies showDependenciesFor={controller.group} />
+          </Box>
         </Box>
       )}
     </React.Fragment>
@@ -92,13 +97,15 @@ export const GroupDetails: React.FC = () => {
 };
 
 interface Controller {
-  group: ServiceDocsTreeRegularGroup | ServiceDocsTreeRootNode | undefined;
+  group: ServiceDocsTreeRegularGroupNode | ServiceDocsTreeRootNode | undefined;
 }
 function useController(): Controller {
   const selectedTreeItem = useSelectedTreeItem();
 
-  let group: ServiceDocsTreeRegularGroup | ServiceDocsTreeRootNode | undefined =
-    undefined;
+  let group:
+    | ServiceDocsTreeRegularGroupNode
+    | ServiceDocsTreeRootNode
+    | undefined = undefined;
   if (
     selectedTreeItem &&
     (selectedTreeItem.type === ServiceDocsTreeNodeType.RootGroup ||

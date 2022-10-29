@@ -18,14 +18,15 @@ import { GROUPS_TREE_ROUTES_ABS } from '../../../../../routes';
 import {
   ServiceDocsTreeAPINode,
   ServiceDocsTreeEventNode,
-  ServiceDocsTreeServiceNode,
+  ServiceDocsTreeMainNode,
 } from '../../../service-docs-tree';
+import { getAllAPIsAndEvents } from '../../../utils/service-docs-tree-utils';
 
 import { DependencyDetails } from './dependency-details';
 import { VisualizationModal } from './visualization/visualization-modal';
 
 interface Props {
-  service: ServiceDocsTreeServiceNode;
+  showDependenciesFor: ServiceDocsTreeMainNode;
 }
 export const Dependencies: React.FC<Props> = (props) => {
   const controller = useController(props);
@@ -99,7 +100,7 @@ export const Dependencies: React.FC<Props> = (props) => {
       {controller.state.dependencyDialogData && (
         <DependencyDetails
           dependency={controller.state.dependencyDialogData}
-          currentService={props.service}
+          currentServiceOrGroup={props.showDependenciesFor}
           close={(): void => controller.hideDependencyDialog()}
           goToService={(serviceName: string): void => {
             controller.hideDependencyDialog();
@@ -110,7 +111,7 @@ export const Dependencies: React.FC<Props> = (props) => {
 
       {controller.state.showVisualization && (
         <VisualizationModal
-          pivotService={props.service}
+          pivotNode={props.showDependenciesFor}
           close={(): void => controller.setShowVisualization(false)}
         />
       )}
@@ -159,24 +160,30 @@ function useController(props: Props): Controller {
     showVisualization: false,
   });
 
-  const dataToShow: DependencyItem[] = [
-    {
-      type: 'provided-apis',
-      data: props.service.providedAPIs,
-    },
-    {
-      type: 'consumed-apis',
-      data: props.service.consumedAPIs,
-    },
-    {
-      type: 'produced-events',
-      data: props.service.producedEvents,
-    },
-    {
-      type: 'consumed-events',
-      data: props.service.consumedEvents,
-    },
-  ];
+  const dataToShow = React.useMemo((): DependencyItem[] => {
+    const APIsAndEvents = getAllAPIsAndEvents(props.showDependenciesFor);
+
+    const result: DependencyItem[] = [
+      {
+        type: 'provided-apis',
+        data: Array.from(APIsAndEvents.providedAPIs),
+      },
+      {
+        type: 'consumed-apis',
+        data: Array.from(APIsAndEvents.consumedAPIs),
+      },
+      {
+        type: 'produced-events',
+        data: Array.from(APIsAndEvents.producedEvents),
+      },
+      {
+        type: 'consumed-events',
+        data: Array.from(APIsAndEvents.consumedEvents),
+      },
+    ];
+
+    return result;
+  }, [props.showDependenciesFor]);
 
   return {
     state: state,

@@ -1,39 +1,36 @@
 import {
-  ServiceDocsTreeRegularGroup,
+  ServiceDocsTreeAPINode,
+  ServiceDocsTreeEventNode,
+  ServiceDocsTreeMainNode,
+  ServiceDocsTreeNodeType,
+  ServiceDocsTreeRegularGroupNode,
   ServiceDocsTreeRootNode,
   ServiceDocsTreeServiceNode,
 } from '../service-docs-tree';
 
 export function isGroupXDescendantOfGroupY(params: {
-  xGroup: ServiceDocsTreeRegularGroup;
-  yGroup: ServiceDocsTreeRegularGroup;
+  xGroup: ServiceDocsTreeRegularGroupNode;
+  yGroup: ServiceDocsTreeRegularGroupNode;
 }): boolean {
-  /*  
-    A trick: We use the identifiers of the two groups in order to determine whether X is the descendant of Y.
+  let currentParentGroup = params.xGroup.parent;
 
-    Example: 
-    `XIdentifier`: "foo.bar.baz"
-    `YIdentifier`: "foo.bar"
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, no-constant-condition
+  while (true) {
+    if (currentParentGroup === params.yGroup) {
+      return true;
+    }
 
-    Now, we simply check if `XIdentifier` starts with `YIdentifier`.
-
-    There is one edge case. Imagine the following:
-    `XIdentifier`: "foo.bars"
-    `YIdentifier`: "foo.bar"
-    Now, the check would return `true`, because `XIdentifier` starts with `YIdentifier`.
-    Because of this, we add a group delimiter (".") to `YIdentifier` before checking.
-  */
-
-  const yIdentifierForChecking = params.yGroup.identifier + '.';
-
-  if (params.xGroup.identifier.startsWith(yIdentifierForChecking)) {
-    return true;
+    if (currentParentGroup.type === ServiceDocsTreeNodeType.RootGroup) {
+      break;
+    }
+    currentParentGroup = currentParentGroup.parent;
   }
+
   return false;
 }
 
 export function extractAllServices(
-  group: ServiceDocsTreeRegularGroup | ServiceDocsTreeRootNode,
+  group: ServiceDocsTreeRegularGroupNode | ServiceDocsTreeRootNode,
 ): ServiceDocsTreeServiceNode[] {
   const result: ServiceDocsTreeServiceNode[] = [...group.services];
 
@@ -43,4 +40,46 @@ export function extractAllServices(
   }
 
   return result;
+}
+
+export interface APIsAndEvents {
+  providedAPIs: Set<ServiceDocsTreeAPINode>;
+  consumedAPIs: Set<ServiceDocsTreeAPINode>;
+  producedEvents: Set<ServiceDocsTreeEventNode>;
+  consumedEvents: Set<ServiceDocsTreeEventNode>;
+}
+export function getAllAPIsAndEvents(
+  item: ServiceDocsTreeMainNode,
+): APIsAndEvents {
+  if (item.type === ServiceDocsTreeNodeType.Service) {
+    return {
+      providedAPIs: new Set(item.providedAPIs),
+      consumedAPIs: new Set(item.consumedAPIs),
+      producedEvents: new Set(item.producedEvents),
+      consumedEvents: new Set(item.consumedEvents),
+    };
+  }
+
+  const result: APIsAndEvents = {
+    providedAPIs: new Set(),
+    consumedAPIs: new Set(),
+    producedEvents: new Set(),
+    consumedEvents: new Set(),
+  };
+  const allServices = extractAllServices(item);
+
+  for (const singleService of allServices) {
+    addMultipleItemsToSet(singleService.providedAPIs, result.providedAPIs);
+    addMultipleItemsToSet(singleService.consumedAPIs, result.consumedAPIs);
+    addMultipleItemsToSet(singleService.producedEvents, result.producedEvents);
+    addMultipleItemsToSet(singleService.consumedEvents, result.consumedEvents);
+  }
+
+  return result;
+}
+
+function addMultipleItemsToSet<T>(items: T[], theSet: Set<T>): void {
+  for (const singleItem of items) {
+    theSet.add(singleItem);
+  }
 }

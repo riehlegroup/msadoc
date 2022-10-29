@@ -17,13 +17,15 @@ import { DefaultLink, DefaultNode } from '@nivo/sankey';
 
 import {
   ServiceDocsTreeConnectingNode,
+  ServiceDocsTreeMainNode,
   ServiceDocsTreeNodeType,
+  ServiceDocsTreeRegularGroupNode,
   ServiceDocsTreeRootNode,
   ServiceDocsTreeServiceNode,
 } from '../../../../service-docs-tree';
-import { extractAllServices } from '../../../../utils/service-docs-tree-utils';
 
 import { HopsGetterFn, buildHopsGetterFn } from './graph-hops';
+import { RawLink, buildRawLinks } from './sankey-links';
 
 export enum NodePosition {
   Left,
@@ -46,28 +48,25 @@ export interface SankeyData {
 }
 
 export interface SankeyConfig {
-  pivotService: ServiceDocsTreeServiceNode;
+  /**
+   * This Pivot Node has two main purposes:
+   * 1. It defines how nodes/links are colored (nodes/links not directly related to the Pivot Node are colored differently).
+   * 2. It defines whether and how nodes are grouped: If a service is passed, then no grouping takes place. However, if a group is passed, then some of the nodes are combined on a per-group basis.
+   */
+  pivotNode: ServiceDocsTreeMainNode;
 
   includeAPIs: boolean;
   includeEvents: boolean;
 }
 
-/**
- * Maps from node name (either the name of the Service, or the name of the API/Event) to the actual node.
- */
-interface NodeNameToSankeyNodeMaps {
-  serviceSourceNodes: Record<string, CustomSankeyNode>;
-  serviceTargetNodes: Record<string, CustomSankeyNode>;
-  APINodes: Record<string, CustomSankeyNode>;
-  eventNodes: Record<string, CustomSankeyNode>;
+interface NodeIdMapEntry {
+  sankeyNode: CustomSankeyNode;
+  correspondingTreeNode:
+    | ServiceDocsTreeServiceNode
+    | ServiceDocsTreeRegularGroupNode
+    | ServiceDocsTreeConnectingNode;
 }
-/**
- * A Map from node ID to the Service Docs Tree Node it is based on.
- */
-type NodeIdToServiceDocsTreeNodeMap = Record<
-  string,
-  ServiceDocsTreeServiceNode | ServiceDocsTreeConnectingNode
->;
+type NodeIdMap = Record<string, NodeIdMapEntry>;
 
 export function buildSankeyData(
   rootGroup: ServiceDocsTreeRootNode,
@@ -78,16 +77,21 @@ export function buildSankeyData(
     links: [],
   };
 
-  const nodeNameToSankeyNodeMaps: NodeNameToSankeyNodeMaps = {
-    serviceSourceNodes: {},
-    serviceTargetNodes: {},
-    APINodes: {},
-    eventNodes: {},
-  };
-  const nodeIdToServiceDocsTreeNodeMap: NodeIdToServiceDocsTreeNodeMap = {};
+  const nodeIdMap: NodeIdMap = {};
 
-  const rawLinks = buildRawLinks(rootGroup);
-  const hopsGetterFn = buildHopsGetterFn(rootGroup, sankeyConfig.pivotService);
+  let rawLinks: RawLink[];
+  if (sankeyConfig.pivotNode.type === ServiceDocsTreeNodeType.Service) {
+    rawLinks = buildRawLinks(rootGroup, {
+      mode: 'include-all-services-separately',
+    });
+  } else {
+    rawLinks = buildRawLinks(rootGroup, {
+      mode: 'build-around-group',
+      group: sankeyConfig.pivotNode,
+    });
+  }
+
+  const hopsGetterFn = buildHopsGetterFn(rootGroup, sankeyConfig.pivotNode);
 
   for (const singleRawLink of rawLinks) {
     if (!shouldIncludeLink(singleRawLink, sankeyConfig)) {
@@ -97,8 +101,7 @@ export function buildSankeyData(
     const fromNodeCreationResult = getOrCreateNode(
       singleRawLink.from,
       'from',
-      nodeNameToSankeyNodeMaps,
-      nodeIdToServiceDocsTreeNodeMap,
+      nodeIdMap,
       hopsGetterFn,
     );
     if (fromNodeCreationResult.isNewNode) {
@@ -108,8 +111,7 @@ export function buildSankeyData(
     const toNodeCreationResult = getOrCreateNode(
       singleRawLink.to,
       'to',
-      nodeNameToSankeyNodeMaps,
-      nodeIdToServiceDocsTreeNodeMap,
+      nodeIdMap,
       hopsGetterFn,
     );
     if (toNodeCreationResult.isNewNode) {
@@ -124,8 +126,8 @@ export function buildSankeyData(
 
     // Make the link grey if it is not connecting two "nodes of interest".
     if (
-      !isNodeDirectlyRelatedToPivotService(singleRawLink.from, hopsGetterFn) ||
-      !isNodeDirectlyRelatedToPivotService(singleRawLink.to, hopsGetterFn)
+      !isNodeDirectlyRelatedToPivotNode(singleRawLink.from, hopsGetterFn) ||
+      !isNodeDirectlyRelatedToPivotNode(singleRawLink.to, hopsGetterFn)
     ) {
       newLink.startColor = grey[300];
       newLink.endColor = grey[300];
@@ -137,73 +139,9 @@ export function buildSankeyData(
   return result;
 }
 
-type RawLink = RawLinkFromService | RawLinkToService;
-
-interface RawLinkFromService {
-  type: 'from-service';
-  from: ServiceDocsTreeServiceNode;
-  to: ServiceDocsTreeConnectingNode;
-}
-
-interface RawLinkToService {
-  type: 'to-service';
-  from: ServiceDocsTreeConnectingNode;
-  to: ServiceDocsTreeServiceNode;
-}
-
-function buildRawLinks(rootGroup: ServiceDocsTreeRootNode): RawLink[] {
-  const result: RawLink[] = [];
-
-  const allServices = extractAllServices(rootGroup);
-
-  for (const singleService of allServices) {
-    /*
-      The "natural" flow of Events if from producer to consumer:
-      (SomeProducer) --> (Event) --> (SomeConsumer)
-    */
-    for (const producedEvent of singleService.producedEvents) {
-      result.push({
-        type: 'from-service',
-        from: singleService,
-        to: producedEvent,
-      });
-    }
-
-    for (const consumedEvent of singleService.consumedEvents) {
-      result.push({
-        type: 'to-service',
-        from: consumedEvent,
-        to: singleService,
-      });
-    }
-
-    /*
-        The "natural" flow of APIs is from consumer to provider:
-        (SomeConsumer) --> (API) --> (SomeProducer)
-      */
-    for (const consumedAPI of singleService.consumedAPIs) {
-      result.push({
-        type: 'from-service',
-        from: singleService,
-        to: consumedAPI,
-      });
-    }
-
-    for (const providedAPI of singleService.providedAPIs) {
-      result.push({
-        type: 'to-service',
-        from: providedAPI,
-        to: singleService,
-      });
-    }
-  }
-
-  return result;
-}
-
 function shouldIncludeLink(link: RawLink, sankeyConfig: SankeyConfig): boolean {
   let connectingNode: ServiceDocsTreeConnectingNode;
-  if (link.type === 'from-service') {
+  if (link.type === 'from-service-or-group') {
     connectingNode = link.to;
   } else {
     connectingNode = link.from;
@@ -228,46 +166,64 @@ function shouldIncludeLink(link: RawLink, sankeyConfig: SankeyConfig): boolean {
 function getOrCreateNode(
   correspondingTreeNode:
     | ServiceDocsTreeServiceNode
+    | ServiceDocsTreeRegularGroupNode
     | ServiceDocsTreeConnectingNode,
   mode: 'from' | 'to',
-  nodeNameToSankeyNodeMaps: NodeNameToSankeyNodeMaps,
-  nodeIdToIntermediateNodeMap: NodeIdToServiceDocsTreeNodeMap,
+  nodeIdMap: NodeIdMap,
   hopsGetterFn: HopsGetterFn,
 ): { node: CustomSankeyNode; isNewNode: boolean } {
   let nodeName: string;
-  let nodeType: keyof typeof nodeNameToSankeyNodeMaps;
+  let nodeType:
+    | 'ServiceSourceNode'
+    | 'ServiceTargetNode'
+    | 'GroupSourceNode'
+    | 'GroupTargetNode'
+    | 'APINode'
+    | 'EventNode';
   let nodePosition: NodePosition;
   if (correspondingTreeNode.type === ServiceDocsTreeNodeType.Service) {
     nodeName = correspondingTreeNode.name;
 
     if (mode === 'from') {
-      nodeType = 'serviceSourceNodes';
+      nodeType = 'ServiceSourceNode';
       nodePosition = NodePosition.Left;
     } else {
-      nodeType = 'serviceTargetNodes';
+      nodeType = 'ServiceTargetNode';
+      nodePosition = NodePosition.Right;
+    }
+  } else if (
+    correspondingTreeNode.type === ServiceDocsTreeNodeType.RegularGroup
+  ) {
+    nodeName = `[Group] ${correspondingTreeNode.identifier}`;
+
+    if (mode === 'from') {
+      nodeType = 'GroupSourceNode';
+      nodePosition = NodePosition.Left;
+    } else {
+      nodeType = 'GroupTargetNode';
       nodePosition = NodePosition.Right;
     }
   } else if (correspondingTreeNode.type === ServiceDocsTreeNodeType.API) {
     nodeName = `[API] ${correspondingTreeNode.name}`;
-    nodeType = 'APINodes';
+    nodeType = 'APINode';
     nodePosition = NodePosition.Middle;
   } else {
     nodeName = `[Event] ${correspondingTreeNode.name}`;
-    nodeType = 'eventNodes';
+    nodeType = 'EventNode';
     nodePosition = NodePosition.Middle;
   }
 
-  const nodeId = `${nodeType}-${nodePosition}-${nodeName}`;
-  const nodeFromMap = nodeNameToSankeyNodeMaps[nodeType][nodeName];
+  const nodeId = `${nodeType}-${nodeName}`;
+  const mapEntry = nodeIdMap[nodeId];
 
-  if (nodeFromMap) {
+  if (mapEntry) {
     return {
-      node: nodeFromMap,
+      node: mapEntry.sankeyNode,
       isNewNode: false,
     };
   }
 
-  const newNode: CustomSankeyNode = {
+  const newSankeyNode: CustomSankeyNode = {
     id: nodeId,
     customData: {
       label: nodeName,
@@ -276,20 +232,25 @@ function getOrCreateNode(
     },
   };
 
-  nodeNameToSankeyNodeMaps[nodeType][nodeName] = newNode;
-  nodeIdToIntermediateNodeMap[newNode.id] = correspondingTreeNode;
+  nodeIdMap[nodeId] = {
+    sankeyNode: newSankeyNode,
+    correspondingTreeNode: correspondingTreeNode,
+  };
 
   return {
-    node: newNode,
+    node: newSankeyNode,
     isNewNode: true,
   };
 }
 
 function getColorForNode(
-  node: ServiceDocsTreeServiceNode | ServiceDocsTreeConnectingNode,
+  node:
+    | ServiceDocsTreeServiceNode
+    | ServiceDocsTreeRegularGroupNode
+    | ServiceDocsTreeConnectingNode,
   hopsGetterFn: HopsGetterFn,
 ): string {
-  if (!isNodeDirectlyRelatedToPivotService(node, hopsGetterFn)) {
+  if (!isNodeDirectlyRelatedToPivotNode(node, hopsGetterFn)) {
     return grey[300];
   }
 
@@ -322,18 +283,24 @@ function getColorForNode(
 }
 
 /**
- * Is the given node directly related to the Pivot Service?
+ * Is the given node directly related to the Pivot Node?
  * We say that a node is directly related if:
- * - It is an API or Event and only one hop is needed to reach it (i.e. `PivotService --> OurNode`)
- * - It is a Service and at most two hops are needed to reach it (i.e. `PivotService --> SomeAPIOrEvent --> OurNode`)
+ * - It is an API or Event and only one hop is needed to reach it (i.e. `PivotNode --> OurNode`)
+ * - It is a Service or Group and at most two hops are needed to reach it (i.e. `PivotNode --> SomeAPIOrEvent --> OurNode`)
  */
-function isNodeDirectlyRelatedToPivotService(
-  node: ServiceDocsTreeServiceNode | ServiceDocsTreeConnectingNode,
+function isNodeDirectlyRelatedToPivotNode(
+  node:
+    | ServiceDocsTreeServiceNode
+    | ServiceDocsTreeRegularGroupNode
+    | ServiceDocsTreeConnectingNode,
   hopsGetterFn: HopsGetterFn,
 ): boolean {
   const hops = hopsGetterFn(node);
 
-  if (node.type === ServiceDocsTreeNodeType.Service) {
+  if (
+    node.type === ServiceDocsTreeNodeType.Service ||
+    node.type === ServiceDocsTreeNodeType.RegularGroup
+  ) {
     if (hops > 2) {
       return false;
     }

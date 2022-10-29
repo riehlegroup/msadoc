@@ -13,12 +13,13 @@ import { Icons } from '../../../../../icons';
 import {
   ServiceDocsTreeAPINode,
   ServiceDocsTreeEventNode,
+  ServiceDocsTreeMainNode,
   ServiceDocsTreeNodeType,
   ServiceDocsTreeServiceNode,
 } from '../../../service-docs-tree';
 
 interface BaseProps {
-  currentService: ServiceDocsTreeServiceNode;
+  currentServiceOrGroup: ServiceDocsTreeMainNode;
 
   goToService: (serviceName: string) => void;
 }
@@ -63,7 +64,11 @@ export const DependencyDetailsItem: React.FC<Props> = (props) => {
           {controller.servicesOfInterest.map((service) => (
             <ListItemButton
               key={service.name}
-              disabled={service.name === props.currentService.name}
+              disabled={
+                props.currentServiceOrGroup.type ===
+                  ServiceDocsTreeNodeType.Service &&
+                service === props.currentServiceOrGroup
+              }
               onClick={(): void => props.goToService(service.name)}
             >
               <ListItemIcon>

@@ -1,7 +1,7 @@
 import { Checkbox, FormControlLabel, FormGroup } from '@mui/material';
 import React from 'react';
 
-import { SankeyConfig } from './sankey-utils';
+import { SankeyConfig } from './sankey-data';
 
 interface Props {
   sankeyConfig: SankeyConfig;
