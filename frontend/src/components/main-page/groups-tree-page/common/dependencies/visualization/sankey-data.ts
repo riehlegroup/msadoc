@@ -70,11 +70,6 @@ export function buildSankeyData(
   rootGroup: RootGroupNode,
   sankeyConfig: SankeyConfig,
 ): SankeyData {
-  const result: SankeyData = {
-    nodes: [],
-    links: [],
-  };
-
   const nodeIdMap: NodeIdMap = {};
 
   let rawLinks: RawLink[];
@@ -90,6 +85,11 @@ export function buildSankeyData(
   }
 
   const hopsGetterFn = buildHopsGetterFn(rootGroup, sankeyConfig.pivotNode);
+
+  const result: SankeyData = {
+    nodes: [],
+    links: [],
+  };
 
   for (const singleRawLink of rawLinks) {
     if (!shouldIncludeLink(singleRawLink, sankeyConfig)) {

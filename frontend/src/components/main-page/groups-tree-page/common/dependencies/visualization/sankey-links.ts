@@ -34,6 +34,11 @@ interface BuildAroundGroup {
   group: RegularGroupNode | RootGroupNode;
 }
 
+/**
+ * There are two options to build the links, as specified in parameter {@link buildConfig}:
+ * - {@link IncludeAllServicesSeparately} makes all services from the provided {@link rootGroup} get listed separately.
+ * - {@link BuildAroundGroup} uses the "diagonal relatives" of the provided group to build the links (see {@link getDiagonalRelativesOfGroup}).
+ */
 export function buildRawLinks(
   rootGroup: RootGroupNode,
   buildConfig: BuildConfig,

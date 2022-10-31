@@ -21,6 +21,11 @@ import { extractAllServices } from '../../../../utils/service-docs-tree-utils';
  */
 export type HopsGetterFn = (node: ServiceDocsTreeNode) => number;
 
+/**
+ * Returns a "hops getter function".
+ * This returned function tells us how far a given node is apart from the provided Pivot Node.
+ * For a detailed explanation of this returned function, see {@link HopsGetterFn}.
+ */
 export function buildHopsGetterFn(
   treeRoot: RootGroupNode,
   pivotNode: MainNode,
