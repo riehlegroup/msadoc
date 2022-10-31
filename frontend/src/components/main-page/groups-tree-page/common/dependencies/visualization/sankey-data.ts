@@ -38,6 +38,8 @@ export interface CustomSankeyNode extends DefaultNode {
     label: string;
     color: string;
     position: NodePosition;
+
+    correspondingTreeNode: ServiceNode | RegularGroupNode | ConnectingNode;
   };
 }
 export type CustomSankeyLink = DefaultLink;
@@ -59,11 +61,10 @@ export interface SankeyConfig {
   includeEvents: boolean;
 }
 
-interface NodeIdMapEntry {
-  sankeyNode: CustomSankeyNode;
-  correspondingTreeNode: ServiceNode | RegularGroupNode | ConnectingNode;
-}
-type NodeIdMap = Record<string, NodeIdMapEntry>;
+/**
+ * A map from node ID to its Sankey Node.
+ */
+type NodeIdMap = Record<string, CustomSankeyNode>;
 
 export function buildSankeyData(
   rootGroup: RootGroupNode,
@@ -212,7 +213,7 @@ function getOrCreateNode(
 
   if (mapEntry) {
     return {
-      node: mapEntry.sankeyNode,
+      node: mapEntry,
       isNewNode: false,
     };
   }
@@ -223,13 +224,12 @@ function getOrCreateNode(
       label: nodeName,
       color: getColorForNode(correspondingTreeNode, hopsGetterFn),
       position: nodePosition,
+
+      correspondingTreeNode: correspondingTreeNode,
     },
   };
 
-  nodeIdMap[nodeId] = {
-    sankeyNode: newSankeyNode,
-    correspondingTreeNode: correspondingTreeNode,
-  };
+  nodeIdMap[nodeId] = newSankeyNode;
 
   return {
     node: newSankeyNode,
