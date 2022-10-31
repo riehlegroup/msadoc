@@ -1,11 +1,11 @@
 import {
-  ServiceDocsTreeConnectingNode,
-  ServiceDocsTreeMainNode,
+  ConnectingNode,
+  MainNode,
+  RegularGroupNode,
+  RootGroupNode,
   ServiceDocsTreeNode,
   ServiceDocsTreeNodeType,
-  ServiceDocsTreeRegularGroupNode,
-  ServiceDocsTreeRootNode,
-  ServiceDocsTreeServiceNode,
+  ServiceNode,
 } from '../../../../service-docs-tree';
 import { extractAllServices } from '../../../../utils/service-docs-tree-utils';
 
@@ -22,17 +22,13 @@ import { extractAllServices } from '../../../../utils/service-docs-tree-utils';
 export type HopsGetterFn = (node: ServiceDocsTreeNode) => number;
 
 export function buildHopsGetterFn(
-  treeRoot: ServiceDocsTreeRootNode,
-  pivotNode: ServiceDocsTreeMainNode,
+  treeRoot: RootGroupNode,
+  pivotNode: MainNode,
 ): HopsGetterFn {
   const hopsMap = new Map<ServiceDocsTreeNode, number>();
 
-  const alreadyVisitedNodes = new Set<
-    ServiceDocsTreeServiceNode | ServiceDocsTreeConnectingNode
-  >();
-  let nodesToVisitInNextIteration: Array<
-    ServiceDocsTreeServiceNode | ServiceDocsTreeConnectingNode
-  >;
+  const alreadyVisitedNodes = new Set<ServiceNode | ConnectingNode>();
+  let nodesToVisitInNextIteration: Array<ServiceNode | ConnectingNode>;
   if (pivotNode.type === ServiceDocsTreeNodeType.Service) {
     nodesToVisitInNextIteration = [pivotNode];
   } else {
@@ -50,7 +46,7 @@ export function buildHopsGetterFn(
       alreadyVisitedNodes.add(singleNode);
 
       const potentialItemsForNextIteration: Array<
-        ServiceDocsTreeServiceNode | ServiceDocsTreeConnectingNode
+        ServiceNode | ConnectingNode
       > = [];
 
       if (singleNode.type === ServiceDocsTreeNodeType.Service) {
@@ -108,14 +104,14 @@ export function buildHopsGetterFn(
  * Complete the Hops Map by adding entries for all groups.
  */
 function addGroupsToHopsMap(
-  rootGroup: ServiceDocsTreeRootNode,
+  rootGroup: RootGroupNode,
   hopsMap: Map<ServiceDocsTreeNode, number>,
 ): void {
   getHopsForGroupAndUpdateHopsMap(rootGroup, hopsMap);
 }
 
 function getHopsForGroupAndUpdateHopsMap(
-  group: ServiceDocsTreeRegularGroupNode | ServiceDocsTreeRootNode,
+  group: RegularGroupNode | RootGroupNode,
   hopsMap: Map<ServiceDocsTreeNode, number>,
 ): number {
   let bestSoFar = Number.POSITIVE_INFINITY;

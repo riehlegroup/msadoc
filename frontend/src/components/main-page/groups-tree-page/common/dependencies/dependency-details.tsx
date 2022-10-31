@@ -2,18 +2,18 @@ import { Dialog, DialogContent, Typography } from '@mui/material';
 import React from 'react';
 
 import {
-  ServiceDocsTreeAPINode,
-  ServiceDocsTreeEventNode,
-  ServiceDocsTreeMainNode,
+  APINode,
+  EventNode,
+  MainNode,
   ServiceDocsTreeNodeType,
 } from '../../../service-docs-tree';
 
 import { DependencyDetailsItem } from './dependency-details-item';
 
 interface Props {
-  dependency: ServiceDocsTreeAPINode | ServiceDocsTreeEventNode;
+  dependency: APINode | EventNode;
 
-  currentServiceOrGroup: ServiceDocsTreeMainNode;
+  currentServiceOrGroup: MainNode;
 
   close: () => void;
   goToService: (serviceName: string) => void;

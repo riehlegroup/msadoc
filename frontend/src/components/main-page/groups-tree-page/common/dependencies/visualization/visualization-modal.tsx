@@ -10,7 +10,7 @@ import { ResponsiveSankey, SankeyLinkDatum } from '@nivo/sankey';
 import React from 'react';
 
 import { Icons } from '../../../../../../icons';
-import { ServiceDocsTreeMainNode } from '../../../../service-docs-tree';
+import { MainNode } from '../../../../service-docs-tree';
 import { useServiceDocsServiceContext } from '../../../../services/service-docs-service';
 
 import {
@@ -24,7 +24,7 @@ import {
 import { VisualizationConfig } from './visualization-config';
 
 interface Props {
-  pivotNode: ServiceDocsTreeMainNode;
+  pivotNode: MainNode;
 
   close: () => void;
 }

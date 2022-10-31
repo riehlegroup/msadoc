@@ -10,9 +10,9 @@ import React from 'react';
 
 import { Icons } from '../../../../icons';
 import {
+  RegularGroupNode,
+  RootGroupNode,
   ServiceDocsTreeNodeType,
-  ServiceDocsTreeRegularGroupNode,
-  ServiceDocsTreeRootNode,
 } from '../../service-docs-tree';
 import { useSelectedTreeItem } from '../../utils/router-utils';
 import { Dependencies } from '../common/dependencies';
@@ -97,15 +97,12 @@ export const GroupDetails: React.FC = () => {
 };
 
 interface Controller {
-  group: ServiceDocsTreeRegularGroupNode | ServiceDocsTreeRootNode | undefined;
+  group: RegularGroupNode | RootGroupNode | undefined;
 }
 function useController(): Controller {
   const selectedTreeItem = useSelectedTreeItem();
 
-  let group:
-    | ServiceDocsTreeRegularGroupNode
-    | ServiceDocsTreeRootNode
-    | undefined = undefined;
+  let group: RegularGroupNode | RootGroupNode | undefined = undefined;
   if (
     selectedTreeItem &&
     (selectedTreeItem.type === ServiceDocsTreeNodeType.RootGroup ||

@@ -16,12 +16,12 @@ import {
 import { DefaultLink, DefaultNode } from '@nivo/sankey';
 
 import {
-  ServiceDocsTreeConnectingNode,
-  ServiceDocsTreeMainNode,
+  ConnectingNode,
+  MainNode,
+  RegularGroupNode,
+  RootGroupNode,
   ServiceDocsTreeNodeType,
-  ServiceDocsTreeRegularGroupNode,
-  ServiceDocsTreeRootNode,
-  ServiceDocsTreeServiceNode,
+  ServiceNode,
 } from '../../../../service-docs-tree';
 
 import { HopsGetterFn, buildHopsGetterFn } from './graph-hops';
@@ -53,7 +53,7 @@ export interface SankeyConfig {
    * 1. It defines how nodes/links are colored (nodes/links not directly related to the Pivot Node are colored differently).
    * 2. It defines whether and how nodes are grouped: If a service is passed, then no grouping takes place. However, if a group is passed, then some of the nodes are combined on a per-group basis.
    */
-  pivotNode: ServiceDocsTreeMainNode;
+  pivotNode: MainNode;
 
   includeAPIs: boolean;
   includeEvents: boolean;
@@ -61,15 +61,12 @@ export interface SankeyConfig {
 
 interface NodeIdMapEntry {
   sankeyNode: CustomSankeyNode;
-  correspondingTreeNode:
-    | ServiceDocsTreeServiceNode
-    | ServiceDocsTreeRegularGroupNode
-    | ServiceDocsTreeConnectingNode;
+  correspondingTreeNode: ServiceNode | RegularGroupNode | ConnectingNode;
 }
 type NodeIdMap = Record<string, NodeIdMapEntry>;
 
 export function buildSankeyData(
-  rootGroup: ServiceDocsTreeRootNode,
+  rootGroup: RootGroupNode,
   sankeyConfig: SankeyConfig,
 ): SankeyData {
   const result: SankeyData = {
@@ -140,7 +137,7 @@ export function buildSankeyData(
 }
 
 function shouldIncludeLink(link: RawLink, sankeyConfig: SankeyConfig): boolean {
-  let connectingNode: ServiceDocsTreeConnectingNode;
+  let connectingNode: ConnectingNode;
   if (link.type === 'from-service-or-group') {
     connectingNode = link.to;
   } else {
@@ -164,10 +161,7 @@ function shouldIncludeLink(link: RawLink, sankeyConfig: SankeyConfig): boolean {
 }
 
 function getOrCreateNode(
-  correspondingTreeNode:
-    | ServiceDocsTreeServiceNode
-    | ServiceDocsTreeRegularGroupNode
-    | ServiceDocsTreeConnectingNode,
+  correspondingTreeNode: ServiceNode | RegularGroupNode | ConnectingNode,
   mode: 'from' | 'to',
   nodeIdMap: NodeIdMap,
   hopsGetterFn: HopsGetterFn,
@@ -244,10 +238,7 @@ function getOrCreateNode(
 }
 
 function getColorForNode(
-  node:
-    | ServiceDocsTreeServiceNode
-    | ServiceDocsTreeRegularGroupNode
-    | ServiceDocsTreeConnectingNode,
+  node: ServiceNode | RegularGroupNode | ConnectingNode,
   hopsGetterFn: HopsGetterFn,
 ): string {
   if (!isNodeDirectlyRelatedToPivotNode(node, hopsGetterFn)) {
@@ -289,10 +280,7 @@ function getColorForNode(
  * - It is a Service or Group and at most two hops are needed to reach it (i.e. `PivotNode --> SomeAPIOrEvent --> OurNode`)
  */
 function isNodeDirectlyRelatedToPivotNode(
-  node:
-    | ServiceDocsTreeServiceNode
-    | ServiceDocsTreeRegularGroupNode
-    | ServiceDocsTreeConnectingNode,
+  node: ServiceNode | RegularGroupNode | ConnectingNode,
   hopsGetterFn: HopsGetterFn,
 ): boolean {
   const hops = hopsGetterFn(node);

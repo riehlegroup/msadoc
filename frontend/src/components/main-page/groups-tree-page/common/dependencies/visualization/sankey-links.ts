@@ -1,9 +1,9 @@
 import {
-  ServiceDocsTreeConnectingNode,
+  ConnectingNode,
+  RegularGroupNode,
+  RootGroupNode,
   ServiceDocsTreeNodeType,
-  ServiceDocsTreeRegularGroupNode,
-  ServiceDocsTreeRootNode,
-  ServiceDocsTreeServiceNode,
+  ServiceNode,
 } from '../../../../service-docs-tree';
 import {
   extractAllServices,
@@ -15,14 +15,14 @@ export type RawLink = RawLinkFromServiceOrGroup | RawLinkToServiceOrGroup;
 
 interface RawLinkFromServiceOrGroup {
   type: 'from-service-or-group';
-  from: ServiceDocsTreeServiceNode | ServiceDocsTreeRegularGroupNode;
-  to: ServiceDocsTreeConnectingNode;
+  from: ServiceNode | RegularGroupNode;
+  to: ConnectingNode;
 }
 
 interface RawLinkToServiceOrGroup {
   type: 'to-service-or-group';
-  from: ServiceDocsTreeConnectingNode;
-  to: ServiceDocsTreeServiceNode | ServiceDocsTreeRegularGroupNode;
+  from: ConnectingNode;
+  to: ServiceNode | RegularGroupNode;
 }
 
 type BuildConfig = IncludeAllServicesSeparately | BuildAroundGroup;
@@ -31,18 +31,16 @@ interface IncludeAllServicesSeparately {
 }
 interface BuildAroundGroup {
   mode: 'build-around-group';
-  group: ServiceDocsTreeRegularGroupNode | ServiceDocsTreeRootNode;
+  group: RegularGroupNode | RootGroupNode;
 }
 
 export function buildRawLinks(
-  rootGroup: ServiceDocsTreeRootNode,
+  rootGroup: RootGroupNode,
   buildConfig: BuildConfig,
 ): RawLink[] {
   const result: RawLink[] = [];
 
-  let servicesAndGroups: Array<
-    ServiceDocsTreeRegularGroupNode | ServiceDocsTreeServiceNode
-  >;
+  let servicesAndGroups: Array<RegularGroupNode | ServiceNode>;
   if (buildConfig.mode === 'build-around-group') {
     servicesAndGroups = getDiagonalRelativesOfGroup(
       buildConfig.group,
@@ -136,9 +134,9 @@ export function buildRawLinks(
  * - In our Service Docs model, we have groups and services. Here, we say that the siblings of a group node X are all sibling groups of X, as well as all services directly owned by X.
  */
 function getDiagonalRelativesOfGroup(
-  targetGroup: ServiceDocsTreeRegularGroupNode | ServiceDocsTreeRootNode,
-  rootGroup: ServiceDocsTreeRootNode,
-): Array<ServiceDocsTreeRegularGroupNode | ServiceDocsTreeServiceNode> {
+  targetGroup: RegularGroupNode | RootGroupNode,
+  rootGroup: RootGroupNode,
+): Array<RegularGroupNode | ServiceNode> {
   if (targetGroup.type === ServiceDocsTreeNodeType.RootGroup) {
     return [...Object.values(targetGroup.childGroups), ...targetGroup.services];
   }
@@ -147,14 +145,10 @@ function getDiagonalRelativesOfGroup(
 }
 
 function getDiagonalRelativesOfGroupRec(
-  targetGroup: ServiceDocsTreeRegularGroupNode,
-  currentlyHandledGroup:
-    | ServiceDocsTreeRegularGroupNode
-    | ServiceDocsTreeRootNode,
-): Array<ServiceDocsTreeRegularGroupNode | ServiceDocsTreeServiceNode> {
-  const result: Array<
-    ServiceDocsTreeRegularGroupNode | ServiceDocsTreeServiceNode
-  > = [];
+  targetGroup: RegularGroupNode,
+  currentlyHandledGroup: RegularGroupNode | RootGroupNode,
+): Array<RegularGroupNode | ServiceNode> {
+  const result: Array<RegularGroupNode | ServiceNode> = [];
 
   if (currentlyHandledGroup === targetGroup) {
     result.push(...Object.values(currentlyHandledGroup.childGroups));

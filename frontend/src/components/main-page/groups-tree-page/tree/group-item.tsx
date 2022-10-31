@@ -10,9 +10,9 @@ import { generatePath, useNavigate } from 'react-router-dom';
 import { Icons } from '../../../../icons';
 import { GROUPS_TREE_ROUTES_ABS } from '../../../../routes';
 import {
-  ServiceDocsTreeMainNode,
+  MainNode,
+  RegularGroupNode,
   ServiceDocsTreeNodeType,
-  ServiceDocsTreeRegularGroupNode,
 } from '../../service-docs-tree';
 import { useSelectedTreeItem } from '../../utils/router-utils';
 import { isGroupXDescendantOfGroupY } from '../../utils/service-docs-tree-utils';
@@ -20,7 +20,7 @@ import { isGroupXDescendantOfGroupY } from '../../utils/service-docs-tree-utils'
 import { ServiceItem } from './service-item';
 
 interface Props {
-  group: ServiceDocsTreeRegularGroupNode;
+  group: RegularGroupNode;
 
   /**
    * How deep is this item in the tree?
@@ -189,10 +189,7 @@ function useController(props: Props): Controller {
 /**
  * Is `x` a descendant (i.e. child, or child of child, or ...) of `y`?
  */
-function isXDescendantOfY(params: {
-  x: ServiceDocsTreeMainNode;
-  y: ServiceDocsTreeMainNode;
-}): boolean {
+function isXDescendantOfY(params: { x: MainNode; y: MainNode }): boolean {
   // The root group cannot be a child of anyone.
   if (params.x.type === ServiceDocsTreeNodeType.RootGroup) {
     return false;

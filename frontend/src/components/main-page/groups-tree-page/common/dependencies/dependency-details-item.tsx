@@ -11,24 +11,24 @@ import React from 'react';
 
 import { Icons } from '../../../../../icons';
 import {
-  ServiceDocsTreeAPINode,
-  ServiceDocsTreeEventNode,
-  ServiceDocsTreeMainNode,
+  APINode,
+  EventNode,
+  MainNode,
   ServiceDocsTreeNodeType,
-  ServiceDocsTreeServiceNode,
+  ServiceNode,
 } from '../../../service-docs-tree';
 
 interface BaseProps {
-  currentServiceOrGroup: ServiceDocsTreeMainNode;
+  currentServiceOrGroup: MainNode;
 
   goToService: (serviceName: string) => void;
 }
 interface APINodeProps extends BaseProps {
-  dependency: ServiceDocsTreeAPINode;
+  dependency: APINode;
   mode: 'providers' | 'consumers';
 }
 interface EventNodeProps extends BaseProps {
-  dependency: ServiceDocsTreeEventNode;
+  dependency: EventNode;
   mode: 'producers' | 'consumers';
 }
 type Props = APINodeProps | EventNodeProps;
@@ -84,10 +84,10 @@ export const DependencyDetailsItem: React.FC<Props> = (props) => {
 };
 
 interface Controller {
-  servicesOfInterest: ServiceDocsTreeServiceNode[];
+  servicesOfInterest: ServiceNode[];
 }
 function useController(props: Props): Controller {
-  const servicesOfInterest = React.useMemo((): ServiceDocsTreeServiceNode[] => {
+  const servicesOfInterest = React.useMemo((): ServiceNode[] => {
     if (props.dependency.type === ServiceDocsTreeNodeType.API) {
       if (props.mode === 'providers') {
         return props.dependency.providedBy;

@@ -13,27 +13,20 @@ export enum ServiceDocsTreeNodeType {
   Event,
 }
 
-export type ServiceDocsTreeNode =
-  | ServiceDocsTreeMainNode
-  | ServiceDocsTreeConnectingNode;
+export type ServiceDocsTreeNode = MainNode | ConnectingNode;
 
 /**
  * The "main" nodes that span the actual tree.
  */
-export type ServiceDocsTreeMainNode =
-  | ServiceDocsTreeRootNode
-  | ServiceDocsTreeRegularGroupNode
-  | ServiceDocsTreeServiceNode;
+export type MainNode = RootGroupNode | RegularGroupNode | ServiceNode;
 
 /**
  * APIs and Events "connect" services with each other.
  * Which is why we call the corresponding nodes "connecting nodes".
  */
-export type ServiceDocsTreeConnectingNode =
-  | ServiceDocsTreeAPINode
-  | ServiceDocsTreeEventNode;
+export type ConnectingNode = APINode | EventNode;
 
-export interface ServiceDocsTreeServiceNode
+export interface ServiceNode
   extends Omit<
     GetServiceDocResponse,
     | 'group'
@@ -44,15 +37,15 @@ export interface ServiceDocsTreeServiceNode
   > {
   type: ServiceDocsTreeNodeType.Service;
 
-  group: ServiceDocsTreeRegularGroupNode | ServiceDocsTreeRootNode;
+  group: RegularGroupNode | RootGroupNode;
 
-  providedAPIs: ServiceDocsTreeAPINode[];
-  consumedAPIs: ServiceDocsTreeAPINode[];
-  producedEvents: ServiceDocsTreeEventNode[];
-  consumedEvents: ServiceDocsTreeEventNode[];
+  providedAPIs: APINode[];
+  consumedAPIs: APINode[];
+  producedEvents: EventNode[];
+  consumedEvents: EventNode[];
 }
 
-export interface ServiceDocsTreeRegularGroupNode {
+export interface RegularGroupNode {
   type: ServiceDocsTreeNodeType.RegularGroup;
 
   /**
@@ -72,43 +65,40 @@ export interface ServiceDocsTreeRegularGroupNode {
    * The object keys are the names of the respective child group.
    * (Compared to just using an array, this enables a faster lookup of groups.)
    */
-  childGroups: { [groupName: string]: ServiceDocsTreeRegularGroupNode };
+  childGroups: { [groupName: string]: RegularGroupNode };
 
-  parent: ServiceDocsTreeRegularGroupNode | ServiceDocsTreeRootNode;
+  parent: RegularGroupNode | RootGroupNode;
 
   /**
    * The services that belong to this group.
    */
-  services: ServiceDocsTreeServiceNode[];
+  services: ServiceNode[];
 }
 // Basically the same as a regular group, but without a name, identifier, or parent.
-export interface ServiceDocsTreeRootNode
-  extends Omit<
-    ServiceDocsTreeRegularGroupNode,
-    'name' | 'identifier' | 'parent' | 'type'
-  > {
+export interface RootGroupNode
+  extends Omit<RegularGroupNode, 'name' | 'identifier' | 'parent' | 'type'> {
   type: ServiceDocsTreeNodeType.RootGroup;
 }
 
-export interface ServiceDocsTreeAPINode {
+export interface APINode {
   type: ServiceDocsTreeNodeType.API;
   name: string;
 
-  providedBy: ServiceDocsTreeServiceNode[];
-  consumedBy: ServiceDocsTreeServiceNode[];
+  providedBy: ServiceNode[];
+  consumedBy: ServiceNode[];
 }
 
-export interface ServiceDocsTreeEventNode {
+export interface EventNode {
   type: ServiceDocsTreeNodeType.Event;
   name: string;
 
-  producedBy: ServiceDocsTreeServiceNode[];
-  consumedBy: ServiceDocsTreeServiceNode[];
+  producedBy: ServiceNode[];
+  consumedBy: ServiceNode[];
 }
 
 export function buildServiceDocsTree(
   serviceDocs: GetServiceDocResponse[],
-): ServiceDocsTreeRootNode {
+): RootGroupNode {
   const allGroupIdentifiers = getAllGroupIdentifiers(serviceDocs);
 
   const theTree = buildGroups(allGroupIdentifiers);
@@ -133,8 +123,8 @@ function getAllGroupIdentifiers(
   return result;
 }
 
-function buildGroups(groupIdentifiers: Set<string>): ServiceDocsTreeRootNode {
-  const rootGroup: ServiceDocsTreeRootNode = {
+function buildGroups(groupIdentifiers: Set<string>): RootGroupNode {
+  const rootGroup: RootGroupNode = {
     type: ServiceDocsTreeNodeType.RootGroup,
     childGroups: {},
     services: [],
@@ -149,15 +139,14 @@ function buildGroups(groupIdentifiers: Set<string>): ServiceDocsTreeRootNode {
 
 function createGroupIfNotExists(
   groupIdentifier: string,
-  rootGroup: ServiceDocsTreeRootNode,
-): ServiceDocsTreeRegularGroupNode | ServiceDocsTreeRootNode {
+  rootGroup: RootGroupNode,
+): RegularGroupNode | RootGroupNode {
   const splitGroupIdentifier = groupIdentifier.split('.');
   if (splitGroupIdentifier[0] === undefined) {
     console.warn('This point should not be reached.');
     return rootGroup;
   }
-  let currentGroup: ServiceDocsTreeRootNode | ServiceDocsTreeRegularGroupNode =
-    rootGroup;
+  let currentGroup: RootGroupNode | RegularGroupNode = rootGroup;
   for (let i = 0; i < splitGroupIdentifier.length; i++) {
     const groupName = splitGroupIdentifier[i];
     if (groupName === undefined) {
@@ -165,7 +154,7 @@ function createGroupIfNotExists(
       continue;
     }
 
-    let childGroup: ServiceDocsTreeRegularGroupNode | undefined =
+    let childGroup: RegularGroupNode | undefined =
       currentGroup.childGroups[groupName];
     if (!childGroup) {
       const identifier = splitGroupIdentifier.slice(0, i + 1).join('.');
@@ -188,19 +177,19 @@ function createGroupIfNotExists(
 
 function buildAndInsertServiceItems(
   serviceDocs: GetServiceDocResponse[],
-  rootGroup: ServiceDocsTreeRootNode,
+  rootGroup: RootGroupNode,
 ): void {
   /**
    * A Map from node name to its Node.
    */
-  const APINodesMap: Record<string, ServiceDocsTreeAPINode> = {};
+  const APINodesMap: Record<string, APINode> = {};
   /**
    * A Map from node name to its Node.
    */
-  const eventNodesMap: Record<string, ServiceDocsTreeEventNode> = {};
+  const eventNodesMap: Record<string, EventNode> = {};
 
   for (const singleServiceDoc of serviceDocs) {
-    let group: ServiceDocsTreeRootNode | ServiceDocsTreeRegularGroupNode;
+    let group: RootGroupNode | RegularGroupNode;
 
     if (singleServiceDoc.group === undefined) {
       // If the group is missing, add this service to the root group.
@@ -220,7 +209,7 @@ function buildAndInsertServiceItems(
       group = foundGroup;
     }
 
-    const newServiceDocNode: ServiceDocsTreeServiceNode = {
+    const newServiceDocNode: ServiceNode = {
       ...singleServiceDoc,
 
       type: ServiceDocsTreeNodeType.Service,
@@ -285,8 +274,8 @@ function buildAndInsertServiceItems(
 
 function getOrCreateAPINode(
   nodeName: string,
-  APINodesMap: Record<string, ServiceDocsTreeAPINode>,
-): ServiceDocsTreeAPINode {
+  APINodesMap: Record<string, APINode>,
+): APINode {
   let theAPINode = APINodesMap[nodeName];
   if (!theAPINode) {
     theAPINode = {
@@ -303,8 +292,8 @@ function getOrCreateAPINode(
 
 function getOrCreateEventNode(
   nodeName: string,
-  eventNodesMap: Record<string, ServiceDocsTreeEventNode>,
-): ServiceDocsTreeEventNode {
+  eventNodesMap: Record<string, EventNode>,
+): EventNode {
   let theEventNode = eventNodesMap[nodeName];
   if (!theEventNode) {
     theEventNode = {
@@ -321,18 +310,17 @@ function getOrCreateEventNode(
 
 export function getGroupByIdentifier(
   groupIdentifier: string,
-  groupsTree: ServiceDocsTreeRootNode,
-): ServiceDocsTreeRegularGroupNode | undefined {
+  groupsTree: RootGroupNode,
+): RegularGroupNode | undefined {
   const splitGroupIdentifier = groupIdentifier.split('.');
-  let currentGroup: ServiceDocsTreeRootNode | ServiceDocsTreeRegularGroupNode =
-    groupsTree;
+  let currentGroup: RootGroupNode | RegularGroupNode = groupsTree;
   for (const identifierPart of splitGroupIdentifier) {
-    const nextGroup: ServiceDocsTreeRegularGroupNode | undefined =
+    const nextGroup: RegularGroupNode | undefined =
       currentGroup.childGroups[identifierPart];
     if (!nextGroup) {
       return undefined;
     }
     currentGroup = nextGroup;
   }
-  return currentGroup as ServiceDocsTreeRegularGroupNode;
+  return currentGroup as RegularGroupNode;
 }
