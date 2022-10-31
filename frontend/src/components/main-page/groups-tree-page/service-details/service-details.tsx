@@ -10,10 +10,7 @@ import {
 import React from 'react';
 
 import { Icons } from '../../../../icons';
-import {
-  ServiceDocsTreeNodeType,
-  ServiceDocsTreeServiceNode,
-} from '../../service-docs-tree';
+import { ServiceDocsTreeNodeType, ServiceNode } from '../../service-docs-tree';
 import { useSelectedTreeItem } from '../../utils/router-utils';
 import { Dependencies } from '../common/dependencies';
 
@@ -102,12 +99,12 @@ export const ServiceDetails: React.FC = () => {
 };
 
 interface Controller {
-  service: ServiceDocsTreeServiceNode | undefined;
+  service: ServiceNode | undefined;
 }
 function useController(): Controller {
   const selectedTreeItem = useSelectedTreeItem();
 
-  let service: ServiceDocsTreeServiceNode | undefined = undefined;
+  let service: ServiceNode | undefined = undefined;
   if (
     selectedTreeItem &&
     selectedTreeItem.type === ServiceDocsTreeNodeType.Service

@@ -15,18 +15,14 @@ import { generatePath, useNavigate } from 'react-router-dom';
 
 import { Icons } from '../../../../../icons';
 import { GROUPS_TREE_ROUTES_ABS } from '../../../../../routes';
-import {
-  ServiceDocsTreeAPINode,
-  ServiceDocsTreeEventNode,
-  ServiceDocsTreeMainNode,
-} from '../../../service-docs-tree';
+import { APINode, EventNode, MainNode } from '../../../service-docs-tree';
 import { getAllAPIsAndEvents } from '../../../utils/service-docs-tree-utils';
 
 import { DependencyDetails } from './dependency-details';
 import { VisualizationModal } from './visualization/visualization-modal';
 
 interface Props {
-  showDependenciesFor: ServiceDocsTreeMainNode;
+  showDependenciesFor: MainNode;
 }
 export const Dependencies: React.FC<Props> = (props) => {
   const controller = useController(props);
@@ -126,14 +122,11 @@ type DependencyType =
   | 'consumed-events';
 interface DependencyItem {
   type: DependencyType;
-  data: ServiceDocsTreeAPINode[] | ServiceDocsTreeEventNode[];
+  data: APINode[] | EventNode[];
 }
 
 interface State {
-  dependencyDialogData:
-    | ServiceDocsTreeAPINode
-    | ServiceDocsTreeEventNode
-    | undefined;
+  dependencyDialogData: APINode | EventNode | undefined;
 
   showVisualization: boolean;
 }
@@ -142,9 +135,7 @@ interface Controller {
 
   dependencyItems: DependencyItem[];
 
-  showDependencyDialog: (
-    data: ServiceDocsTreeAPINode | ServiceDocsTreeEventNode,
-  ) => void;
+  showDependencyDialog: (data: APINode | EventNode) => void;
   hideDependencyDialog: () => void;
 
   setShowVisualization: (show: boolean) => void;

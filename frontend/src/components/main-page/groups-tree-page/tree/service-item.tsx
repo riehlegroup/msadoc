@@ -4,14 +4,11 @@ import { generatePath, useNavigate } from 'react-router-dom';
 
 import { Icons } from '../../../../icons';
 import { GROUPS_TREE_ROUTES_ABS } from '../../../../routes';
-import {
-  ServiceDocsTreeNodeType,
-  ServiceDocsTreeServiceNode,
-} from '../../service-docs-tree';
+import { ServiceDocsTreeNodeType, ServiceNode } from '../../service-docs-tree';
 import { useSelectedTreeItem } from '../../utils/router-utils';
 
 interface Props {
-  service: ServiceDocsTreeServiceNode;
+  service: ServiceNode;
 
   /**
    * How deep is this item in the tree?

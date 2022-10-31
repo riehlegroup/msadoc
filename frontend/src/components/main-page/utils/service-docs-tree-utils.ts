@@ -1,16 +1,16 @@
 import {
-  ServiceDocsTreeAPINode,
-  ServiceDocsTreeEventNode,
-  ServiceDocsTreeMainNode,
+  APINode,
+  EventNode,
+  MainNode,
+  RegularGroupNode,
+  RootGroupNode,
   ServiceDocsTreeNodeType,
-  ServiceDocsTreeRegularGroupNode,
-  ServiceDocsTreeRootNode,
-  ServiceDocsTreeServiceNode,
+  ServiceNode,
 } from '../service-docs-tree';
 
 export function isGroupXDescendantOfGroupY(params: {
-  xGroup: ServiceDocsTreeRegularGroupNode;
-  yGroup: ServiceDocsTreeRegularGroupNode;
+  xGroup: RegularGroupNode;
+  yGroup: RegularGroupNode;
 }): boolean {
   let currentParentGroup = params.xGroup.parent;
 
@@ -30,9 +30,9 @@ export function isGroupXDescendantOfGroupY(params: {
 }
 
 export function extractAllServices(
-  group: ServiceDocsTreeRegularGroupNode | ServiceDocsTreeRootNode,
-): ServiceDocsTreeServiceNode[] {
-  const result: ServiceDocsTreeServiceNode[] = [...group.services];
+  group: RegularGroupNode | RootGroupNode,
+): ServiceNode[] {
+  const result: ServiceNode[] = [...group.services];
 
   for (const singleChildGroup of Object.values(group.childGroups)) {
     const recursivelyExtractedServices = extractAllServices(singleChildGroup);
@@ -43,14 +43,12 @@ export function extractAllServices(
 }
 
 export interface APIsAndEvents {
-  providedAPIs: Set<ServiceDocsTreeAPINode>;
-  consumedAPIs: Set<ServiceDocsTreeAPINode>;
-  producedEvents: Set<ServiceDocsTreeEventNode>;
-  consumedEvents: Set<ServiceDocsTreeEventNode>;
+  providedAPIs: Set<APINode>;
+  consumedAPIs: Set<APINode>;
+  producedEvents: Set<EventNode>;
+  consumedEvents: Set<EventNode>;
 }
-export function getAllAPIsAndEvents(
-  item: ServiceDocsTreeMainNode,
-): APIsAndEvents {
+export function getAllAPIsAndEvents(item: MainNode): APIsAndEvents {
   if (item.type === ServiceDocsTreeNodeType.Service) {
     return {
       providedAPIs: new Set(item.providedAPIs),

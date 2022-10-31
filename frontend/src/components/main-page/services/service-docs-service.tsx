@@ -2,21 +2,21 @@ import { GetServiceDocResponse } from 'msadoc-client';
 import React from 'react';
 
 import {
-  ServiceDocsTreeRootNode,
-  ServiceDocsTreeServiceNode,
+  RootGroupNode,
+  ServiceNode,
   buildServiceDocsTree,
 } from '../service-docs-tree';
 import { extractAllServices } from '../utils/service-docs-tree-utils';
 
 interface ServiceDocsService {
-  serviceDocs: ServiceDocsTreeServiceNode[];
-  groupsTree: ServiceDocsTreeRootNode;
+  serviceDocs: ServiceNode[];
+  groupsTree: RootGroupNode;
 }
 function useServiceDocsService(
   serviceDocs: GetServiceDocResponse[],
 ): ServiceDocsService {
   const groupsTree = React.useMemo(
-    (): ServiceDocsTreeRootNode => buildServiceDocsTree(serviceDocs),
+    (): RootGroupNode => buildServiceDocsTree(serviceDocs),
     [serviceDocs],
   );
 
