@@ -1,12 +1,5 @@
-import {
-  Box,
-  Dialog,
-  Divider,
-  IconButton,
-  Paper,
-  Tooltip,
-} from '@mui/material';
-import { ResponsiveSankey, SankeyLinkDatum } from '@nivo/sankey';
+import { Box, Dialog, Divider, IconButton, Tooltip } from '@mui/material';
+import { ResponsiveSankey } from '@nivo/sankey';
 import React from 'react';
 
 import { Icons } from '../../../../../../icons';
@@ -21,6 +14,7 @@ import {
   SankeyData,
   buildSankeyData,
 } from './sankey-data';
+import { SankeyLinkTooltip } from './sankey-link-tooltip';
 import { VisualizationConfig } from './visualization-config';
 
 interface Props {
@@ -108,7 +102,7 @@ export const VisualizationModal: React.FC<Props> = (props) => {
                 data={controller.sankeyData}
                 colors={(node): string => node.customData.color}
                 label={(node): string => node.customData.label}
-                linkTooltip={CustomLinkTooltip}
+                linkTooltip={SankeyLinkTooltip}
                 align={(node, maxDepth): number =>
                   getNodeAlignment(node as SankeyNodeWithDepth, maxDepth)
                 }
@@ -181,46 +175,3 @@ function getNodeAlignment(node: SankeyNodeWithDepth, maxDepth: number): number {
       return 2;
   }
 }
-
-/**
- * The tooltip that is being shown when hovering a link.
- */
-const CustomLinkTooltip: React.FC<{
-  link: SankeyLinkDatum<CustomSankeyNode, CustomSankeyLink>;
-}> = (props) => {
-  return (
-    <Paper
-      elevation={1}
-      sx={{
-        background: '#ffffff',
-        paddingX: 2,
-        paddingY: 1,
-        display: 'flex',
-        gap: 2,
-        alignItems: 'center',
-      }}
-    >
-      <Box
-        sx={{
-          background: props.link.source.color,
-          height: '15px',
-          width: '15px',
-        }}
-      />
-
-      <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-        <span>{props.link.source.label}</span>
-        <Icons.ArrowForward />
-        <span>{props.link.target.label}</span>
-      </Box>
-
-      <Box
-        sx={{
-          background: props.link.target.color,
-          height: '15px',
-          width: '15px',
-        }}
-      />
-    </Paper>
-  );
-};
