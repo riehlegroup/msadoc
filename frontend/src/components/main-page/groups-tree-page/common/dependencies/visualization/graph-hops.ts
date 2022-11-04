@@ -1,3 +1,4 @@
+import { addMultipleItemsToSet } from '../../../../../../utils/set';
 import {
   ConnectingNode,
   MainNode,
@@ -14,10 +15,23 @@ import { extractAllServices } from '../../../../utils/service-docs-tree-utils';
  *
  * Hops are the minimal number of services/APIs/Events one would have to visit in order to reach the Pivot Node. (One could also call this number "depth" or "distance".)
  *
- * If the Pivot Node is a service, then the following applies:
- * The hops number is 0 for the Pivot Service itself, 1 for all the APIs and Events directly connected to this service, 2 for all services that are connected to the APIs/Events mentioned before, and so on. If the Pivot Service is not reachable, the number is set to infinity.
+ * If the Pivot Node is a service, then the following applies. The hops number is:
+ * - 0 for the Pivot Service itself.
+ * - 1 for all the APIs and Events directly connected to the Pivot Service.
+ * - 2 for all services consuming an API/Event produced by the Pivot Service, and also 2 for all services producing an API/Event consumed by the Pivot Service.
+ * - ...
  *
- * If the Pivot Node is a group, then all services contained in the Pivot Group are collected. The hops number is then the minimal distance to any of the collected services, i.e. if there is one service reachable in 3 hops and one in 4, then the hops number is set to 3.
+ * If the Pivot Node is a group, then all services contained in the Pivot Group are collected. The hops number is then the minimal distance to any of the collected services, i.e. if there is one service reachable in 2 hops and one in 4, then the hops number is set to 2.
+ *
+ * The hops are calculated by following the APIs/Events in a directed way.
+ * Example:
+ * Assume there is only one Event, and this Event is:
+ * - Consumed by the Pivot Service and by service X
+ * - Produced by service Y
+ *
+ * In this scenario, we say that 2 hops are needed to reach service Y (PivotService --> TheEvent --> Y).
+ * However, we say that the Pivot Service and X are not connected at all, leading to an infinite number of hops.
+ * This is because we follow the graph in a directed way, so when looking an the consumed Events of a service, we then go to the services that produced these Events, and we do not look at services that consumed these Events.
  */
 export type HopsGetterFn = (node: ServiceDocsTreeNode) => number;
 
@@ -33,62 +47,103 @@ export function buildHopsGetterFn(
   const hopsMap = new Map<ServiceDocsTreeNode, number>();
 
   const alreadyVisitedNodes = new Set<ServiceNode | ConnectingNode>();
-  let nodesToVisitInNextIteration: Array<ServiceNode | ConnectingNode>;
+  const servicesToVisitInNextIteration = new Set<ServiceNode>();
+
   if (pivotNode.type === ServiceDocsTreeNodeType.Service) {
-    nodesToVisitInNextIteration = [pivotNode];
+    servicesToVisitInNextIteration.add(pivotNode);
   } else {
-    nodesToVisitInNextIteration = extractAllServices(pivotNode);
+    const allServicesOfPivotNode = extractAllServices(pivotNode);
+    addMultipleItemsToSet(
+      allServicesOfPivotNode,
+      servicesToVisitInNextIteration,
+    );
   }
 
   let currentDepth = 0;
-  // This is basically Breadth-First Search: We go over all services and API/Event nodes "layer-by-layer".
-  while (nodesToVisitInNextIteration.length > 0) {
-    const nodesOnCurrentLevel = [...nodesToVisitInNextIteration];
-    nodesToVisitInNextIteration = [];
+  /*
+    This is basically Breadth-First Search: We go over all services "layer-by-layer", following the direction of the APIs/Events.
 
-    for (const singleNode of nodesOnCurrentLevel) {
-      hopsMap.set(singleNode, currentDepth);
-      alreadyVisitedNodes.add(singleNode);
+    So, we take a service, look at the APIs it provides, and say that we want to visit all services consuming these APIs in the next iteration.
+    Also, we look at the APIs it consumes, and say that we want to visit all services producing these APIs in the next iteration.
+    The same is done for Events.
 
-      const potentialItemsForNextIteration: Array<
-        ServiceNode | ConnectingNode
-      > = [];
+    By doing it like that, we always follow the APIs/Events in a directed way.  
+  */
+  while (servicesToVisitInNextIteration.size > 0) {
+    const servicesOnCurrentLevel = Array.from(servicesToVisitInNextIteration);
+    servicesToVisitInNextIteration.clear();
 
-      if (singleNode.type === ServiceDocsTreeNodeType.Service) {
-        potentialItemsForNextIteration.push(
-          ...Array.from(singleNode.providedAPIs),
-        );
-        potentialItemsForNextIteration.push(
-          ...Array.from(singleNode.consumedAPIs),
-        );
-        potentialItemsForNextIteration.push(
-          ...Array.from(singleNode.producedEvents),
-        );
-        potentialItemsForNextIteration.push(
-          ...Array.from(singleNode.consumedEvents),
-        );
-      } else if (singleNode.type === ServiceDocsTreeNodeType.API) {
-        potentialItemsForNextIteration.push(
-          ...Array.from(singleNode.providedBy),
-        );
-        potentialItemsForNextIteration.push(
-          ...Array.from(singleNode.consumedBy),
-        );
-      } else {
-        potentialItemsForNextIteration.push(
-          ...Array.from(singleNode.producedBy),
-        );
-        potentialItemsForNextIteration.push(
-          ...Array.from(singleNode.consumedBy),
-        );
-      }
+    const potentialServicesToVisitInNextIteration = new Set<ServiceNode>();
 
-      for (const singlePotentialItem of potentialItemsForNextIteration) {
-        if (alreadyVisitedNodes.has(singlePotentialItem)) {
+    for (const singleService of servicesOnCurrentLevel) {
+      hopsMap.set(singleService, currentDepth * 2);
+      alreadyVisitedNodes.add(singleService);
+
+      const APIOrEventDepth = currentDepth * 2 + 1;
+
+      for (const singleProvidedAPI of singleService.providedAPIs) {
+        if (alreadyVisitedNodes.has(singleProvidedAPI)) {
           continue;
         }
-        nodesToVisitInNextIteration.push(singlePotentialItem);
+        hopsMap.set(singleProvidedAPI, APIOrEventDepth);
+
+        addMultipleItemsToSet(
+          singleProvidedAPI.consumedBy,
+          potentialServicesToVisitInNextIteration,
+        );
       }
+
+      for (const singleConsumedAPI of singleService.consumedAPIs) {
+        if (alreadyVisitedNodes.has(singleConsumedAPI)) {
+          continue;
+        }
+        hopsMap.set(singleConsumedAPI, APIOrEventDepth);
+
+        addMultipleItemsToSet(
+          singleConsumedAPI.providedBy,
+          potentialServicesToVisitInNextIteration,
+        );
+      }
+
+      for (const singleProducedEvent of singleService.producedEvents) {
+        if (alreadyVisitedNodes.has(singleProducedEvent)) {
+          continue;
+        }
+        hopsMap.set(singleProducedEvent, APIOrEventDepth);
+
+        addMultipleItemsToSet(
+          singleProducedEvent.consumedBy,
+          potentialServicesToVisitInNextIteration,
+        );
+      }
+
+      for (const singleConsumedEvent of singleService.consumedEvents) {
+        if (alreadyVisitedNodes.has(singleConsumedEvent)) {
+          continue;
+        }
+        hopsMap.set(singleConsumedEvent, APIOrEventDepth);
+
+        addMultipleItemsToSet(
+          singleConsumedEvent.producedBy,
+          potentialServicesToVisitInNextIteration,
+        );
+      }
+
+      for (const singleAPIOrEventNode of [
+        ...singleService.providedAPIs,
+        ...singleService.consumedAPIs,
+        ...singleService.producedEvents,
+        ...singleService.consumedEvents,
+      ]) {
+        alreadyVisitedNodes.add(singleAPIOrEventNode);
+      }
+    }
+
+    for (const singlePotentialItem of potentialServicesToVisitInNextIteration.values()) {
+      if (alreadyVisitedNodes.has(singlePotentialItem)) {
+        continue;
+      }
+      servicesToVisitInNextIteration.add(singlePotentialItem);
     }
 
     currentDepth++;

@@ -1,3 +1,4 @@
+import { addMultipleItemsToSet } from '../../../utils/set';
 import {
   APINode,
   EventNode,
@@ -74,10 +75,4 @@ export function getAllAPIsAndEvents(item: MainNode): APIsAndEvents {
   }
 
   return result;
-}
-
-function addMultipleItemsToSet<T>(items: T[], theSet: Set<T>): void {
-  for (const singleItem of items) {
-    theSet.add(singleItem);
-  }
 }
