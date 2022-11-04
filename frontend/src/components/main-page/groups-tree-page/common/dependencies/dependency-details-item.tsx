@@ -103,7 +103,25 @@ function useController(props: Props): Controller {
     return props.dependency.consumedBy;
   }, [props.dependency, props.mode]);
 
+  const sortedServicesOfInterest = React.useMemo((): ServiceNode[] => {
+    const result = [...servicesOfInterest];
+
+    sortServicesInPlace(result);
+
+    return result;
+  }, [servicesOfInterest]);
+
   return {
-    servicesOfInterest: servicesOfInterest,
+    servicesOfInterest: sortedServicesOfInterest,
   };
+}
+
+/**
+ * Sort the given Services by their name.
+ * This function sorts in-place, i.e. it directly modifies the given array.
+ */
+function sortServicesInPlace(services: ServiceNode[]): void {
+  services.sort((a, b) => {
+    return a.name.localeCompare(b.name);
+  });
 }
