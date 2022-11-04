@@ -13,6 +13,7 @@ import {
   MainNode,
   RegularGroupNode,
   ServiceDocsTreeNodeType,
+  ServiceNode,
 } from '../../service-docs-tree';
 import { useSelectedTreeItem } from '../../utils/router-utils';
 import { isGroupXDescendantOfGroupY } from '../../utils/service-docs-tree-utils';
@@ -86,7 +87,7 @@ export const GroupItem: React.FC<Props> = (props) => {
       {!controller.state.isCollapsed && (
         <React.Fragment>
           <List component="div" disablePadding>
-            {Object.values(props.group.childGroups).map((childGroup) => (
+            {controller.sortedChildGroups.map((childGroup) => (
               <GroupItem
                 key={childGroup.identifier}
                 group={childGroup}
@@ -96,7 +97,7 @@ export const GroupItem: React.FC<Props> = (props) => {
           </List>
 
           <List component="div" disablePadding>
-            {props.group.services.map((service) => (
+            {controller.sortedServices.map((service) => (
               <ServiceItem
                 key={service.name}
                 service={service}
@@ -119,6 +120,9 @@ interface Controller {
   isSelected: boolean;
 
   buttonRef: React.RefObject<HTMLDivElement>;
+
+  sortedChildGroups: RegularGroupNode[];
+  sortedServices: ServiceNode[];
 
   navigateToThisGroup: () => void;
   toggleIsCollapsed: () => void;
@@ -166,12 +170,31 @@ function useController(props: Props): Controller {
     setState((state) => ({ ...state, isCollapsed: false }));
   }, [props.group, selectedTreeItem]);
 
+  const sortedChildGroups = React.useMemo((): RegularGroupNode[] => {
+    const result = Object.values(props.group.childGroups);
+
+    sortGroupsInPlace(result);
+
+    return result;
+  }, [props.group.childGroups]);
+
+  const sortedServices = React.useMemo((): ServiceNode[] => {
+    const result = [...props.group.services];
+
+    sortServicesInPlace(result);
+
+    return result;
+  }, [props.group.services]);
+
   return {
     state: state,
 
     isSelected: isSelected,
 
     buttonRef: buttonRef,
+
+    sortedChildGroups: sortedChildGroups,
+    sortedServices: sortedServices,
 
     navigateToThisGroup: (): void => {
       navigate(
@@ -223,5 +246,25 @@ function isXDescendantOfY(params: { x: MainNode; y: MainNode }): boolean {
   return isGroupXDescendantOfGroupY({
     xGroup: params.x,
     yGroup: params.y,
+  });
+}
+
+/**
+ * Sort the given Services by their name.
+ * This function sorts in-place, i.e. it directly modifies the given array.
+ */
+function sortServicesInPlace(services: ServiceNode[]): void {
+  services.sort((a, b) => {
+    return a.name.localeCompare(b.name);
+  });
+}
+
+/**
+ * Sort the given Groups by their name.
+ * This function sorts in-place, i.e. it directly modifies the given array.
+ */
+function sortGroupsInPlace(groups: RegularGroupNode[]): void {
+  groups.sort((a, b) => {
+    return a.name.localeCompare(b.name);
   });
 }
