@@ -266,7 +266,7 @@ function buildAndInsertServiceItems(
         );
 
         newServiceDocNode.consumedEvents.push(theEventNode);
-        theEventNode.producedBy.push(newServiceDocNode);
+        theEventNode.consumedBy.push(newServiceDocNode);
       }
     }
   }
