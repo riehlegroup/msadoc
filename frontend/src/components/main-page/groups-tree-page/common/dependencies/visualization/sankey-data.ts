@@ -59,6 +59,8 @@ export interface SankeyConfig {
 
   includeAPIs: boolean;
   includeEvents: boolean;
+
+  includeUnrelatedEntries: boolean;
 }
 
 /**
@@ -92,7 +94,7 @@ export function buildSankeyData(
   };
 
   for (const singleRawLink of rawLinks) {
-    if (!shouldIncludeLink(singleRawLink, sankeyConfig)) {
+    if (!shouldIncludeLink(singleRawLink, sankeyConfig, hopsGetterFn)) {
       continue;
     }
 
@@ -137,7 +139,11 @@ export function buildSankeyData(
   return result;
 }
 
-function shouldIncludeLink(link: RawLink, sankeyConfig: SankeyConfig): boolean {
+function shouldIncludeLink(
+  link: RawLink,
+  sankeyConfig: SankeyConfig,
+  hopsGetterFn: HopsGetterFn,
+): boolean {
   let connectingNode: ConnectingNode;
   if (link.type === 'from-service-or-group') {
     connectingNode = link.to;
@@ -154,6 +160,14 @@ function shouldIncludeLink(link: RawLink, sankeyConfig: SankeyConfig): boolean {
   if (
     connectingNode.type === ServiceDocsTreeNodeType.Event &&
     !sankeyConfig.includeEvents
+  ) {
+    return false;
+  }
+
+  if (
+    !sankeyConfig.includeUnrelatedEntries &&
+    (!isNodeDirectlyRelatedToPivotNode(link.from, hopsGetterFn) ||
+      !isNodeDirectlyRelatedToPivotNode(link.to, hopsGetterFn))
   ) {
     return false;
   }

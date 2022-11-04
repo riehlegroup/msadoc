@@ -141,6 +141,8 @@ function useController(props: Props): Controller {
 
       includeAPIs: true,
       includeEvents: true,
+
+      includeUnrelatedEntries: true,
     },
   });
 
