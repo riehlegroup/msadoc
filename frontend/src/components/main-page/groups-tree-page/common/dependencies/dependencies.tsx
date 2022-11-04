@@ -15,7 +15,12 @@ import { generatePath, useNavigate } from 'react-router-dom';
 
 import { Icons } from '../../../../../icons';
 import { GROUPS_TREE_ROUTES_ABS } from '../../../../../routes';
-import { APINode, EventNode, MainNode } from '../../../service-docs-tree';
+import {
+  APINode,
+  EventNode,
+  MainNode,
+  ServiceDocsTreeNodeType,
+} from '../../../service-docs-tree';
 import { getAllAPIsAndEvents } from '../../../utils/service-docs-tree-utils';
 
 import { DependencyDetails } from './dependency-details';
@@ -29,7 +34,11 @@ export const Dependencies: React.FC<Props> = (props) => {
 
   return (
     <React.Fragment>
-      <Typography variant="h3">Dependencies</Typography>
+      <Typography variant="h3">
+        {props.showDependenciesFor.type === ServiceDocsTreeNodeType.Service
+          ? 'Service Dependencies'
+          : 'Aggregated Dependencies'}
+      </Typography>
 
       <Box sx={{ marginTop: 2 }}>
         <Button
