@@ -11,7 +11,7 @@
     "/extractions/execution-stats",
 
     "/transformation/configs",
-    "transformation/execution-stats",
+    "/transformation/execution-stats",
 
     "/load/configs",
     "/load/execution-stats",
