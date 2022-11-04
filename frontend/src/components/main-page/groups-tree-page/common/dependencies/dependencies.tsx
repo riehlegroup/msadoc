@@ -173,6 +173,10 @@ function useController(props: Props): Controller {
       },
     ];
 
+    for (const item of result) {
+      sortAPIsOrEventsInPlace(item.data);
+    }
+
     return result;
   }, [props.showDependenciesFor]);
 
@@ -200,4 +204,14 @@ function useController(props: Props): Controller {
       );
     },
   };
+}
+
+/**
+ * Sort the given APIs or Events by their name.
+ * This function sorts in-place, i.e. it directly modifies the given array.
+ */
+function sortAPIsOrEventsInPlace(APIsOrEvents: APINode[] | EventNode[]): void {
+  APIsOrEvents.sort((a, b) => {
+    return a.name.localeCompare(b.name);
+  });
 }
