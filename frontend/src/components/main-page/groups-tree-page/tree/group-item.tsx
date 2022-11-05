@@ -16,7 +16,10 @@ import {
   ServiceNode,
 } from '../../service-docs-tree';
 import { useSelectedTreeItem } from '../../utils/router-utils';
-import { isGroupXDescendantOfGroupY } from '../../utils/service-docs-tree-utils';
+import {
+  isGroupXDescendantOfGroupY,
+  sortServicesByName,
+} from '../../utils/service-docs-tree-utils';
 
 import { ServiceItem } from './service-item';
 
@@ -171,19 +174,11 @@ function useController(props: Props): Controller {
   }, [props.group, selectedTreeItem]);
 
   const sortedChildGroups = React.useMemo((): RegularGroupNode[] => {
-    const result = Object.values(props.group.childGroups);
-
-    sortGroupsInPlace(result);
-
-    return result;
+    return sortGroupsByName(Object.values(props.group.childGroups));
   }, [props.group.childGroups]);
 
   const sortedServices = React.useMemo((): ServiceNode[] => {
-    const result = [...props.group.services];
-
-    sortServicesInPlace(result);
-
-    return result;
+    return sortServicesByName(props.group.services);
   }, [props.group.services]);
 
   return {
@@ -250,21 +245,14 @@ function isXDescendantOfY(params: { x: MainNode; y: MainNode }): boolean {
 }
 
 /**
- * Sort the given Services by their name.
- * This function sorts in-place, i.e. it directly modifies the given array.
- */
-function sortServicesInPlace(services: ServiceNode[]): void {
-  services.sort((a, b) => {
-    return a.name.localeCompare(b.name);
-  });
-}
-
-/**
  * Sort the given Groups by their name.
- * This function sorts in-place, i.e. it directly modifies the given array.
  */
-function sortGroupsInPlace(groups: RegularGroupNode[]): void {
-  groups.sort((a, b) => {
+function sortGroupsByName(groups: RegularGroupNode[]): RegularGroupNode[] {
+  const result = [...groups];
+
+  result.sort((a, b) => {
     return a.name.localeCompare(b.name);
   });
+
+  return result;
 }

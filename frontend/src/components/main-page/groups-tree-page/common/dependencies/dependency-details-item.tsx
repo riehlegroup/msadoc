@@ -17,6 +17,7 @@ import {
   ServiceDocsTreeNodeType,
   ServiceNode,
 } from '../../../service-docs-tree';
+import { sortServicesByName } from '../../../utils/service-docs-tree-utils';
 
 interface BaseProps {
   currentServiceOrGroup: MainNode;
@@ -104,24 +105,10 @@ function useController(props: Props): Controller {
   }, [props.dependency, props.mode]);
 
   const sortedServicesOfInterest = React.useMemo((): ServiceNode[] => {
-    const result = [...servicesOfInterest];
-
-    sortServicesInPlace(result);
-
-    return result;
+    return sortServicesByName(servicesOfInterest);
   }, [servicesOfInterest]);
 
   return {
     servicesOfInterest: sortedServicesOfInterest,
   };
-}
-
-/**
- * Sort the given Services by their name.
- * This function sorts in-place, i.e. it directly modifies the given array.
- */
-function sortServicesInPlace(services: ServiceNode[]): void {
-  services.sort((a, b) => {
-    return a.name.localeCompare(b.name);
-  });
 }
