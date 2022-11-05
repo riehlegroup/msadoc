@@ -1,1 +1,1 @@
-export { GroupsTreePage as ServiceDocsPage } from './groups-tree-page';
+export { GroupsTreePage } from './groups-tree-page';
