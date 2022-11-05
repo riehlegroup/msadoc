@@ -76,3 +76,16 @@ export function getAllAPIsAndEvents(item: MainNode): APIsAndEvents {
 
   return result;
 }
+
+/**
+ * Sort the given Services by their name.
+ */
+export function sortServicesByName(services: ServiceNode[]): ServiceNode[] {
+  const result = [...services];
+
+  result.sort((a, b) => {
+    return a.name.localeCompare(b.name);
+  });
+
+  return result;
+}
