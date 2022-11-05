@@ -1,0 +1,1 @@
+export { Tags } from './tags';
