@@ -13,6 +13,7 @@ import { Icons } from '../../../../icons';
 import { ServiceDocsTreeNodeType, ServiceNode } from '../../service-docs-tree';
 import { useSelectedTreeItem } from '../../utils/router-utils';
 import { Dependencies } from '../common/dependencies';
+import { Tags } from '../common/tags';
 
 export const ServiceDetails: React.FC = () => {
   const controller = useController();
@@ -88,6 +89,10 @@ export const ServiceDetails: React.FC = () => {
               </ListItemButton>
             )}
           </List>
+
+          <Box sx={{ marginTop: 3 }}>
+            <Tags showTagsFor={controller.service} />
+          </Box>
 
           <Box sx={{ marginTop: 3 }}>
             <Dependencies showDependenciesFor={controller.service} />
