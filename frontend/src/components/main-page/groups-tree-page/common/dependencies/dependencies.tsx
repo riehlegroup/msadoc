@@ -55,18 +55,19 @@ export const Dependencies: React.FC<Props> = (props) => {
             <Typography variant="h5" component="div" sx={{ marginBottom: 2 }}>
               {dependencyItem.type === 'provided-apis' && 'Provided APIs'}
               {dependencyItem.type === 'consumed-apis' && 'Consumed APIs'}
-              {dependencyItem.type === 'produced-events' && 'Produced Events'}
-              {dependencyItem.type === 'consumed-events' && 'Consumed Events'}
+              {dependencyItem.type === 'published-events' && 'Published Events'}
+              {dependencyItem.type === 'subscribed-events' &&
+                'Subscribed Events'}
             </Typography>
 
             {dependencyItem.data.length < 1 && (
               <Alert severity="info">
                 {dependencyItem.type === 'provided-apis' && 'No provided APIs'}
                 {dependencyItem.type === 'consumed-apis' && 'No consumed APIs'}
-                {dependencyItem.type === 'produced-events' &&
-                  'No produced Events'}
-                {dependencyItem.type === 'consumed-events' &&
-                  'No consumed Events'}
+                {dependencyItem.type === 'published-events' &&
+                  'No published events'}
+                {dependencyItem.type === 'subscribed-events' &&
+                  'No subscribed events'}
               </Alert>
             )}
 
@@ -86,10 +87,10 @@ export const Dependencies: React.FC<Props> = (props) => {
                       {dependencyItem.type === 'consumed-apis' && (
                         <Icons.CloudDownloadOutlined />
                       )}
-                      {dependencyItem.type === 'produced-events' && (
+                      {dependencyItem.type === 'published-events' && (
                         <Icons.UnarchiveOutlined />
                       )}
-                      {dependencyItem.type === 'consumed-events' && (
+                      {dependencyItem.type === 'subscribed-events' && (
                         <Icons.ArchiveOutlined />
                       )}
                     </ListItemIcon>
@@ -127,8 +128,8 @@ export const Dependencies: React.FC<Props> = (props) => {
 type DependencyType =
   | 'provided-apis'
   | 'consumed-apis'
-  | 'produced-events'
-  | 'consumed-events';
+  | 'published-events'
+  | 'subscribed-events';
 interface DependencyItem {
   type: DependencyType;
   data: APINode[] | EventNode[];
@@ -173,12 +174,12 @@ function useController(props: Props): Controller {
         data: Array.from(APIsAndEvents.consumedAPIs),
       },
       {
-        type: 'produced-events',
-        data: Array.from(APIsAndEvents.producedEvents),
+        type: 'published-events',
+        data: Array.from(APIsAndEvents.publishedEvents),
       },
       {
-        type: 'consumed-events',
-        data: Array.from(APIsAndEvents.consumedEvents),
+        type: 'subscribed-events',
+        data: Array.from(APIsAndEvents.subscribedEvents),
       },
     ];
 

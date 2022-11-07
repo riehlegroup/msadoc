@@ -62,14 +62,14 @@ function useController(props: Props): Controller {
       sourceNode.type === ServiceDocsTreeNodeType.Service &&
       targetNode.type === ServiceDocsTreeNodeType.Event
     ) {
-      return `Service "${sourceNode.name}" produces event "${targetNode.name}"`;
+      return `Service "${sourceNode.name}" publishes event "${targetNode.name}"`;
     }
     // Event --> Service
     if (
       sourceNode.type === ServiceDocsTreeNodeType.Event &&
       targetNode.type === ServiceDocsTreeNodeType.Service
     ) {
-      return `Service "${targetNode.name}" consumes event "${sourceNode.name}"`;
+      return `Service "${targetNode.name}" subscribes to event "${sourceNode.name}"`;
     }
 
     // API --> Group
@@ -108,14 +108,14 @@ function useController(props: Props): Controller {
       targetNode.type === ServiceDocsTreeNodeType.Event
     ) {
       const relatedServices = findServicesRelatedToGroup(
-        targetNode.producedBy,
+        targetNode.publishedBy,
         sourceNode,
       );
       const formattedGroupName = formatGroupNameForTooltip(
         sourceNode,
         relatedServices,
       );
-      return `Group ${formattedGroupName} produces event "${targetNode.name}"`;
+      return `Group ${formattedGroupName} publishes event "${targetNode.name}"`;
     }
     // Event --> Group
     if (
@@ -123,14 +123,14 @@ function useController(props: Props): Controller {
       targetNode.type === ServiceDocsTreeNodeType.RegularGroup
     ) {
       const relatedServices = findServicesRelatedToGroup(
-        sourceNode.consumedBy,
+        sourceNode.subscribedBy,
         targetNode,
       );
       const formattedGroupName = formatGroupNameForTooltip(
         targetNode,
         relatedServices,
       );
-      return `Group ${formattedGroupName} consumes event "${sourceNode.name}"`;
+      return `Group ${formattedGroupName} subscribes to event "${sourceNode.name}"`;
     }
 
     console.warn(

@@ -31,7 +31,7 @@ import { extractAllServices } from '../../../../utils/service-docs-tree-utils';
  *
  * In this scenario, we say that 2 hops are needed to reach service Y (PivotService --> TheEvent --> Y).
  * However, we say that the Pivot Service and X are not connected at all, leading to an infinite number of hops.
- * This is because we follow the graph in a directed way, so when looking an the consumed Events of a service, we then go to the services that produced these Events, and we do not look at services that consumed these Events.
+ * This is because we follow the graph in a directed way, so when looking an the subscribed events of a service, we then go to the services that produced these Events, and we do not look at services that consumed these Events.
  */
 export type HopsGetterFn = (node: ServiceDocsTreeNode) => number;
 
@@ -105,26 +105,26 @@ export function buildHopsGetterFn(
         );
       }
 
-      for (const singleProducedEvent of singleService.producedEvents) {
+      for (const singleProducedEvent of singleService.publishedEvents) {
         if (alreadyVisitedNodes.has(singleProducedEvent)) {
           continue;
         }
         hopsMap.set(singleProducedEvent, APIOrEventDepth);
 
         addMultipleItemsToSet(
-          singleProducedEvent.consumedBy,
+          singleProducedEvent.subscribedBy,
           potentialServicesToVisitInNextIteration,
         );
       }
 
-      for (const singleConsumedEvent of singleService.consumedEvents) {
+      for (const singleConsumedEvent of singleService.subscribedEvents) {
         if (alreadyVisitedNodes.has(singleConsumedEvent)) {
           continue;
         }
         hopsMap.set(singleConsumedEvent, APIOrEventDepth);
 
         addMultipleItemsToSet(
-          singleConsumedEvent.producedBy,
+          singleConsumedEvent.publishedBy,
           potentialServicesToVisitInNextIteration,
         );
       }
@@ -132,8 +132,8 @@ export function buildHopsGetterFn(
       for (const singleAPIOrEventNode of [
         ...singleService.providedAPIs,
         ...singleService.consumedAPIs,
-        ...singleService.producedEvents,
-        ...singleService.consumedEvents,
+        ...singleService.publishedEvents,
+        ...singleService.subscribedEvents,
       ]) {
         alreadyVisitedNodes.add(singleAPIOrEventNode);
       }
