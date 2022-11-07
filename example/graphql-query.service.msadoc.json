@@ -8,7 +8,7 @@
 
   "providedAPIs": ["/query/graphql"],
 
-  "consumedEvents": [
+  "subscribedEvents": [
     "loading.config.created",
     "loading.config.updated",
     "loading.config.deleted",

@@ -111,7 +111,7 @@ The chosen formatting as string is deliberatively chosen to allow documenting mu
 
 #### Best Practices
 
-- Use this attribute to document synchronous API dependencies. For events use the attribute `producedEvents`.
+- Use this attribute to document synchronous API dependencies. For events use the attribute `publishedEvents`.
 - Use a consistent naming scheme for APIs across all microservices.
 - Consider if you can uniquely identify an API via its route, e.g. `/pipelines` to add more expressiveness to the documentation. Otherwise you can use custom names as e.g. `PipelineApi`.
 - Don't use spaces - otherwise API requests filtering by name might not work.
@@ -131,12 +131,11 @@ The APIs that the microservice consumes. The `consumedAPI` identifier has to mat
 
 #### Best Practices
 
-- Use this attribute to document synchronous API dependencies. For events use the attribute `consumedEvents`.
+- Use this attribute to document synchronous API dependencies. For events use the attribute `subscribedEvents`.
 
-### `producedEvents` (string[])
+### `publishedEvents` (string[])
 
-The events that the microservice produces. The `consumedEvents` identifier of other microservices have to match with the here chosen `producedEvent` in order to link them. A microservice can provide multiple events allowing to document more fine-granularly.
-
+The events that the microservice publishes. The `subscribedEvents` identifier of other microservices have to match with the here chosen `publishedEvents` in order to link them. A microservice can provide multiple events allowing to document more fine-grained.
 The chosen formatting as string is deliberatively chosen to allow documenting multiple communication protocols.
 
 #### Example
@@ -144,7 +143,7 @@ The chosen formatting as string is deliberatively chosen to allow documenting mu
 ```json
 {
   "name": "PipelineService",
-  "producedEvents": [
+  "publishedEvents": [
     "datasources.config.created",
     "datasources.config.deleted",
     "datasources.execution.success",
@@ -160,16 +159,16 @@ The chosen formatting as string is deliberatively chosen to allow documenting mu
 - Consider if you can uniquely identify an event via its routing key, e.g. `datasources.config.created` to add more expressiveness to the documentation. Otherwise you can use custom names as e.g. `DatasourceConfigCreatedEvent`.
 - Don't use spaces - otherwise API requests filtering by name might not work.
 
-### `consumedEvents` (string[])
+### `subscribedEvents` (string[])
 
-The events that the microservice consumes. The `consumedEvents` identifier has to match a `producedEvents` identifier in another microservice`s `msadoc.json` in order to link them.
+The events that the microservice consumes. The `subscribedEvents` identifier has to match a `publishedEvents` identifier in another microservice`s `msadoc.json` in order to link them.
 
 #### Example
 
 ```json
 {
   "name": "PipelineService",
-  "consumedEvents": ["datasources.execution.success"]
+  "subscribedEvents": ["datasources.execution.success"]
 }
 ```
 
