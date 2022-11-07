@@ -55,13 +55,13 @@ export const DependencyDetails: React.FC<Props> = (props) => {
           <React.Fragment>
             <DependencyDetailsItem
               dependency={props.dependency}
-              mode="producers"
+              mode="publishers"
               currentServiceOrGroup={props.currentServiceOrGroup}
               goToService={props.goToService}
             />
             <DependencyDetailsItem
               dependency={props.dependency}
-              mode="consumers"
+              mode="subscribers"
               currentServiceOrGroup={props.currentServiceOrGroup}
               goToService={props.goToService}
             />

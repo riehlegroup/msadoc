@@ -32,8 +32,8 @@ export interface ServiceNode
     | 'group'
     | 'providedAPIs'
     | 'consumedAPIs'
-    | 'producedEvents'
-    | 'consumedEvents'
+    | 'publishedEvents'
+    | 'subscribedEvents'
   > {
   type: ServiceDocsTreeNodeType.Service;
 
@@ -41,8 +41,8 @@ export interface ServiceNode
 
   providedAPIs: APINode[];
   consumedAPIs: APINode[];
-  producedEvents: EventNode[];
-  consumedEvents: EventNode[];
+  publishedEvents: EventNode[];
+  subscribedEvents: EventNode[];
 }
 
 export interface RegularGroupNode {
@@ -92,8 +92,8 @@ export interface EventNode {
   type: ServiceDocsTreeNodeType.Event;
   name: string;
 
-  producedBy: ServiceNode[];
-  consumedBy: ServiceNode[];
+  publishedBy: ServiceNode[];
+  subscribedBy: ServiceNode[];
 }
 
 export function buildServiceDocsTree(
@@ -217,8 +217,8 @@ function buildAndInsertServiceItems(
       group: group,
       providedAPIs: [],
       consumedAPIs: [],
-      producedEvents: [],
-      consumedEvents: [],
+      publishedEvents: [],
+      subscribedEvents: [],
     };
     group.services.push(newServiceDocNode);
 
@@ -246,27 +246,27 @@ function buildAndInsertServiceItems(
       }
     }
 
-    if (singleServiceDoc.producedEvents !== undefined) {
-      for (const singleProducedEventName of singleServiceDoc.producedEvents) {
+    if (singleServiceDoc.publishedEvents !== undefined) {
+      for (const singlePublishedEventName of singleServiceDoc.publishedEvents) {
         const theEventNode = getOrCreateEventNode(
-          singleProducedEventName,
+          singlePublishedEventName,
           eventNodesMap,
         );
 
-        newServiceDocNode.producedEvents.push(theEventNode);
-        theEventNode.producedBy.push(newServiceDocNode);
+        newServiceDocNode.publishedEvents.push(theEventNode);
+        theEventNode.publishedBy.push(newServiceDocNode);
       }
     }
 
-    if (singleServiceDoc.consumedEvents !== undefined) {
-      for (const singleProducedEventName of singleServiceDoc.consumedEvents) {
+    if (singleServiceDoc.subscribedEvents !== undefined) {
+      for (const singlePublishedEventName of singleServiceDoc.subscribedEvents) {
         const theEventNode = getOrCreateEventNode(
-          singleProducedEventName,
+          singlePublishedEventName,
           eventNodesMap,
         );
 
-        newServiceDocNode.consumedEvents.push(theEventNode);
-        theEventNode.consumedBy.push(newServiceDocNode);
+        newServiceDocNode.subscribedEvents.push(theEventNode);
+        theEventNode.subscribedBy.push(newServiceDocNode);
       }
     }
   }
@@ -299,8 +299,8 @@ function getOrCreateEventNode(
     theEventNode = {
       type: ServiceDocsTreeNodeType.Event,
       name: nodeName,
-      producedBy: [],
-      consumedBy: [],
+      publishedBy: [],
+      subscribedBy: [],
     };
     eventNodesMap[nodeName] = theEventNode;
   }

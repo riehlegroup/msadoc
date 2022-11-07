@@ -30,7 +30,7 @@ interface APINodeProps extends BaseProps {
 }
 interface EventNodeProps extends BaseProps {
   dependency: EventNode;
-  mode: 'producers' | 'consumers';
+  mode: 'publishers' | 'subscribers';
 }
 type Props = APINodeProps | EventNodeProps;
 export const DependencyDetailsItem: React.FC<Props> = (props) => {
@@ -42,10 +42,15 @@ export const DependencyDetailsItem: React.FC<Props> = (props) => {
         {props.dependency.type === ServiceDocsTreeNodeType.API &&
           props.mode === 'providers' &&
           'Providers'}
+        {props.dependency.type === ServiceDocsTreeNodeType.Event &&
+          props.mode === 'publishers' &&
+          'Publishers'}
         {props.dependency.type === ServiceDocsTreeNodeType.API &&
-          props.mode === 'producers' &&
-          'Producers'}
-        {props.mode === 'consumers' && 'Consumers'}
+          props.mode === 'consumers' &&
+          'Consumers'}
+        {props.dependency.type === ServiceDocsTreeNodeType.Event &&
+          props.mode === 'subscribers' &&
+          'Subscribers'}
       </Typography>
 
       {controller.servicesOfInterest.length < 1 && (
@@ -53,10 +58,15 @@ export const DependencyDetailsItem: React.FC<Props> = (props) => {
           {props.dependency.type === ServiceDocsTreeNodeType.API &&
             props.mode === 'providers' &&
             'No Providers'}
+          {props.dependency.type === ServiceDocsTreeNodeType.Event &&
+            props.mode === 'publishers' &&
+            'No Publishers'}
           {props.dependency.type === ServiceDocsTreeNodeType.API &&
-            props.mode === 'producers' &&
-            'No Producers'}
-          {props.mode === 'consumers' && 'No Consumers'}
+            props.mode === 'consumers' &&
+            'No Consumers'}
+          {props.dependency.type === ServiceDocsTreeNodeType.Event &&
+            props.mode === 'subscribers' &&
+            'No Subscribers'}
         </Alert>
       )}
 
@@ -97,11 +107,11 @@ function useController(props: Props): Controller {
       return props.dependency.consumedBy;
     }
 
-    if (props.mode === 'producers') {
-      return props.dependency.producedBy;
+    if (props.mode === 'publishers') {
+      return props.dependency.publishedBy;
     }
 
-    return props.dependency.consumedBy;
+    return props.dependency.subscribedBy;
   }, [props.dependency, props.mode]);
 
   const sortedServicesOfInterest = React.useMemo((): ServiceNode[] => {

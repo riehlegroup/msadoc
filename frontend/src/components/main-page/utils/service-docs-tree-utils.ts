@@ -46,32 +46,38 @@ export function extractAllServices(
 export interface APIsAndEvents {
   providedAPIs: Set<APINode>;
   consumedAPIs: Set<APINode>;
-  producedEvents: Set<EventNode>;
-  consumedEvents: Set<EventNode>;
+  publishedEvents: Set<EventNode>;
+  subscribedEvents: Set<EventNode>;
 }
 export function getAllAPIsAndEvents(item: MainNode): APIsAndEvents {
   if (item.type === ServiceDocsTreeNodeType.Service) {
     return {
       providedAPIs: new Set(item.providedAPIs),
       consumedAPIs: new Set(item.consumedAPIs),
-      producedEvents: new Set(item.producedEvents),
-      consumedEvents: new Set(item.consumedEvents),
+      publishedEvents: new Set(item.publishedEvents),
+      subscribedEvents: new Set(item.subscribedEvents),
     };
   }
 
   const result: APIsAndEvents = {
     providedAPIs: new Set(),
     consumedAPIs: new Set(),
-    producedEvents: new Set(),
-    consumedEvents: new Set(),
+    publishedEvents: new Set(),
+    subscribedEvents: new Set(),
   };
   const allServices = extractAllServices(item);
 
   for (const singleService of allServices) {
     addMultipleItemsToSet(singleService.providedAPIs, result.providedAPIs);
     addMultipleItemsToSet(singleService.consumedAPIs, result.consumedAPIs);
-    addMultipleItemsToSet(singleService.producedEvents, result.producedEvents);
-    addMultipleItemsToSet(singleService.consumedEvents, result.consumedEvents);
+    addMultipleItemsToSet(
+      singleService.publishedEvents,
+      result.publishedEvents,
+    );
+    addMultipleItemsToSet(
+      singleService.subscribedEvents,
+      result.subscribedEvents,
+    );
   }
 
   return result;
