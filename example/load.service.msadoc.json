@@ -8,14 +8,14 @@
 
   "providedAPIs": ["/load/configs", "/load/execution-stats"],
 
-  "producedEvents": [
+  "publishedEvents": [
     "load.config.created",
     "load.config.updated",
     "load.config.deleted",
     "load.execution.success",
     "load.execution.failure"
   ],
-  "consumedEvents": [
+  "subscribedEvents": [
     "transformation.config.created",
     "transformation.config.updated",
     "transformation.config.deleted",

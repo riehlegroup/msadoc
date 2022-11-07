@@ -11,14 +11,14 @@
     "/transformation/execution-stats"
   ],
 
-  "consumedEvents": [
+  "subscribedEvents": [
     "extraction.config.created",
     "extraction.config.updated",
     "extraction.config.deleted",
     "extraction.execution.success",
     "extraction.execution.failure"
   ],
-  "producedEvents": [
+  "publishedEvents": [
     "transformation.execution.success",
     "transformation.execution.failure",
     "transformation.config.created",
