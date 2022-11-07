@@ -61,19 +61,19 @@ export class CreateServiceDocRequest {
 
   @ApiProperty({
     description:
-      'List of produced event identifiers. Event identifier matched for dependency analysis.',
+      'List of published event identifiers. Event identifier matched for dependency analysis.',
     required: false,
   })
   @IsNonEmptyOptionalStringArray()
-  producedEvents?: string[];
+  publishedEvents?: string[];
 
   @ApiProperty({
     description:
-      'List of consumed event identifiers. Event identifier matched for dependency analysis.',
+      'List of subscribed event identifiers. Event identifier matched for dependency analysis.',
     required: false,
   })
   @IsNonEmptyOptionalStringArray()
-  consumedEvents?: string[];
+  subscribedEvents?: string[];
 
   /** Documentation links */
 

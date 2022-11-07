@@ -244,9 +244,9 @@ describe('ServiceDocsController (e2e)', () => {
         repository: 'repo',
         taskBoard: 'tasks',
         providedAPIs: ['API1', 'API2'],
-        producedEvents: ['event1', 'event2'],
+        publishedEvents: ['event1', 'event2'],
         consumedAPIs: ['API3', 'API4'],
-        consumedEvents: ['event3', 'event4'],
+        subscribedEvents: ['event3', 'event4'],
         apiDocumentation: 'api',
         deploymentDocumentation: 'deploy',
         developmentDocumentation: 'develop',
@@ -265,9 +265,13 @@ describe('ServiceDocsController (e2e)', () => {
       expect(creationResponse.body.repository).toEqual(dto.repository);
       expect(creationResponse.body.taskBoard).toEqual(dto.taskBoard);
       expect(creationResponse.body.providedAPIs).toEqual(dto.providedAPIs);
-      expect(creationResponse.body.producedEvents).toEqual(dto.producedEvents);
+      expect(creationResponse.body.publishedEvents).toEqual(
+        dto.publishedEvents,
+      );
       expect(creationResponse.body.consumedAPIs).toEqual(dto.consumedAPIs);
-      expect(creationResponse.body.consumedEvents).toEqual(dto.consumedEvents);
+      expect(creationResponse.body.subscribedEvents).toEqual(
+        dto.subscribedEvents,
+      );
       expect(creationResponse.body.apiDocumentation).toEqual(
         dto.apiDocumentation,
       );

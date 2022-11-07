@@ -34,10 +34,10 @@ export class ServiceDocOrm {
   providedAPIs: string[] | null;
 
   @Column('text', { array: true, nullable: true })
-  producedEvents: string[] | null;
+  publishedEvents: string[] | null;
 
   @Column('text', { array: true, nullable: true })
-  consumedEvents: string[] | null;
+  subscribedEvents: string[] | null;
 
   /** Documentation links */
 
