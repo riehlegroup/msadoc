@@ -162,8 +162,8 @@ describe('ServiceDocsController (e2e)', () => {
       const optionalListParameters = [
         'consumedAPIs',
         'providedAPIs',
-        'producedEvents',
-        'consumedEvents',
+        'publishedEvents',
+        'subscribedEvents',
         'responsibles',
       ];
       it.each(optionalListParameters)(

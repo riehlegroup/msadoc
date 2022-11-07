@@ -63,13 +63,13 @@ export interface GetServiceDocResponse {
      * @type {Array<string>}
      * @memberof GetServiceDocResponse
      */
-    producedEvents?: Array<string>;
+    publishedEvents?: Array<string>;
     /**
      * List of consumed event identifiers. Event identifier matched for dependency analysis.
      * @type {Array<string>}
      * @memberof GetServiceDocResponse
      */
-    consumedEvents?: Array<string>;
+    subscribedEvents?: Array<string>;
     /**
      * URL to development documentation.
      * @type {string}
