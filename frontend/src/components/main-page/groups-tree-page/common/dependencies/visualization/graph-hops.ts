@@ -26,12 +26,12 @@ import { extractAllServices } from '../../../../utils/service-docs-tree-utils';
  * The hops are calculated by following the APIs/Events in a directed way.
  * Example:
  * Assume there is only one Event, and this Event is:
- * - Consumed by the Pivot Service and by service X
- * - Produced by service Y
+ * - Subscribed by the Pivot Service and by service X
+ * - Published by service Y
  *
  * In this scenario, we say that 2 hops are needed to reach service Y (PivotService --> TheEvent --> Y).
  * However, we say that the Pivot Service and X are not connected at all, leading to an infinite number of hops.
- * This is because we follow the graph in a directed way, so when looking an the subscribed events of a service, we then go to the services that produced these Events, and we do not look at services that consumed these Events.
+ * This is because we follow the graph in a directed way, so when looking an the subscribed events of a service, we then go to the services that published these Events, and we do not look at services that subscribed to these Events.
  */
 export type HopsGetterFn = (node: ServiceDocsTreeNode) => number;
 
@@ -105,26 +105,26 @@ export function buildHopsGetterFn(
         );
       }
 
-      for (const singleProducedEvent of singleService.publishedEvents) {
-        if (alreadyVisitedNodes.has(singleProducedEvent)) {
+      for (const singlePublishedEvent of singleService.publishedEvents) {
+        if (alreadyVisitedNodes.has(singlePublishedEvent)) {
           continue;
         }
-        hopsMap.set(singleProducedEvent, APIOrEventDepth);
+        hopsMap.set(singlePublishedEvent, APIOrEventDepth);
 
         addMultipleItemsToSet(
-          singleProducedEvent.subscribedBy,
+          singlePublishedEvent.subscribedBy,
           potentialServicesToVisitInNextIteration,
         );
       }
 
-      for (const singleConsumedEvent of singleService.subscribedEvents) {
-        if (alreadyVisitedNodes.has(singleConsumedEvent)) {
+      for (const singleSubscribedEvent of singleService.subscribedEvents) {
+        if (alreadyVisitedNodes.has(singleSubscribedEvent)) {
           continue;
         }
-        hopsMap.set(singleConsumedEvent, APIOrEventDepth);
+        hopsMap.set(singleSubscribedEvent, APIOrEventDepth);
 
         addMultipleItemsToSet(
-          singleConsumedEvent.publishedBy,
+          singleSubscribedEvent.publishedBy,
           potentialServicesToVisitInNextIteration,
         );
       }
