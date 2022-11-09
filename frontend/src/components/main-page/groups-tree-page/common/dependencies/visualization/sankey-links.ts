@@ -60,20 +60,20 @@ export function buildRawLinks(
 
     /*
       The "natural" flow of Events if from producer to consumer:
-      (SomeProducer) --> (Event) --> (SomeConsumer)
+      (SomePublisher) --> (Event) --> (SomeSubscriber)
     */
-    for (const producedEvent of APIsAndEvents.publishedEvents) {
+    for (const publishedEvent of APIsAndEvents.publishedEvents) {
       result.push({
         type: 'from-service-or-group',
         from: singleServiceOrGroup,
-        to: producedEvent,
+        to: publishedEvent,
       });
     }
 
-    for (const consumedEvent of APIsAndEvents.subscribedEvents) {
+    for (const subscribedEvent of APIsAndEvents.subscribedEvents) {
       result.push({
         type: 'to-service-or-group',
-        from: consumedEvent,
+        from: subscribedEvent,
         to: singleServiceOrGroup,
       });
     }
