@@ -17,6 +17,9 @@ import { BaseAPI, throwIfNullOrUndefined, encodeURI } from '../runtime';
 import type { OperationOpts, HttpHeaders } from '../runtime';
 import type {
     CreateApiKeyRequestDto,
+    CreateApiKeyResponseDto,
+    GetApiKeysResponseDto,
+    IsApiKeyValidResponseDto,
 } from '../models';
 
 export interface ApiKeysControllerCreateApiKeyRequest {
@@ -34,14 +37,14 @@ export class ApiKeysApi extends BaseAPI {
 
     /**
      */
-    apiKeyTestControllerTestApiKey(): Observable<void>
-    apiKeyTestControllerTestApiKey(opts?: OperationOpts): Observable<void | AjaxResponse<void>>
-    apiKeyTestControllerTestApiKey(opts?: OperationOpts): Observable<void | AjaxResponse<void>> {
+    apiKeyTestControllerTestApiKey(): Observable<IsApiKeyValidResponseDto>
+    apiKeyTestControllerTestApiKey(opts?: OperationOpts): Observable<AjaxResponse<IsApiKeyValidResponseDto>>
+    apiKeyTestControllerTestApiKey(opts?: OperationOpts): Observable<IsApiKeyValidResponseDto | AjaxResponse<IsApiKeyValidResponseDto>> {
         const headers: HttpHeaders = {
             ...(this.configuration.username != null && this.configuration.password != null ? { Authorization: `Basic ${btoa(this.configuration.username + ':' + this.configuration.password)}` } : undefined),
         };
 
-        return this.request<void>({
+        return this.request<IsApiKeyValidResponseDto>({
             url: '/api-keys/test',
             method: 'GET',
             headers,
@@ -50,9 +53,9 @@ export class ApiKeysApi extends BaseAPI {
 
     /**
      */
-    apiKeysControllerCreateApiKey({ createApiKeyRequestDto }: ApiKeysControllerCreateApiKeyRequest): Observable<void>
-    apiKeysControllerCreateApiKey({ createApiKeyRequestDto }: ApiKeysControllerCreateApiKeyRequest, opts?: OperationOpts): Observable<void | AjaxResponse<void>>
-    apiKeysControllerCreateApiKey({ createApiKeyRequestDto }: ApiKeysControllerCreateApiKeyRequest, opts?: OperationOpts): Observable<void | AjaxResponse<void>> {
+    apiKeysControllerCreateApiKey({ createApiKeyRequestDto }: ApiKeysControllerCreateApiKeyRequest): Observable<CreateApiKeyResponseDto>
+    apiKeysControllerCreateApiKey({ createApiKeyRequestDto }: ApiKeysControllerCreateApiKeyRequest, opts?: OperationOpts): Observable<AjaxResponse<CreateApiKeyResponseDto>>
+    apiKeysControllerCreateApiKey({ createApiKeyRequestDto }: ApiKeysControllerCreateApiKeyRequest, opts?: OperationOpts): Observable<CreateApiKeyResponseDto | AjaxResponse<CreateApiKeyResponseDto>> {
         throwIfNullOrUndefined(createApiKeyRequestDto, 'createApiKeyRequestDto', 'apiKeysControllerCreateApiKey');
 
         const headers: HttpHeaders = {
@@ -60,7 +63,7 @@ export class ApiKeysApi extends BaseAPI {
             ...(this.configuration.username != null && this.configuration.password != null ? { Authorization: `Basic ${btoa(this.configuration.username + ':' + this.configuration.password)}` } : undefined),
         };
 
-        return this.request<void>({
+        return this.request<CreateApiKeyResponseDto>({
             url: '/api-keys',
             method: 'POST',
             headers,
@@ -104,14 +107,14 @@ export class ApiKeysApi extends BaseAPI {
 
     /**
      */
-    apiKeysControllerGetAllApiKeys(): Observable<void>
-    apiKeysControllerGetAllApiKeys(opts?: OperationOpts): Observable<void | AjaxResponse<void>>
-    apiKeysControllerGetAllApiKeys(opts?: OperationOpts): Observable<void | AjaxResponse<void>> {
+    apiKeysControllerGetAllApiKeys(): Observable<GetApiKeysResponseDto>
+    apiKeysControllerGetAllApiKeys(opts?: OperationOpts): Observable<AjaxResponse<GetApiKeysResponseDto>>
+    apiKeysControllerGetAllApiKeys(opts?: OperationOpts): Observable<GetApiKeysResponseDto | AjaxResponse<GetApiKeysResponseDto>> {
         const headers: HttpHeaders = {
             ...(this.configuration.username != null && this.configuration.password != null ? { Authorization: `Basic ${btoa(this.configuration.username + ':' + this.configuration.password)}` } : undefined),
         };
 
-        return this.request<void>({
+        return this.request<GetApiKeysResponseDto>({
             url: '/api-keys',
             method: 'GET',
             headers,

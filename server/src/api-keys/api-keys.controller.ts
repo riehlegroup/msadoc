@@ -36,6 +36,7 @@ export class ApiKeysController {
   @ApiResponse({
     status: 200,
     description: 'Fetched all existing API keys (without the secret).',
+    type: GetApiKeysResponseDto,
   })
   async getAllApiKeys(): Promise<GetApiKeysResponseDto> {
     return {
@@ -56,6 +57,7 @@ export class ApiKeysController {
   @ApiResponse({
     status: 201,
     description: 'Created and returned an API key (with the secret).',
+    type: CreateApiKeyResponseDto,
   })
   async createApiKey(
     @Body() createApiKeyDto: CreateApiKeyRequestDto,
@@ -106,6 +108,7 @@ export class ApiKeyTestController {
   @ApiResponse({
     status: 200,
     description: 'Successfully tested that provided API key is valid.',
+    type: IsApiKeyValidResponseDto,
   })
   testApiKey(): IsApiKeyValidResponseDto {
     return {

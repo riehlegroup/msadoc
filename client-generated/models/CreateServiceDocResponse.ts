@@ -59,13 +59,13 @@ export interface CreateServiceDocResponse {
      */
     providedAPIs?: Array<string>;
     /**
-     * List of produced event identifiers. Event identifier matched for dependency analysis.
+     * List of published event identifiers. Event identifier matched for dependency analysis.
      * @type {Array<string>}
      * @memberof CreateServiceDocResponse
      */
     publishedEvents?: Array<string>;
     /**
-     * List of consumed event identifiers. Event identifier matched for dependency analysis.
+     * List of subscribed event identifiers. Event identifier matched for dependency analysis.
      * @type {Array<string>}
      * @memberof CreateServiceDocResponse
      */
