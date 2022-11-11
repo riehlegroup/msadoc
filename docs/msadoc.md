@@ -1,6 +1,26 @@
 # MSAdoc Format Specification
 
-The presented format is currently under development and might change over time.
+## Table of Contents
+
+- [Base Data](#base-data)
+  - [`name` (string) **[mandatory]**](#name-string-mandatory)
+  - [`group` (string)](#group-string)
+  - [`tags` (string[])](#tags-string)
+  - [`repository` (string)](#repository-string)
+  - [`taskBoard` (string)](#taskboard-string)
+- [Dependencies](#dependencies)
+  - [`providedAPIs` (string[])](#providedapis-string)
+  - [`consumedAPIs` (string[])](#consumedapis-string)
+  - [`publishedEvents` (string[])](#publishedevents-string)
+  - [`subscribedEvents` (string[])](#subscribedevents-string)
+- [Documentation Links](#documentation-links)
+  - [`developmentDocumentation` (string)](#developmentdocumentation-string)
+  - [`deploymentDocumentation` (string)](#deploymentdocumentation-string)
+  - [`apiDocumentation` (string)](#apidocumentation-string)
+- [Responsibilities](#responsibilities)
+  - [`responsibleTeam` (string)](#responsibleteam-string)
+  - [`responsibles` (string[])](#responsibles-string)
+- [Extension/Custom Fields](#extensioncustom-fields)
 
 ## Base Data
 
@@ -265,3 +285,22 @@ The email addresses or names of the mainly responsible people that should serve 
 #### Best Practices
 
 - Using email addresses makes getting in touch easier than names.
+
+## Extension/Custom Fields
+
+You can easily add custom fields by prepending a "x-" to the attribute.
+Extension field values can only be of type `string`, `number`, `boolean`, or `array` of these types.
+Extension fields are visualized in the UI in a very generic way.
+
+#### Example
+
+```json
+{
+  "name": "PipelineService",
+  "x-products": ["Product A", "Product B"]
+}
+```
+
+#### Best Practices
+
+- Use extension fields to document things the base version does not support (as an alternative to tags).
