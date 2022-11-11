@@ -2,7 +2,13 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { MockType, RepositoryMockFactory } from '../repository-factory.mock';
 import { Repository } from 'typeorm';
 import { ServiceDocOrm } from './service-doc.orm';
-import { ServiceDocModel, ServiceDocsService } from './service-docs.service';
+import {
+  ExtensionValueType,
+  fromOrm,
+  ServiceDocModel,
+  ServiceDocsService,
+  toOrm,
+} from './service-docs.service';
 import { getRepositoryToken } from '@nestjs/typeorm';
 
 describe('ServiceDocsService', () => {
@@ -26,6 +32,7 @@ describe('ServiceDocsService', () => {
     responsibleTeam: null,
     creationTimestamp: new Date(Date.now()),
     updateTimestamp: new Date(Date.now()),
+    extensions: {},
   };
   const expectedServiceDoc: ServiceDocModel = {
     name: mockedServiceDoc.name,
@@ -100,5 +107,71 @@ describe('ServiceDocsService', () => {
       name: mockedServiceDoc.name,
     });
     expect(found).toEqual(expectedServiceDoc);
+  });
+});
+
+describe('ServiceDocs ORM conversion', () => {
+  it('should convert valid extension fields', () => {
+    const model = {
+      name: 'test',
+      'x-test1': 123,
+      'x-test2': 'asd',
+      'x-test3': false,
+      'x-test4': [123, 'asd', false],
+    };
+
+    const orm = toOrm(model);
+    expect(orm.extensions['x-test1']).toEqual(123);
+    expect(orm.extensions['x-test2']).toEqual('asd');
+    expect(orm.extensions['x-test3']).toEqual(false);
+    expect(orm.extensions['x-test4']).toContain(123);
+    expect(orm.extensions['x-test4']).toContain('asd');
+    expect(orm.extensions['x-test4']).toContain(false);
+  });
+
+  it('should throw on converting invalid extension fields', () => {
+    const model = {
+      name: 'test',
+      'x-test1': {
+        asd: 123,
+      },
+    };
+
+    expect(() => toOrm(model)).toThrowError();
+  });
+
+  it('should convert back extension fields', () => {
+    const orm: ServiceDocOrm = {
+      name: 'test',
+      extensions: {
+        'x-test1': 123,
+        'x-test2': 'asd',
+        'x-test3': false,
+        'x-test4': [123, 'asd', false],
+      },
+      group: null,
+      tags: null,
+      repository: null,
+      taskBoard: null,
+      consumedAPIs: null,
+      providedAPIs: null,
+      publishedEvents: null,
+      subscribedEvents: null,
+      developmentDocumentation: null,
+      deploymentDocumentation: null,
+      apiDocumentation: null,
+      responsibleTeam: null,
+      responsibles: null,
+      creationTimestamp: new Date(),
+      updateTimestamp: new Date(),
+    };
+
+    const model = fromOrm(orm) as unknown as Record<string, ExtensionValueType>;
+    expect(model['x-test1']).toEqual(123);
+    expect(model['x-test2']).toEqual('asd');
+    expect(model['x-test3']).toEqual(false);
+    expect(model['x-test4']).toContain(123);
+    expect(model['x-test4']).toContain('asd');
+    expect(model['x-test4']).toContain(false);
   });
 });

@@ -1,11 +1,21 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { GetServiceDocResponse } from './service-doc.dto';
 import { ServiceDocOrm } from './service-doc.orm';
 
-function fromOrm(entity: ServiceDocOrm): ServiceDocModel {
-  // currently models are the same
+export function fromOrm(entity: ServiceDocOrm): ServiceDocModel {
+  const storedExtensions = entity.extensions;
+  const extensions: Record<string, ExtensionValueType> = {};
+  for (const extensionKey of Object.keys(storedExtensions)) {
+    extensions[extensionKey] = storedExtensions[extensionKey];
+  }
+
   return {
     name: entity.name,
     group: entity.group ?? undefined,
@@ -23,12 +33,28 @@ function fromOrm(entity: ServiceDocOrm): ServiceDocModel {
     responsibleTeam: entity.responsibleTeam ?? undefined,
     creationTimestamp: entity.creationTimestamp ?? undefined,
     updateTimestamp: entity.updateTimestamp,
+    ...extensions,
   };
 }
 
-function toOrm(
+export function toOrm(
   model: ServiceDocModelWithoutTimestamps,
 ): Omit<ServiceDocOrm, 'creationTimestamp' | 'updateTimestamp'> {
+  const extensionKeys = Object.keys(model).filter((key) =>
+    key.startsWith('x-'),
+  );
+  const extensions: Record<string, ExtensionValueType> = {};
+  for (const extensionKey of extensionKeys) {
+    const extensionValue = (model as Record<string, unknown>)[extensionKey];
+    if (!isExtensionValueType(extensionValue)) {
+      throw new HttpException(
+        `Extension field ${extensionKey} is not type string, number or boolean or their array types. Cannot parse!`,
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+    extensions[extensionKey] = extensionValue;
+  }
+
   return {
     name: model.name,
     group: model.group ?? null,
@@ -44,7 +70,39 @@ function toOrm(
     apiDocumentation: model.apiDocumentation ?? null,
     responsibles: model.responsibles ?? null,
     responsibleTeam: model.responsibleTeam ?? null,
+    extensions: extensions,
   };
+}
+
+export type ExtensionValueType =
+  | ExtensionPrimitiveValueType
+  | ExtensionPrimitiveValueType[];
+export type ExtensionPrimitiveValueType = string | number | boolean;
+
+export function isExtensionPrimitiveValueType(
+  extensionValue: unknown,
+): extensionValue is ExtensionPrimitiveValueType {
+  return (
+    typeof extensionValue === 'string' ||
+    typeof extensionValue === 'number' ||
+    typeof extensionValue === 'boolean'
+  );
+}
+
+export function isExtensionValueType(
+  extensionValue: unknown,
+): extensionValue is ExtensionValueType {
+  if (Array.isArray(extensionValue)) {
+    for (const item of extensionValue) {
+      if (!isExtensionPrimitiveValueType(item)) {
+        return false;
+      }
+    }
+  } else if (!isExtensionPrimitiveValueType(extensionValue)) {
+    return false;
+  }
+
+  return true;
 }
 
 export type ServiceDocModel = GetServiceDocResponse;
