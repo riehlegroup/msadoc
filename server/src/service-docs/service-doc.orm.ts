@@ -5,6 +5,7 @@ import {
   UpdateDateColumn,
   CreateDateColumn,
 } from 'typeorm';
+import { ExtensionValueType } from './service-docs.service';
 
 @Entity({
   name: 'ServiceDocs',
@@ -57,6 +58,11 @@ export class ServiceDocOrm {
 
   @Column('text', { array: true, nullable: true })
   responsibles: string[] | null;
+
+  /** Extensions */
+
+  @Column('simple-json', { nullable: true })
+  extensions: Record<string, ExtensionValueType>;
 
   /** Timestamps */
 

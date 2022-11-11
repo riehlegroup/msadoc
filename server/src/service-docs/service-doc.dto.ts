@@ -114,6 +114,8 @@ export class CreateServiceDocRequest {
   })
   @IsNonEmptyOptionalStringArray()
   responsibles?: string[];
+
+  // Extension fields begin with the prefix 'x-', e.g. 'x-my-extension' and can contain strings, numbers, booleans, or arrays of these types.
 }
 
 export class CreateServiceDocResponse extends CreateServiceDocRequest {
