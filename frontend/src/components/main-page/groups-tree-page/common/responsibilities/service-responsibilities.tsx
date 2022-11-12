@@ -34,6 +34,7 @@ export const ServiceResponsibilities: React.FC<Props> = (props) => {
         <List component="div">
           <ListItemButton
             component="div"
+            divider
             onClick={(): void => {
               if (props.showResponsiblesFor.responsibleTeam === undefined) {
                 return;
