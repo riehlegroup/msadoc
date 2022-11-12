@@ -1,4 +1,5 @@
 import {
+  Alert,
   Box,
   List,
   ListItem,
@@ -97,6 +98,74 @@ export const ServiceDetails: React.FC = () => {
                 </ListItemButton>
               )}
             </List>
+          </DataContainer>
+
+          <DataContainer>
+            <Typography variant="h4">Documentation</Typography>
+
+            {controller.service.developmentDocumentation === undefined &&
+            controller.service.deploymentDocumentation === undefined &&
+            controller.service.apiDocumentation === undefined ? (
+              <Alert severity="info" sx={{ marginTop: 2 }}>
+                No documentation URLs defined
+              </Alert>
+            ) : (
+              <List component="div">
+                {controller.service.developmentDocumentation !== undefined && (
+                  <ListItemButton
+                    divider
+                    onClick={(): void =>
+                      openURLIfPossible(
+                        controller.service?.developmentDocumentation,
+                      )
+                    }
+                  >
+                    <ListItemIcon>
+                      <Icons.IntegrationInstructions />
+                    </ListItemIcon>
+                    <ListItemText
+                      primary={controller.service.developmentDocumentation}
+                      secondary="Development Documentation"
+                    />
+                  </ListItemButton>
+                )}
+                {controller.service.deploymentDocumentation !== undefined && (
+                  <ListItemButton
+                    divider
+                    onClick={(): void =>
+                      openURLIfPossible(
+                        controller.service?.deploymentDocumentation,
+                      )
+                    }
+                  >
+                    <ListItemIcon>
+                      <Icons.CloudUpload />
+                    </ListItemIcon>
+                    <ListItemText
+                      primary={controller.service.deploymentDocumentation}
+                      secondary="Deployment Documentation"
+                    />
+                  </ListItemButton>
+                )}
+
+                {controller.service.apiDocumentation !== undefined && (
+                  <ListItemButton
+                    divider
+                    onClick={(): void =>
+                      openURLIfPossible(controller.service?.apiDocumentation)
+                    }
+                  >
+                    <ListItemIcon>
+                      <Icons.Assignment />
+                    </ListItemIcon>
+                    <ListItemText
+                      primary={controller.service.apiDocumentation}
+                      secondary="API Documentation"
+                    />
+                  </ListItemButton>
+                )}
+              </List>
+            )}
           </DataContainer>
 
           <DataContainer>
