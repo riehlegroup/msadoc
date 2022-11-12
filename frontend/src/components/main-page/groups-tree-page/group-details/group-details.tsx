@@ -16,6 +16,7 @@ import {
 } from '../../service-docs-tree';
 import { useSelectedTreeItem } from '../../utils/router-utils';
 import { Dependencies } from '../common/dependencies';
+import { Responsibilities } from '../common/responsibilities';
 import { Tags } from '../common/tags';
 
 export const GroupDetails: React.FC = () => {
@@ -87,6 +88,10 @@ export const GroupDetails: React.FC = () => {
               />
             </ListItem>
           </List>
+
+          <Box sx={{ marginTop: 3 }}>
+            <Responsibilities showResponsibilitiesFor={controller.group} />
+          </Box>
 
           <Box sx={{ marginTop: 3 }}>
             <Tags showTagsFor={controller.group} />
