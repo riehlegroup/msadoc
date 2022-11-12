@@ -12,6 +12,7 @@ import React from 'react';
 import { Icons } from '../../../../icons';
 import { ServiceDocsTreeNodeType, ServiceNode } from '../../service-docs-tree';
 import { useSelectedTreeItem } from '../../utils/router-utils';
+import { DataContainer } from '../common/data-container';
 import { Dependencies } from '../common/dependencies';
 import { Responsibilities } from '../common/responsibilities';
 import { Tags } from '../common/tags';
@@ -26,82 +27,89 @@ export const ServiceDetails: React.FC = () => {
           sx={{
             overflowX: 'hidden',
             overflowY: 'auto',
-            padding: 4,
-            maxWidth: '700px',
+            paddingX: 8,
+            paddingBottom: 10,
+            paddingTop: 3,
+            maxWidth: '800px',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 5,
           }}
         >
-          <Typography variant="h3">Base Information</Typography>
+          <DataContainer>
+            <Typography variant="h4">Base Information</Typography>
 
-          <List component="div">
-            <ListItem component="div" divider>
-              <ListItemIcon>
-                <Icons.Badge />
-              </ListItemIcon>
-              <ListItemText
-                primary={controller.service.name}
-                secondary="Name"
-              />
-            </ListItem>
-
-            {controller.service.group.type ===
-              ServiceDocsTreeNodeType.RegularGroup && (
+            <List component="div">
               <ListItem component="div" divider>
                 <ListItemIcon>
-                  <Icons.Group />
+                  <Icons.Badge />
                 </ListItemIcon>
                 <ListItemText
-                  primary={controller.service.group.name}
-                  secondary="Group"
+                  primary={controller.service.name}
+                  secondary="Name"
                 />
               </ListItem>
-            )}
 
-            {controller.service.repository !== undefined && (
-              <ListItemButton
-                divider
-                onClick={(): void =>
-                  openURLIfPossible(controller.service?.repository)
-                }
-              >
-                <ListItemIcon>
-                  <Icons.Code />
-                </ListItemIcon>
-                <ListItemText
-                  primary={controller.service.repository}
-                  secondary="Repository"
-                />
-              </ListItemButton>
-            )}
+              {controller.service.group.type ===
+                ServiceDocsTreeNodeType.RegularGroup && (
+                <ListItem component="div" divider>
+                  <ListItemIcon>
+                    <Icons.Group />
+                  </ListItemIcon>
+                  <ListItemText
+                    primary={controller.service.group.name}
+                    secondary="Group"
+                  />
+                </ListItem>
+              )}
 
-            {controller.service.taskBoard !== undefined && (
-              <ListItemButton
-                divider
-                onClick={(): void =>
-                  openURLIfPossible(controller.service?.taskBoard)
-                }
-              >
-                <ListItemIcon>
-                  <Icons.TaskAlt />
-                </ListItemIcon>
-                <ListItemText
-                  primary={controller.service.taskBoard}
-                  secondary="Task Board"
-                />
-              </ListItemButton>
-            )}
-          </List>
+              {controller.service.repository !== undefined && (
+                <ListItemButton
+                  divider
+                  onClick={(): void =>
+                    openURLIfPossible(controller.service?.repository)
+                  }
+                >
+                  <ListItemIcon>
+                    <Icons.Code />
+                  </ListItemIcon>
+                  <ListItemText
+                    primary={controller.service.repository}
+                    secondary="Repository"
+                  />
+                </ListItemButton>
+              )}
 
-          <Box sx={{ marginTop: 3 }}>
+              {controller.service.taskBoard !== undefined && (
+                <ListItemButton
+                  divider
+                  onClick={(): void =>
+                    openURLIfPossible(controller.service?.taskBoard)
+                  }
+                >
+                  <ListItemIcon>
+                    <Icons.TaskAlt />
+                  </ListItemIcon>
+                  <ListItemText
+                    primary={controller.service.taskBoard}
+                    secondary="Task Board"
+                  />
+                </ListItemButton>
+              )}
+            </List>
+          </DataContainer>
+
+          <DataContainer>
             <Tags showTagsFor={controller.service} />
-          </Box>
+          </DataContainer>
 
-          <Box sx={{ marginTop: 3 }}>
+          <DataContainer>
             <Responsibilities showResponsibilitiesFor={controller.service} />
-          </Box>
+          </DataContainer>
 
-          <Box sx={{ marginTop: 3 }}>
+          <DataContainer>
             <Dependencies showDependenciesFor={controller.service} />
-          </Box>
+          </DataContainer>
         </Box>
       )}
     </React.Fragment>
