@@ -12,7 +12,7 @@ interface Props {
 export const Responsibilities: React.FC<Props> = (props) => {
   return (
     <React.Fragment>
-      <Typography variant="h3">
+      <Typography variant="h4">
         {props.showResponsibilitiesFor.type === ServiceDocsTreeNodeType.Service
           ? 'Responsibilities'
           : 'Aggregated Responsibilities'}

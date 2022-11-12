@@ -17,7 +17,7 @@ export const Tags: React.FC<Props> = (props) => {
 
   return (
     <React.Fragment>
-      <Typography variant="h3">
+      <Typography variant="h4">
         {props.showTagsFor.type === ServiceDocsTreeNodeType.Service
           ? 'Tags'
           : 'Aggregated Tags'}

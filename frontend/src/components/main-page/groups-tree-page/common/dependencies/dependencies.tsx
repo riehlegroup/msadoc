@@ -2,8 +2,6 @@ import {
   Alert,
   Box,
   Button,
-  Card,
-  CardContent,
   List,
   ListItemButton,
   ListItemIcon,
@@ -34,7 +32,7 @@ export const Dependencies: React.FC<Props> = (props) => {
 
   return (
     <React.Fragment>
-      <Typography variant="h3">
+      <Typography variant="h4">
         {props.showDependenciesFor.type === ServiceDocsTreeNodeType.Service
           ? 'Service Dependencies'
           : 'Aggregated Dependencies'}
@@ -50,57 +48,54 @@ export const Dependencies: React.FC<Props> = (props) => {
       </Box>
 
       {controller.dependencyItems.map((dependencyItem) => (
-        <Card key={dependencyItem.type} sx={{ marginTop: 3 }}>
-          <CardContent>
-            <Typography variant="h5" component="div" sx={{ marginBottom: 2 }}>
-              {dependencyItem.type === 'provided-apis' && 'Provided APIs'}
-              {dependencyItem.type === 'consumed-apis' && 'Consumed APIs'}
-              {dependencyItem.type === 'published-events' && 'Published Events'}
+        <Box key={dependencyItem.type} sx={{ marginTop: 3 }}>
+          <Typography variant="h5" component="div" sx={{ marginBottom: 2 }}>
+            {dependencyItem.type === 'provided-apis' && 'Provided APIs'}
+            {dependencyItem.type === 'consumed-apis' && 'Consumed APIs'}
+            {dependencyItem.type === 'published-events' && 'Published Events'}
+            {dependencyItem.type === 'subscribed-events' && 'Subscribed Events'}
+          </Typography>
+
+          {dependencyItem.data.length < 1 && (
+            <Alert severity="info">
+              {dependencyItem.type === 'provided-apis' && 'No provided APIs'}
+              {dependencyItem.type === 'consumed-apis' && 'No consumed APIs'}
+              {dependencyItem.type === 'published-events' &&
+                'No published events'}
               {dependencyItem.type === 'subscribed-events' &&
-                'Subscribed Events'}
-            </Typography>
+                'No subscribed events'}
+            </Alert>
+          )}
 
-            {dependencyItem.data.length < 1 && (
-              <Alert severity="info">
-                {dependencyItem.type === 'provided-apis' && 'No provided APIs'}
-                {dependencyItem.type === 'consumed-apis' && 'No consumed APIs'}
-                {dependencyItem.type === 'published-events' &&
-                  'No published events'}
-                {dependencyItem.type === 'subscribed-events' &&
-                  'No subscribed events'}
-              </Alert>
-            )}
-
-            {dependencyItem.data.length > 0 && (
-              <List component="div">
-                {dependencyItem.data.map((apiOrEvent) => (
-                  <ListItemButton
-                    key={apiOrEvent.name}
-                    onClick={(): void =>
-                      controller.showDependencyDialog(apiOrEvent)
-                    }
-                  >
-                    <ListItemIcon>
-                      {dependencyItem.type === 'provided-apis' && (
-                        <Icons.CloudUploadOutlined />
-                      )}
-                      {dependencyItem.type === 'consumed-apis' && (
-                        <Icons.CloudDownloadOutlined />
-                      )}
-                      {dependencyItem.type === 'published-events' && (
-                        <Icons.UnarchiveOutlined />
-                      )}
-                      {dependencyItem.type === 'subscribed-events' && (
-                        <Icons.ArchiveOutlined />
-                      )}
-                    </ListItemIcon>
-                    <ListItemText>{apiOrEvent.name}</ListItemText>
-                  </ListItemButton>
-                ))}
-              </List>
-            )}
-          </CardContent>
-        </Card>
+          {dependencyItem.data.length > 0 && (
+            <List component="div">
+              {dependencyItem.data.map((apiOrEvent) => (
+                <ListItemButton
+                  key={apiOrEvent.name}
+                  onClick={(): void =>
+                    controller.showDependencyDialog(apiOrEvent)
+                  }
+                >
+                  <ListItemIcon>
+                    {dependencyItem.type === 'provided-apis' && (
+                      <Icons.CloudUploadOutlined />
+                    )}
+                    {dependencyItem.type === 'consumed-apis' && (
+                      <Icons.CloudDownloadOutlined />
+                    )}
+                    {dependencyItem.type === 'published-events' && (
+                      <Icons.UnarchiveOutlined />
+                    )}
+                    {dependencyItem.type === 'subscribed-events' && (
+                      <Icons.ArchiveOutlined />
+                    )}
+                  </ListItemIcon>
+                  <ListItemText>{apiOrEvent.name}</ListItemText>
+                </ListItemButton>
+              ))}
+            </List>
+          )}
+        </Box>
       ))}
 
       {controller.state.dependencyDialogData && (
