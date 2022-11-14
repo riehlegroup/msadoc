@@ -1,12 +1,26 @@
 version: '3.7'
 
 services:
+  msadoc-frontend:
+    image: msadoc-frontend
+    build:
+      context: .
+      dockerfile: frontend.Dockerfile
+    environment:
+      FRONTEND_PORT: 80
+      REACT_APP_BACKEND_URL: '/api'
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.routers.to-ui.rule=PathPrefix(`/`)'
+
   msadoc-server:
     image: msadoc-server
     build:
       context: .
       dockerfile: server.Dockerfile
     environment:
+      msadoc_port: 80
+
       msadoc_username: 'myuser'
       msadoc_password: '12345'
       msadoc_jwt_access_secret: 'mGbDyb$o2!KSYt%XCB8TGKcuK7XfH6Nf@44xg853MFrGRqV7CG'
@@ -18,20 +32,12 @@ services:
       msadoc_db_pw: 'password'
       msadoc_db_db: 'msadoc'
 
-      msadoc_frontend_url: 'http://localhost:3001'
-    ports:
-      - 3000:3000
-
-  msadoc-frontend:
-    image: msadoc-frontend
-    build:
-      context: .
-      dockerfile: frontend.Dockerfile
-    environment:
-      FRONTEND_PORT: 80
-      BACKEND_URL: 'msadoc-server'
-    ports:
-      - 80:80
+      msadoc_frontend_url: '/'
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.routers.to-server.rule=PathPrefix(`/api`)'
+      - 'traefik.http.routers.to-server.middlewares=server-stripprefix@docker'
+      - 'traefik.http.middlewares.server-stripprefix.stripprefix.prefixes=/api'
 
   msadoc-db:
     image: postgres
@@ -39,3 +45,17 @@ services:
       POSTGRES_USER: 'postgres'
       POSTGRES_PASSWORD: 'password'
       POSTGRES_DB: 'msadoc'
+
+  msadoc-edge:
+    image: 'traefik:v2.9'
+    command:
+      - '--providers.docker=true' # enable label annotations in compose file
+      - '--providers.docker.exposedbydefault=false'
+      - '--entrypoints.web.address=:80'
+      - --api.insecure # Activates dashboard: don't do that in production
+      #- "--log.level=DEBUG"
+    ports:
+      - '80:80' # HTTP port
+      - '8080:8080' # Dashboard
+    volumes:
+      - '/var/run/docker.sock:/var/run/docker.sock:ro'

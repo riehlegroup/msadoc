@@ -37,6 +37,7 @@ async function bootstrap() {
     origin: configService.getOrThrow('msadoc_frontend_url'),
   });
 
-  await app.listen(3000);
+  const port = configService.getOrThrow('msadoc_port');
+  await app.listen(port);
 }
 bootstrap();

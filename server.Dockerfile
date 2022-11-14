@@ -44,4 +44,6 @@ COPY --from=build /build/server/package*.json ./
 
 RUN npm i --omit=dev
 
+EXPOSE 80
+
 CMD [ "npm", "run", "start:prod" ]
