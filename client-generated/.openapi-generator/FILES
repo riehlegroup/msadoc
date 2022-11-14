@@ -12,6 +12,7 @@ models/CreateApiKeyResponseDto.ts
 models/CreateServiceDocRequest.ts
 models/CreateServiceDocResponse.ts
 models/DeleteServiceDocResponse.ts
+models/GetApiKeyResponseDto.ts
 models/GetApiKeysResponseDto.ts
 models/GetServiceDocResponse.ts
 models/GetServiceGroupResponse.ts

@@ -11,14 +11,18 @@
  * Do not edit the class manually.
  */
 
+import type {
+    GetApiKeyResponseDto,
+} from './';
+
 /**
  * @export
  * @interface GetApiKeysResponseDto
  */
 export interface GetApiKeysResponseDto {
     /**
-     * @type {Array<string>}
+     * @type {Array<GetApiKeyResponseDto>}
      * @memberof GetApiKeysResponseDto
      */
-    apiKeys: Array<string>;
+    apiKeys: Array<GetApiKeyResponseDto>;
 }

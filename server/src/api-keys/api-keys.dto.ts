@@ -24,7 +24,10 @@ export class CreateApiKeyResponseDto extends GetApiKeyResponseDto {
 }
 
 export class GetApiKeysResponseDto {
-  @ApiProperty()
+  @ApiProperty({
+    isArray: true,
+    type: GetApiKeyResponseDto,
+  })
   apiKeys: GetApiKeyResponseDto[];
 }
 

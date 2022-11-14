@@ -3,6 +3,7 @@ export * from './CreateApiKeyResponseDto';
 export * from './CreateServiceDocRequest';
 export * from './CreateServiceDocResponse';
 export * from './DeleteServiceDocResponse';
+export * from './GetApiKeyResponseDto';
 export * from './GetApiKeysResponseDto';
 export * from './GetServiceDocResponse';
 export * from './GetServiceGroupResponse';
