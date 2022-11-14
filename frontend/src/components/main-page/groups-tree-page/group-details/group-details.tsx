@@ -1,10 +1,4 @@
 import {
-  Badge,
-  CenterFocusStrongOutlined,
-  DatasetOutlined,
-  Group,
-} from '@mui/icons-material';
-import {
   Box,
   List,
   ListItem,
@@ -14,12 +8,17 @@ import {
 } from '@mui/material';
 import React from 'react';
 
-import { useSelectedTreeItem } from '../../utils/router-utils';
+import { Icons } from '../../../../icons';
 import {
-  ServiceDocsRegularGroupTreeItem,
-  ServiceDocsRootTreeItem,
-  ServiceDocsTreeItemType,
-} from '../../utils/service-docs-utils';
+  RegularGroupNode,
+  RootGroupNode,
+  ServiceDocsTreeNodeType,
+} from '../../service-docs-tree';
+import { useSelectedTreeItem } from '../../utils/router-utils';
+import { DataContainer } from '../common/data-container';
+import { Dependencies } from '../common/dependencies';
+import { Responsibilities } from '../common/responsibilities';
+import { Tags } from '../common/tags';
 
 export const GroupDetails: React.FC = () => {
   const controller = useController();
@@ -31,73 +30,88 @@ export const GroupDetails: React.FC = () => {
           sx={{
             overflowX: 'hidden',
             overflowY: 'auto',
-            padding: 4,
-            maxWidth: '700px',
+            paddingX: 8,
+            paddingBottom: 10,
+            paddingTop: 3,
+            maxWidth: '800px',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 5,
           }}
         >
-          <Typography variant="h3">Group Information</Typography>
+          <DataContainer>
+            <Typography variant="h4">Group Information</Typography>
 
-          {controller.group.treeItemType ===
-            ServiceDocsTreeItemType.RegularGroup && (
-            <List>
-              <ListItem divider>
-                <ListItemIcon>
-                  <Badge />
+            <List component="div">
+              {controller.group.type ===
+                ServiceDocsTreeNodeType.RegularGroup && (
+                <ListItem component="div" divider>
+                  <ListItemIcon>
+                    <Icons.Badge />
+                  </ListItemIcon>
+                  <ListItemText
+                    primary={controller.group.name}
+                    secondary="Name"
+                  />
+                </ListItem>
+              )}
+
+              {controller.group.type ===
+                ServiceDocsTreeNodeType.RegularGroup && (
+                <ListItem component="div" divider>
+                  <ListItemIcon>
+                    <Icons.Group />
+                  </ListItemIcon>
+                  <ListItemText
+                    primary={controller.group.identifier}
+                    secondary="Full identifier"
+                  />
+                </ListItem>
+              )}
+
+              <ListItem component="div" divider>
+                <ListItemIcon sx={{ color: 'inherit' }}>
+                  <Icons.CenterFocusStrongOutlined />
                 </ListItemIcon>
                 <ListItemText
-                  primary={controller.group.name}
-                  secondary="Name"
+                  primary={`${controller.group.services.length} ${
+                    controller.group.services.length === 1
+                      ? 'Service'
+                      : 'Services'
+                  }`}
+                  secondary="Number of owned services"
+                />
+              </ListItem>
+
+              <ListItem component="div" divider>
+                <ListItemIcon sx={{ color: 'inherit' }}>
+                  <Icons.DatasetOutlined />
+                </ListItemIcon>
+                <ListItemText
+                  primary={`${
+                    Object.keys(controller.group.childGroups).length
+                  } ${
+                    Object.keys(controller.group.childGroups).length === 1
+                      ? 'Group'
+                      : 'Groups'
+                  }`}
+                  secondary="Number of owned groups"
                 />
               </ListItem>
             </List>
-          )}
+          </DataContainer>
 
-          {controller.group.treeItemType ===
-            ServiceDocsTreeItemType.RegularGroup && (
-            <List>
-              <ListItem divider>
-                <ListItemIcon>
-                  <Group />
-                </ListItemIcon>
-                <ListItemText
-                  primary={controller.group.identifier}
-                  secondary="Full identifier"
-                />
-              </ListItem>
-            </List>
-          )}
+          <DataContainer>
+            <Responsibilities showResponsibilitiesFor={controller.group} />
+          </DataContainer>
 
-          <List>
-            <ListItem divider>
-              <ListItemIcon sx={{ color: 'inherit' }}>
-                <CenterFocusStrongOutlined />
-              </ListItemIcon>
-              <ListItemText
-                primary={`${controller.group.services.length} ${
-                  controller.group.services.length === 1
-                    ? 'Service'
-                    : 'Services'
-                }`}
-                secondary="Number of owned services"
-              />
-            </ListItem>
-          </List>
+          <DataContainer>
+            <Tags showTagsFor={controller.group} />
+          </DataContainer>
 
-          <List>
-            <ListItem divider>
-              <ListItemIcon sx={{ color: 'inherit' }}>
-                <DatasetOutlined />
-              </ListItemIcon>
-              <ListItemText
-                primary={`${Object.keys(controller.group.childGroups).length} ${
-                  Object.keys(controller.group.childGroups).length === 1
-                    ? 'Group'
-                    : 'Groups'
-                }`}
-                secondary="Number of owned groups"
-              />
-            </ListItem>
-          </List>
+          <DataContainer>
+            <Dependencies showDependenciesFor={controller.group} />
+          </DataContainer>
         </Box>
       )}
     </React.Fragment>
@@ -105,19 +119,16 @@ export const GroupDetails: React.FC = () => {
 };
 
 interface Controller {
-  group: ServiceDocsRegularGroupTreeItem | ServiceDocsRootTreeItem | undefined;
+  group: RegularGroupNode | RootGroupNode | undefined;
 }
 function useController(): Controller {
   const selectedTreeItem = useSelectedTreeItem();
 
-  let group:
-    | ServiceDocsRegularGroupTreeItem
-    | ServiceDocsRootTreeItem
-    | undefined = undefined;
+  let group: RegularGroupNode | RootGroupNode | undefined = undefined;
   if (
     selectedTreeItem &&
-    (selectedTreeItem.treeItemType === ServiceDocsTreeItemType.RootGroup ||
-      selectedTreeItem.treeItemType === ServiceDocsTreeItemType.RegularGroup)
+    (selectedTreeItem.type === ServiceDocsTreeNodeType.RootGroup ||
+      selectedTreeItem.type === ServiceDocsTreeNodeType.RegularGroup)
   ) {
     group = selectedTreeItem;
   }

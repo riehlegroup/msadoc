@@ -4,7 +4,7 @@ import { Navigate, RouteObject, useRoutes } from 'react-router-dom';
 import { MAIN_PAGE_ROUTES_ABS, MAIN_PAGE_ROUTES_REL } from '../../routes';
 
 import { AuthTokensPage } from './auth-tokens-page';
-import { GroupsTreePage } from './groups-tree-page/groups-tree-page';
+import { GroupsTreePage } from './groups-tree-page';
 
 export const MainPageRouter: React.FC = () => {
   const routes: RouteObject[] = [

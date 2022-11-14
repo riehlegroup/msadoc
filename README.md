@@ -1,20 +1,27 @@
 ![Logo](./docs/logo.png)
 
-**Document your microservice architecture - recentralize decentralized documentation!**
+**The entrypoint to your decentralized microservice documentation.**
 
-_Note_: This project is currently in developent, this document describes the vision of the tool. If you like the project we'd appreciate a star!
+- Document each microservice within its repository with a standardized JSON file.
+- Discover your architecture by browsing the aggregated documentation.
+- Generate higher-level documentation like dependency graphs.
+- Arrange microservices in an hierarchical structure (groups) to keep an overview.
+- Find the responsible person if you need to get in touch with the service owner.
+- Extend the documentation format to your needs (**Upcoming**).
 
 ## Mission
 
-Microservice-based projects often struggle with documentation. Information is distributed to various places, especially if there is a lack of standard procedures to document the microservices and the architecture. `msadoc` is a tool that allows documenting metadata of each microservice directly in its code base increasing the odds of keeping the documentation consistent. The metadata is collected in a central place serving as an entry point to documentation, increasing documentation's discoverability, and automating the extraction of higher-value documentation.
+**Problem:**
+Microservice-based projects often struggle with documentation. Information is distributed to various places, especially if there is a lack of standard procedures to document the microservices and the architecture. At the same time, higher-level documentation that give an overview over the system (like architecture diagrams) become outdated quite quickly.
 
-<!-- TODO: 2 nice screenshots of UI. -->
+**Solution:**
+`msadoc` is a tool that allows documenting metadata of each microservice directly in its code base increasing the odds of keeping the documentation consistent. The metadata is collected in a central place serving as an entry point to documentation, increasing documentation's discoverability, and automating the extraction of higher-value documentation like architecture diagrams.
 
 ## Usage
 
 1. [Deploy](./docs/deployment.md) your `msadoc-server` instance on your servers.
 
-2. Add a `msadoc.json` file to your project. See the [docs](./docs/msadoc.md) for more information.
+2. Add a `msadoc.json` file to your microservices. See the [docs](./docs/msadoc.md) for more information.
    Example:
 
 ```json
@@ -36,13 +43,18 @@ Microservice-based projects often struggle with documentation. Information is di
    3.1 Generate an [API key](./docs/api-keys.md) in the `msadoc-server`.  
    3.2 Use the [CLI](./cli/README.md) to push to the `msadoc-server`.
 
-4. Browse all your microservices on your `msadoc-server` instance.
+4. Browse all your microservices on your `msadoc-frontend` instance.
+<p float="left">
+  <img src="docs/screenshot-list-view.png" width="45%" />
+  <img src="docs/screenshot-dependency-view.png" width="45%" /> 
+</p>
 
 ## Documentation
 
 - [Format of msadoc.json files](./docs/msadoc.md)
 - [Deployment](./docs/deployment.md)
 - [Tutorial: Generating and using API keys](./docs/api-keys.md)
+- [Tutorial: Use example data for a demo](./example/README.md)
 
 ## Architecture
 

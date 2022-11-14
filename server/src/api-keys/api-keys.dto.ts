@@ -1,10 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsNonEmptyString } from '../utils/class-validators';
 
 export class CreateApiKeyRequestDto {
   @ApiProperty()
-  @IsString()
-  @IsNotEmpty()
+  @IsNonEmptyString()
   keyName: string;
 }
 
@@ -25,7 +24,10 @@ export class CreateApiKeyResponseDto extends GetApiKeyResponseDto {
 }
 
 export class GetApiKeysResponseDto {
-  @ApiProperty()
+  @ApiProperty({
+    isArray: true,
+    type: GetApiKeyResponseDto,
+  })
   apiKeys: GetApiKeyResponseDto[];
 }
 

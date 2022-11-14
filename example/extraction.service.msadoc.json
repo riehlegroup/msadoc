@@ -8,8 +8,8 @@
 
   "providedAPIs": ["/extractions/config", "/extractions/execution-stats"],
 
-  "consumedEvents": ["extraction.execution.triggered"],
-  "producedEvents": [
+  "subscribedEvents": ["extraction.execution.triggered"],
+  "publishedEvents": [
     "extraction.config.created",
     "extraction.config.updated",
     "extraction.config.deleted",

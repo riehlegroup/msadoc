@@ -7,14 +7,14 @@
 
   "providedAPIs": ["/notifications/configs", "/notifications/execution-stats"],
 
-  "producedEvents": [
+  "publishedEvents": [
     "notification.config.created",
     "notification.config.updated",
     "notification.config.deleted",
     "notification.execution.success",
     "notification.execution.failure"
   ],
-  "consumedEvents": ["load.execution.success", "load.execution.failure"],
+  "subscribedEvents": ["load.execution.success", "load.execution.failure"],
 
   "deploymentDocumentation": "https://github.com/jvalue/ods-deployment",
 

@@ -8,8 +8,8 @@
 
   "providedAPIs": ["/scheduler/tasks"],
 
-  "producedEvents": ["extraction.execution.tiggered"],
-  "consumedEvents": [
+  "publishedEvents": ["extraction.execution.tiggered"],
+  "subscribedEvents": [
     "extraction.config.created",
     "extraction.config.updated",
     "extraction.config.deleted"

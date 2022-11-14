@@ -1,4 +1,3 @@
-import { ChevronRight, ExpandMore } from '@mui/icons-material';
 import {
   List,
   ListItemButton,
@@ -8,18 +7,24 @@ import {
 import React from 'react';
 import { generatePath, useNavigate } from 'react-router-dom';
 
+import { Icons } from '../../../../icons';
 import { GROUPS_TREE_ROUTES_ABS } from '../../../../routes';
+import {
+  MainNode,
+  RegularGroupNode,
+  ServiceDocsTreeNodeType,
+  ServiceNode,
+} from '../../service-docs-tree';
 import { useSelectedTreeItem } from '../../utils/router-utils';
 import {
-  ServiceDocsRegularGroupTreeItem,
-  ServiceDocsTreeItem,
-  ServiceDocsTreeItemType,
-} from '../../utils/service-docs-utils';
+  isGroupXDescendantOfGroupY,
+  sortServicesByName,
+} from '../../utils/service-docs-tree-utils';
 
 import { ServiceItem } from './service-item';
 
 interface Props {
-  group: ServiceDocsRegularGroupTreeItem;
+  group: RegularGroupNode;
 
   /**
    * How deep is this item in the tree?
@@ -73,7 +78,11 @@ export const GroupItem: React.FC<Props> = (props) => {
             controller.toggleIsCollapsed();
           }}
         >
-          {controller.state.isCollapsed ? <ChevronRight /> : <ExpandMore />}
+          {controller.state.isCollapsed ? (
+            <Icons.ChevronRight />
+          ) : (
+            <Icons.ExpandMore />
+          )}
         </ListItemIcon>
         <ListItemText primary={props.group.name} />
       </ListItemButton>
@@ -81,7 +90,7 @@ export const GroupItem: React.FC<Props> = (props) => {
       {!controller.state.isCollapsed && (
         <React.Fragment>
           <List component="div" disablePadding>
-            {Object.values(props.group.childGroups).map((childGroup) => (
+            {controller.sortedChildGroups.map((childGroup) => (
               <GroupItem
                 key={childGroup.identifier}
                 group={childGroup}
@@ -91,7 +100,7 @@ export const GroupItem: React.FC<Props> = (props) => {
           </List>
 
           <List component="div" disablePadding>
-            {props.group.services.map((service) => (
+            {controller.sortedServices.map((service) => (
               <ServiceItem
                 key={service.name}
                 service={service}
@@ -115,6 +124,9 @@ interface Controller {
 
   buttonRef: React.RefObject<HTMLDivElement>;
 
+  sortedChildGroups: RegularGroupNode[];
+  sortedServices: ServiceNode[];
+
   navigateToThisGroup: () => void;
   toggleIsCollapsed: () => void;
 }
@@ -131,7 +143,7 @@ function useController(props: Props): Controller {
   const isSelected = ((): boolean => {
     if (
       !selectedTreeItem ||
-      selectedTreeItem.treeItemType !== ServiceDocsTreeItemType.RegularGroup
+      selectedTreeItem.type !== ServiceDocsTreeNodeType.RegularGroup
     ) {
       return false;
     }
@@ -161,12 +173,23 @@ function useController(props: Props): Controller {
     setState((state) => ({ ...state, isCollapsed: false }));
   }, [props.group, selectedTreeItem]);
 
+  const sortedChildGroups = React.useMemo((): RegularGroupNode[] => {
+    return sortGroupsByName(Object.values(props.group.childGroups));
+  }, [props.group.childGroups]);
+
+  const sortedServices = React.useMemo((): ServiceNode[] => {
+    return sortServicesByName(props.group.services);
+  }, [props.group.services]);
+
   return {
     state: state,
 
     isSelected: isSelected,
 
     buttonRef: buttonRef,
+
+    sortedChildGroups: sortedChildGroups,
+    sortedServices: sortedServices,
 
     navigateToThisGroup: (): void => {
       navigate(
@@ -184,70 +207,52 @@ function useController(props: Props): Controller {
 /**
  * Is `x` a descendant (i.e. child, or child of child, or ...) of `y`?
  */
-function isXDescendantOfY(params: {
-  x: ServiceDocsTreeItem;
-  y: ServiceDocsTreeItem;
-}): boolean {
+function isXDescendantOfY(params: { x: MainNode; y: MainNode }): boolean {
   // The root group cannot be a child of anyone.
-  if (params.x.treeItemType === ServiceDocsTreeItemType.RootGroup) {
+  if (params.x.type === ServiceDocsTreeNodeType.RootGroup) {
     return false;
   }
 
   // A service cannot be the parent of anyone.
-  if (params.y.treeItemType === ServiceDocsTreeItemType.Service) {
+  if (params.y.type === ServiceDocsTreeNodeType.Service) {
     return false;
   }
 
   // The root group is the parent of everyone.
-  if (params.y.treeItemType === ServiceDocsTreeItemType.RootGroup) {
+  if (params.y.type === ServiceDocsTreeNodeType.RootGroup) {
     return false;
   }
 
-  if (params.x.treeItemType === ServiceDocsTreeItemType.Service) {
-    // A service with no group is only the descendant of the root group. But we have already covered the case where y=RootGroup before.
-    if (params.x.group === undefined) {
+  if (params.x.type === ServiceDocsTreeNodeType.Service) {
+    // A service belonging to the root group is, of course, only the descendant of the root group. But we have already covered the case where y=RootGroup before.
+    if (params.x.group.type === ServiceDocsTreeNodeType.RootGroup) {
       return false;
     }
 
-    if (params.x.group === params.y.identifier) {
+    if (params.x.group === params.y) {
       return true;
     }
     return isGroupXDescendantOfGroupY({
-      xIdentifier: params.x.group,
-      yIdentifier: params.y.identifier,
+      xGroup: params.x.group,
+      yGroup: params.y,
     });
   }
 
   return isGroupXDescendantOfGroupY({
-    xIdentifier: params.y.identifier,
-    yIdentifier: params.y.identifier,
+    xGroup: params.x,
+    yGroup: params.y,
   });
 }
 
-function isGroupXDescendantOfGroupY(params: {
-  xIdentifier: string;
-  yIdentifier: string;
-}): boolean {
-  /*  
-    A trick: We use the identifiers of the two groups in order to determine whether X is the descendant of Y.
+/**
+ * Sort the given Groups by their name.
+ */
+function sortGroupsByName(groups: RegularGroupNode[]): RegularGroupNode[] {
+  const result = [...groups];
 
-    Example: 
-    `XIdentifier`: "foo.bar.baz"
-    `YIdentifier`: "foo.bar"
+  result.sort((a, b) => {
+    return a.name.localeCompare(b.name);
+  });
 
-    Now, we simply check if `XIdentifier` starts with `YIdentifier`.
-
-    There is one edge case. Imagine the following:
-    `XIdentifier`: "foo.bars"
-    `YIdentifier`: "foo.bar"
-    Now, the check would return `true`, because `XIdentifier` starts with `YIdentifier`.
-    Because of this, we add a group delimiter (".") to `YIdentifier` before checking.
-  */
-
-  const yIdentifierForChecking = params.yIdentifier + '.';
-
-  if (params.xIdentifier.startsWith(yIdentifierForChecking)) {
-    return true;
-  }
-  return false;
+  return result;
 }

@@ -1,15 +1,14 @@
-import { CenterFocusStrongOutlined } from '@mui/icons-material';
 import { ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
-import { GetServiceDocResponse } from 'msadoc-client';
 import React from 'react';
 import { generatePath, useNavigate } from 'react-router-dom';
 
+import { Icons } from '../../../../icons';
 import { GROUPS_TREE_ROUTES_ABS } from '../../../../routes';
+import { ServiceDocsTreeNodeType, ServiceNode } from '../../service-docs-tree';
 import { useSelectedTreeItem } from '../../utils/router-utils';
-import { ServiceDocsTreeItemType } from '../../utils/service-docs-utils';
 
 interface Props {
-  service: GetServiceDocResponse;
+  service: ServiceNode;
 
   /**
    * How deep is this item in the tree?
@@ -43,7 +42,7 @@ export const ServiceItem: React.FC<Props> = (props) => {
       onClick={(): void => controller.navigateToThisService()}
     >
       <ListItemIcon sx={{ color: 'inherit' }}>
-        <CenterFocusStrongOutlined />
+        <Icons.CenterFocusStrongOutlined />
       </ListItemIcon>
       <ListItemText primary={props.service.name} />
     </ListItemButton>
@@ -66,7 +65,7 @@ function useController(props: Props): Controller {
   const isSelected = ((): boolean => {
     if (
       !selectedTreeItem ||
-      selectedTreeItem.treeItemType !== ServiceDocsTreeItemType.Service
+      selectedTreeItem.type !== ServiceDocsTreeNodeType.Service
     ) {
       return false;
     }

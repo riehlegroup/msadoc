@@ -2,40 +2,31 @@ import { GetServiceDocResponse } from 'msadoc-client';
 import React from 'react';
 
 import {
-  ServiceDocsRootTreeItem,
-  ServiceDocsServiceTreeItem,
-  ServiceDocsTreeItemType,
-  buildGroupsTree,
-} from '../utils/service-docs-utils';
+  RootGroupNode,
+  ServiceNode,
+  buildServiceDocsTree,
+} from '../service-docs-tree';
+import { extractAllServices } from '../utils/service-docs-tree-utils';
 
 interface ServiceDocsService {
-  serviceDocs: ServiceDocsServiceTreeItem[];
-  groupsTree: ServiceDocsRootTreeItem;
+  serviceDocs: ServiceNode[];
+  groupsTree: RootGroupNode;
 }
 function useServiceDocsService(
   serviceDocs: GetServiceDocResponse[],
 ): ServiceDocsService {
-  const serviceDocsWithType =
-    React.useMemo((): ServiceDocsServiceTreeItem[] => {
-      const result: ServiceDocsServiceTreeItem[] = [];
-
-      for (const singleServiceDoc of serviceDocs) {
-        result.push({
-          ...singleServiceDoc,
-          treeItemType: ServiceDocsTreeItemType.Service,
-        });
-      }
-
-      return result;
-    }, [serviceDocs]);
-
   const groupsTree = React.useMemo(
-    (): ServiceDocsRootTreeItem => buildGroupsTree(serviceDocsWithType),
-    [serviceDocsWithType],
+    (): RootGroupNode => buildServiceDocsTree(serviceDocs),
+    [serviceDocs],
+  );
+
+  const serviceDocsAsArray = React.useMemo(
+    () => extractAllServices(groupsTree),
+    [groupsTree],
   );
 
   return {
-    serviceDocs: serviceDocsWithType,
+    serviceDocs: serviceDocsAsArray,
     groupsTree: groupsTree,
   };
 }

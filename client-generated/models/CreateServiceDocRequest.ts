@@ -59,17 +59,17 @@ export interface CreateServiceDocRequest {
      */
     providedAPIs?: Array<string>;
     /**
-     * List of produced event identifiers. Event identifier matched for dependency analysis.
+     * List of published event identifiers. Event identifier matched for dependency analysis.
      * @type {Array<string>}
      * @memberof CreateServiceDocRequest
      */
-    producedEvents?: Array<string>;
+    publishedEvents?: Array<string>;
     /**
-     * List of consumed event identifiers. Event identifier matched for dependency analysis.
+     * List of subscribed event identifiers. Event identifier matched for dependency analysis.
      * @type {Array<string>}
      * @memberof CreateServiceDocRequest
      */
-    consumedEvents?: Array<string>;
+    subscribedEvents?: Array<string>;
     /**
      * URL to development documentation.
      * @type {string}
