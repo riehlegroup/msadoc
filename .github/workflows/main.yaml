@@ -80,8 +80,4 @@ jobs:
 
       - name: Run e2e tests
         run: |
-          docker compose -f server/docker-compose.ci.yaml build
-          cp server/.env.ci server/.env
-          docker compose -f server/docker-compose.ci.yaml up -d
           npm run test:e2e -w=server
-          docker compose -f server/docker-compose.ci.yaml down
