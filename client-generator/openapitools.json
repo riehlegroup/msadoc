@@ -8,7 +8,7 @@
       "ts-rxjs": {
         "generatorName": "typescript-rxjs",
         "output": "../client-generated/",
-        "inputSpec": "http://localhost:3000/api-json",
+        "inputSpec": "http://localhost:3001/api-json",
         "additionalProperties": {
           "npmName": "msadoc-client",
           "npmRepository": "https://github.com/osrgroup/msadoc",

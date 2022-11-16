@@ -6,7 +6,6 @@ export * from './DeleteServiceDocResponse';
 export * from './GetApiKeyResponseDto';
 export * from './GetApiKeysResponseDto';
 export * from './GetServiceDocResponse';
-export * from './GetServiceGroupResponse';
 export * from './IsApiKeyValidResponseDto';
 export * from './ListServiceDocResponse';
 export * from './LoginRequestDto';
