@@ -3,13 +3,13 @@ import { MockType, RepositoryMockFactory } from '../repository-factory.mock';
 import { Repository } from 'typeorm';
 import { ServiceDocOrm } from './service-doc.orm';
 import {
-  ExtensionValueType,
   fromOrm,
   ServiceDocModel,
   ServiceDocsService,
   toOrm,
 } from './service-docs.service';
 import { getRepositoryToken } from '@nestjs/typeorm';
+import { ExtensionValueType } from './extensions';
 
 describe('ServiceDocsService', () => {
   let service: ServiceDocsService;
@@ -135,7 +135,7 @@ describe('ServiceDocs ORM conversion', () => {
       'x-test1': {
         asd: 123,
       },
-    };
+    } as any as ServiceDocModel;
 
     expect(() => toOrm(model)).toThrowError();
   });
