@@ -6,9 +6,8 @@ services:
     build:
       context: .
       dockerfile: frontend.Dockerfile
-    environment:
-      FRONTEND_PORT: 80
-      REACT_APP_BACKEND_URL: '/api'
+      args:
+        REACT_APP_BACKEND_URL: '/api'
     labels:
       - 'traefik.enable=true'
       - 'traefik.http.routers.to-ui.rule=PathPrefix(`/`)'

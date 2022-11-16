@@ -25,6 +25,8 @@ RUN npm ci
 #--------------------------------------------------------#
 FROM base as build
 
+ARG REACT_APP_BACKEND_URL
+
 # lint project
 RUN npm run lint -w frontend
 
