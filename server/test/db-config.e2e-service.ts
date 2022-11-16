@@ -4,8 +4,6 @@ import { join } from 'path';
 
 @Injectable()
 export class E2eTypeOrmConfigService implements TypeOrmOptionsFactory {
-  constructor() {}
-
   /**
    * Used by NestJS to reach database.
    * Keep in sync with @see TypeOrm.config.ts
