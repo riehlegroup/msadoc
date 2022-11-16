@@ -1,9 +1,15 @@
 # Deployment
 
-Currently, we only support local deployment. See [Development Setup](../README) in the main README.
+## Local Machine
 
-Planned:
+See [Development Setup](../README) in the main README.
 
-- Dockerization
-- Docker-compose deployment
-- Kubernetes deployment
+## Docker Compose
+
+- Use the `/deployment/docker/docker-compose.yml`. Change environment variables to change secrets, credentials, etc.
+- Build via `docker compose -f deployment/docker/docker-compose.yml build`.
+- Run via `docker compose -f deployment/docker/docker-compose.yml up`
+
+## Kubernetes
+
+Upcoming!
