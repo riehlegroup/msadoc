@@ -39,7 +39,7 @@ jobs:
           context: .
           file: frontend.Dockerfile
           push: true
-          build-args: REACT_APP_BACKEND_URL='/api'
+          build-args: REACT_APP_BACKEND_URL=/api
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
 
