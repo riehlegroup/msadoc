@@ -19,7 +19,7 @@ The name of the microservice. The `name` is used as key to identify and referenc
 #### Best Practices
 
 - Use a consistent naming scheme across all microservices.
-- Don't use spaces - otherwise API requests filtering by name might not work.
+- Don't use spaces to avoid ambiguities.
 
 ### `group` (string)
 
@@ -38,7 +38,7 @@ The `group` name will later be used as key to add more meta-data to the group.
 #### Best Practices
 
 - Use a consistent naming scheme across all groups.
-- Don't use spaces - otherwise API requests filtering by name might not work.
+- Don't use spaces to avoid ambiguities.
 
 ### `tags` (string[])
 
@@ -56,7 +56,7 @@ A list of tags for the microservice. The `tag` is used as key to filter services
 #### Best Practices
 
 - Use a consistent tagging scheme across all microservices.
-- Don't use spaces - otherwise API requests filtering by name might not work.
+- Don't use spaces to avoid ambiguities.
 
 ### `repository` (string)
 
@@ -114,7 +114,7 @@ The chosen formatting as string is deliberatively chosen to allow documenting mu
 - Use this attribute to document synchronous API dependencies. For events use the attribute `publishedEvents`.
 - Use a consistent naming scheme for APIs across all microservices.
 - Consider if you can uniquely identify an API via its route, e.g. `/pipelines` to add more expressiveness to the documentation. Otherwise you can use custom names as e.g. `PipelineApi`.
-- Don't use spaces - otherwise API requests filtering by name might not work.
+- Don't use spaces to avoid ambiguities.
 
 ### `consumedAPIs` (string[])
 
@@ -157,7 +157,7 @@ The chosen formatting as string is deliberatively chosen to allow documenting mu
 - Use this attribute to document asynchronous event dependencies. For synchronous APIs like HTTP or RPC use the attribute `providedAPIs`.
 - Use a consistent naming scheme for events across all microservices.
 - Consider if you can uniquely identify an event via its routing key, e.g. `datasources.config.created` to add more expressiveness to the documentation. Otherwise you can use custom names as e.g. `DatasourceConfigCreatedEvent`.
-- Don't use spaces - otherwise API requests filtering by name might not work.
+- Don't use spaces to avoid ambiguities.
 
 ### `subscribedEvents` (string[])
 
