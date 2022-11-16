@@ -1,6 +1,16 @@
+### Variables
+# Uncomment the matching @url your current deployment setting!
+
+# Local deployment
+@url = http://localhost:3000 
+
+# Local docker deployment
+# @url = http://localhost/api
+
+
 ### Login
 # @name postLogin
-POST http://localhost:3000/auth/login HTTP/1.1
+POST {{url}}/auth/login HTTP/1.1
 content-type: application/json
 
 {
@@ -13,42 +23,42 @@ content-type: application/json
 @authToken = {{postLogin.response.body.access_token}}
 
 ### Create WebClientService
-POST http://localhost:3000/service-docs HTTP/1.1
+POST {{url}}/service-docs HTTP/1.1
 content-type: application/json
 Authorization: Bearer {{authToken}}
 
 <@ ./web.client.msadoc.json
 
 ### Create ExtractionService
-POST http://localhost:3000/service-docs HTTP/1.1
+POST {{url}}/service-docs HTTP/1.1
 content-type: application/json
 Authorization: Bearer {{authToken}}
 
 <@ ./extraction.service.msadoc.json
 
 ### Create SchedulerService
-POST http://localhost:3000/service-docs HTTP/1.1
+POST {{url}}/service-docs HTTP/1.1
 content-type: application/json
 Authorization: Bearer {{authToken}}
 
 <@ ./scheduler.service.msadoc.json
 
 ### Create TransformationService
-POST http://localhost:3000/service-docs HTTP/1.1
+POST {{url}}/service-docs HTTP/1.1
 content-type: application/json
 Authorization: Bearer {{authToken}}
 
 <@ ./transformation.service.msadoc.json
 
 ### Create LoadService
-POST http://localhost:3000/service-docs HTTP/1.1
+POST {{url}}/service-docs HTTP/1.1
 content-type: application/json
 Authorization: Bearer {{authToken}}
 
 <@ ./load.service.msadoc.json
 
 ### Create NotificationService
-POST http://localhost:3000/service-docs HTTP/1.1
+POST {{url}}/service-docs HTTP/1.1
 content-type: application/json
 Authorization: Bearer {{authToken}}
 
@@ -56,14 +66,14 @@ Authorization: Bearer {{authToken}}
 
 
 ### Create RestfulQueryService
-POST http://localhost:3000/service-docs HTTP/1.1
+POST {{url}}/service-docs HTTP/1.1
 content-type: application/json
 Authorization: Bearer {{authToken}}
 
 <@ ./restful-query.service.msadoc.json
 
 ### Create GraphQlQueryService
-POST http://localhost:3000/service-docs HTTP/1.1
+POST {{url}}/service-docs HTTP/1.1
 content-type: application/json
 Authorization: Bearer {{authToken}}
 
