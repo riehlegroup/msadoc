@@ -4,7 +4,7 @@ services:
   msadoc-frontend:
     image: msadoc-frontend
     build:
-      context: .
+      context: ../..
       dockerfile: frontend.Dockerfile
       args:
         REACT_APP_BACKEND_URL: '/api'
@@ -15,7 +15,7 @@ services:
   msadoc-server:
     image: msadoc-server
     build:
-      context: .
+      context: ../..
       dockerfile: server.Dockerfile
     environment:
       msadoc_port: 80
@@ -46,7 +46,7 @@ services:
       POSTGRES_DB: 'msadoc'
 
   msadoc-edge:
-    image: 'traefik:v2.9'
+    image: traefik:v2.9
     command:
       - '--providers.docker=true' # enable label annotations in compose file
       - '--providers.docker.exposedbydefault=false'
