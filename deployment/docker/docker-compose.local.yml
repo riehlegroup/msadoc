@@ -1,0 +1,18 @@
+version: '3.7'
+# Note: This compose file cannot be used standalone
+# This compose file overwrites the default compose file by adding build context for local building and starting.
+
+services:
+  msadoc-frontend:
+    # Add build context to image
+    build:
+      context: ../..
+      dockerfile: frontend.Dockerfile
+      args:
+        REACT_APP_BACKEND_URL: '/api'
+
+  msadoc-server:
+    # Add build context to image
+    build:
+      context: ../..
+      dockerfile: server.Dockerfile

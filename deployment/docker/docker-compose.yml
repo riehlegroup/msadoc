@@ -2,21 +2,13 @@ version: '3.7'
 
 services:
   msadoc-frontend:
-    image: msadoc-frontend
-    build:
-      context: ../..
-      dockerfile: frontend.Dockerfile
-      args:
-        REACT_APP_BACKEND_URL: '/api'
+    image: ghcr.io/osrgroup/msadoc-frontend
     labels:
       - 'traefik.enable=true'
       - 'traefik.http.routers.to-ui.rule=PathPrefix(`/`)'
 
   msadoc-server:
-    image: msadoc-server
-    build:
-      context: ../..
-      dockerfile: server.Dockerfile
+    image: ghcr.io/osrgroup/msadoc-server
     environment:
       msadoc_port: 80
 
