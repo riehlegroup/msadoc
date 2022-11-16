@@ -3,7 +3,6 @@ import { INestApplication, ValidationPipe } from '@nestjs/common';
 import * as request from 'supertest';
 import { AppModule } from '../src/app.module';
 import { CreateServiceDocRequest } from '../src/service-docs/service-doc.dto';
-import { E2eTypeOrmConfigService } from './db-config.e2e-service';
 
 describe('ServiceDocsController (e2e)', () => {
   let app: INestApplication;
@@ -11,7 +10,6 @@ describe('ServiceDocsController (e2e)', () => {
   beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-      providers: [E2eTypeOrmConfigService],
     }).compile();
 
     app = moduleFixture.createNestApplication();
