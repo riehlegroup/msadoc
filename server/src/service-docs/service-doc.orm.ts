@@ -5,7 +5,7 @@ import {
   UpdateDateColumn,
   CreateDateColumn,
 } from 'typeorm';
-import { ExtensionValueType } from './service-docs.service';
+import { ExtensionValueType } from './extensions';
 
 @Entity({
   name: 'ServiceDocs',

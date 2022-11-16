@@ -6,6 +6,11 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import {
+  ExtensionValueType,
+  extractExtensions,
+  isExtensionObject,
+} from './extensions';
 import { GetServiceDocResponse } from './service-doc.dto';
 import { ServiceDocOrm } from './service-doc.orm';
 
@@ -40,20 +45,13 @@ export function fromOrm(entity: ServiceDocOrm): ServiceDocModel {
 export function toOrm(
   model: ServiceDocModelWithoutTimestamps,
 ): Omit<ServiceDocOrm, 'creationTimestamp' | 'updateTimestamp'> {
-  const extensionKeys = Object.keys(model).filter((key) =>
-    key.startsWith('x-'),
-  );
-  const extensions: Record<string, ExtensionValueType> = {};
-  for (const extensionKey of extensionKeys) {
-    const extensionValue = (model as Record<string, unknown>)[extensionKey];
-    if (!isExtensionValueType(extensionValue)) {
-      throw new HttpException(
-        `Extension field ${extensionKey} is not type string, number or boolean or their array types. Cannot parse!`,
-        HttpStatus.BAD_REQUEST,
-      );
-    }
-    extensions[extensionKey] = extensionValue;
+  if (!isExtensionObject(model)) {
+    throw new HttpException(
+      `Found an extension field that is not type string, number or boolean or their array types. Cannot parse!`,
+      HttpStatus.BAD_REQUEST,
+    );
   }
+  const extensions = extractExtensions(model);
 
   return {
     name: model.name,
@@ -72,37 +70,6 @@ export function toOrm(
     responsibleTeam: model.responsibleTeam ?? null,
     extensions: extensions,
   };
-}
-
-export type ExtensionValueType =
-  | ExtensionPrimitiveValueType
-  | ExtensionPrimitiveValueType[];
-export type ExtensionPrimitiveValueType = string | number | boolean;
-
-export function isExtensionPrimitiveValueType(
-  extensionValue: unknown,
-): extensionValue is ExtensionPrimitiveValueType {
-  return (
-    typeof extensionValue === 'string' ||
-    typeof extensionValue === 'number' ||
-    typeof extensionValue === 'boolean'
-  );
-}
-
-export function isExtensionValueType(
-  extensionValue: unknown,
-): extensionValue is ExtensionValueType {
-  if (Array.isArray(extensionValue)) {
-    for (const item of extensionValue) {
-      if (!isExtensionPrimitiveValueType(item)) {
-        return false;
-      }
-    }
-  } else if (!isExtensionPrimitiveValueType(extensionValue)) {
-    return false;
-  }
-
-  return true;
 }
 
 export type ServiceDocModel = GetServiceDocResponse;

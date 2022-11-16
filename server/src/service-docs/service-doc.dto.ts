@@ -4,6 +4,7 @@ import {
   IsNonEmptyOptionalStringArray,
   IsNonEmptyString,
 } from '../utils/class-validators';
+import { ExtensionKey, ExtensionValueType } from './extensions';
 
 export class CreateServiceDocRequest {
   @ApiProperty({
@@ -115,7 +116,10 @@ export class CreateServiceDocRequest {
   @IsNonEmptyOptionalStringArray()
   responsibles?: string[];
 
-  // Extension fields begin with the prefix 'x-', e.g. 'x-my-extension' and can contain strings, numbers, booleans, or arrays of these types.
+  /** Extensions */
+
+  /** Cannot be validated via class-validator. Validation happens in @see ServiceDocsService */
+  [x: ExtensionKey]: ExtensionValueType;
 }
 
 export class CreateServiceDocResponse extends CreateServiceDocRequest {
