@@ -43,7 +43,7 @@ FROM nginx:1-alpine
 COPY --from=build /build/frontend/build/ /usr/share/nginx/html
 
 # use custom nginx config
-COPY default.conf /etc/nginx/conf.d/
+COPY frontend.Docker.nginx.conf /etc/nginx/conf.d/default.conf
 
 EXPOSE 80
 
