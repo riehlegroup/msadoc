@@ -10,21 +10,21 @@
     "lint": "eslint src --max-warnings=0"
   },
   "dependencies": {
-    "@emotion/react": "^11.10.4",
-    "@emotion/styled": "^11.10.4",
+    "@emotion/react": "^11.10.5",
+    "@emotion/styled": "^11.10.5",
     "@fontsource/roboto": "^4.5.8",
-    "@mui/icons-material": "^5.10.6",
-    "@mui/lab": "^5.0.0-alpha.101",
-    "@mui/material": "^5.10.7",
+    "@mui/icons-material": "^5.10.14",
+    "@mui/lab": "^5.0.0-alpha.108",
+    "@mui/material": "^5.10.14",
     "@nivo/sankey": "^0.80.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-router-dom": "^6.4.1",
+    "react-router-dom": "^6.4.3",
     "react-scripts": "5.0.1"
   },
   "devDependencies": {
     "@types/react": "^18.0.21",
-    "@types/react-dom": "^18.0.6",
-    "sass": "^1.55.0"
+    "@types/react-dom": "^18.0.9",
+    "sass": "^1.56.1"
   }
 }
