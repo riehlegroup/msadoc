@@ -288,7 +288,7 @@ The email addresses or names of the mainly responsible people that should serve 
 
 ## Extension/Custom Fields
 
-You can easily add custom fields by prepending a "x-" to the attribute.
+You can easily add custom fields under the attribute `extensions`.
 Extension field values can only be of type `string`, `number`, `boolean`, or `array` of these types.
 Extension fields are visualized in the UI in a very generic way.
 
@@ -297,7 +297,9 @@ Extension fields are visualized in the UI in a very generic way.
 ```json
 {
   "name": "PipelineService",
-  "x-products": ["Product A", "Product B"]
+  "extensions": {
+    "usedInProducts": ["ProductA", "ProductB"]
+  }
 }
 ```
 
