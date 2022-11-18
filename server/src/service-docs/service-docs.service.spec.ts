@@ -9,7 +9,7 @@ import {
   toOrm,
 } from './service-docs.service';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { ExtensionValueType } from './extensions';
+import { ExtensionObject } from './extensions';
 
 describe('ServiceDocsService', () => {
   let service: ServiceDocsService;
@@ -32,7 +32,7 @@ describe('ServiceDocsService', () => {
     responsibleTeam: null,
     creationTimestamp: new Date(Date.now()),
     updateTimestamp: new Date(Date.now()),
-    extensions: {},
+    extensions: null,
   };
   const expectedServiceDoc: ServiceDocModel = {
     name: mockedServiceDoc.name,
@@ -114,30 +114,23 @@ describe('ServiceDocs ORM conversion', () => {
   it('should convert valid extension fields', () => {
     const model = {
       name: 'test',
-      'x-test1': 123,
-      'x-test2': 'asd',
-      'x-test3': false,
-      'x-test4': [123, 'asd', false],
+      extensions: {
+        'x-test1': 123,
+        'x-test2': 'asd',
+        'x-test3': false,
+        'x-test4': [123, 'asd', false],
+      },
     };
 
     const orm = toOrm(model);
-    expect(orm.extensions['x-test1']).toEqual(123);
-    expect(orm.extensions['x-test2']).toEqual('asd');
-    expect(orm.extensions['x-test3']).toEqual(false);
-    expect(orm.extensions['x-test4']).toContain(123);
-    expect(orm.extensions['x-test4']).toContain('asd');
-    expect(orm.extensions['x-test4']).toContain(false);
-  });
-
-  it('should throw on converting invalid extension fields', () => {
-    const model = {
-      name: 'test',
-      'x-test1': {
-        asd: 123,
-      },
-    } as any as ServiceDocModel;
-
-    expect(() => toOrm(model)).toThrowError();
+    expect(orm.extensions).not.toBeNull();
+    const ormExtensions = orm.extensions as ExtensionObject;
+    expect(ormExtensions['x-test1']).toEqual(123);
+    expect(ormExtensions['x-test2']).toEqual('asd');
+    expect(ormExtensions['x-test3']).toEqual(false);
+    expect(ormExtensions['x-test4']).toContain(123);
+    expect(ormExtensions['x-test4']).toContain('asd');
+    expect(ormExtensions['x-test4']).toContain(false);
   });
 
   it('should convert back extension fields', () => {
@@ -166,12 +159,12 @@ describe('ServiceDocs ORM conversion', () => {
       updateTimestamp: new Date(),
     };
 
-    const model = fromOrm(orm) as unknown as Record<string, ExtensionValueType>;
-    expect(model['x-test1']).toEqual(123);
-    expect(model['x-test2']).toEqual('asd');
-    expect(model['x-test3']).toEqual(false);
-    expect(model['x-test4']).toContain(123);
-    expect(model['x-test4']).toContain('asd');
-    expect(model['x-test4']).toContain(false);
+    const model = fromOrm(orm) as unknown as any;
+    expect(model.extensions['x-test1']).toEqual(123);
+    expect(model.extensions['x-test2']).toEqual('asd');
+    expect(model.extensions['x-test3']).toEqual(false);
+    expect(model.extensions['x-test4']).toContain(123);
+    expect(model.extensions['x-test4']).toContain('asd');
+    expect(model.extensions['x-test4']).toContain(false);
   });
 });

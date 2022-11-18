@@ -1,4 +1,6 @@
-export type ExtensionKey = `x-${string}`;
+import { buildMessage, ValidateBy, ValidationOptions } from 'class-validator';
+
+export type ExtensionKey = string;
 export type ExtensionValueType =
   | ExtensionPrimitiveValueType
   | ExtensionPrimitiveValueType[];
@@ -38,9 +40,7 @@ export function isExtensionObject(
     return false;
   }
 
-  const extensionKeys = Object.keys(extensionObject).filter((key) =>
-    key.startsWith('x-'),
-  );
+  const extensionKeys = Object.keys(extensionObject);
   for (const extensionKey of extensionKeys) {
     const extensionValue = (extensionObject as Record<string, unknown>)[
       extensionKey
@@ -52,17 +52,22 @@ export function isExtensionObject(
   return true;
 }
 
-export function extractExtensions<T extends ExtensionObject>(
-  extensionObject: T,
-): ExtensionObject {
-  const extensionKeys = Object.keys(extensionObject).filter((key) =>
-    key.startsWith('x-'),
+export function IsExtensionObject(
+  validationOptions?: ValidationOptions,
+): PropertyDecorator {
+  return ValidateBy(
+    {
+      name: 'IS_EXTENSION_OBJECT',
+      constraints: [],
+      validator: {
+        validate: (value): boolean => isExtensionObject(value),
+        defaultMessage: buildMessage(
+          (eachPrefix) =>
+            `${eachPrefix} must be a valid extension object. Keys must be a string, values must be of type string, number, boolean, or their array types.`,
+          validationOptions,
+        ),
+      },
+    },
+    validationOptions,
   );
-  const extensions: Record<string, ExtensionValueType> = {};
-  for (const extensionKey of extensionKeys) {
-    extensions[extensionKey] = (
-      extensionObject as Record<string, ExtensionValueType>
-    )[extensionKey];
-  }
-  return extensions;
 }

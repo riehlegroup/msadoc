@@ -62,7 +62,7 @@ export class ServiceDocOrm {
   /** Extensions */
 
   @Column('simple-json', { nullable: true })
-  extensions: Record<string, ExtensionValueType>;
+  extensions: Record<string, ExtensionValueType> | null;
 
   /** Timestamps */
 

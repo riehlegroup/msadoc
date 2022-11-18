@@ -1,10 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { IsOptional } from 'class-validator';
 import {
   IsNonEmptyOptionalString,
   IsNonEmptyOptionalStringArray,
   IsNonEmptyString,
 } from '../utils/class-validators';
-import { ExtensionKey, ExtensionValueType } from './extensions';
+import { ExtensionObject, IsExtensionObject } from './extensions';
 
 export class CreateServiceDocRequest {
   @ApiProperty({
@@ -119,7 +120,29 @@ export class CreateServiceDocRequest {
   /** Extensions */
 
   /** Cannot be validated via class-validator. Validation happens in @see ServiceDocsService */
-  [x: ExtensionKey]: ExtensionValueType;
+  @ApiProperty({
+    type: 'object',
+    additionalProperties: {
+      oneOf: [
+        { type: 'string' },
+        { type: 'number' },
+        { type: 'boolean' },
+        {
+          type: 'array',
+          items: {
+            oneOf: [
+              { type: 'string' },
+              { type: 'number' },
+              { type: 'boolean' },
+            ],
+          },
+        },
+      ],
+    },
+  })
+  @IsExtensionObject()
+  @IsOptional()
+  extensions?: ExtensionObject;
 }
 
 export class CreateServiceDocResponse extends CreateServiceDocRequest {

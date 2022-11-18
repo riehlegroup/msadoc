@@ -1,26 +1,10 @@
-import {
-  HttpException,
-  HttpStatus,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import {
-  ExtensionValueType,
-  extractExtensions,
-  isExtensionObject,
-} from './extensions';
 import { GetServiceDocResponse } from './service-doc.dto';
 import { ServiceDocOrm } from './service-doc.orm';
 
 export function fromOrm(entity: ServiceDocOrm): ServiceDocModel {
-  const storedExtensions = entity.extensions;
-  const extensions: Record<string, ExtensionValueType> = {};
-  for (const extensionKey of Object.keys(storedExtensions)) {
-    extensions[extensionKey] = storedExtensions[extensionKey];
-  }
-
   return {
     name: entity.name,
     group: entity.group ?? undefined,
@@ -37,22 +21,14 @@ export function fromOrm(entity: ServiceDocOrm): ServiceDocModel {
     responsibles: entity.responsibles ?? undefined,
     responsibleTeam: entity.responsibleTeam ?? undefined,
     creationTimestamp: entity.creationTimestamp ?? undefined,
-    updateTimestamp: entity.updateTimestamp,
-    ...extensions,
+    updateTimestamp: entity.updateTimestamp ?? undefined,
+    extensions: entity.extensions ?? undefined,
   };
 }
 
 export function toOrm(
   model: ServiceDocModelWithoutTimestamps,
 ): Omit<ServiceDocOrm, 'creationTimestamp' | 'updateTimestamp'> {
-  if (!isExtensionObject(model)) {
-    throw new HttpException(
-      `Found an extension field that is not type string, number or boolean or their array types. Cannot parse!`,
-      HttpStatus.BAD_REQUEST,
-    );
-  }
-  const extensions = extractExtensions(model);
-
   return {
     name: model.name,
     group: model.group ?? null,
@@ -68,7 +44,7 @@ export function toOrm(
     apiDocumentation: model.apiDocumentation ?? null,
     responsibles: model.responsibles ?? null,
     responsibleTeam: model.responsibleTeam ?? null,
-    extensions: extensions,
+    extensions: model.extensions ?? null,
   };
 }
 
