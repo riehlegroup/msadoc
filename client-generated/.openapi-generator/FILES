@@ -9,6 +9,8 @@ index.ts
 models/CreateApiKeyRequestDto.ts
 models/CreateApiKeyResponseDto.ts
 models/CreateServiceDocRequest.ts
+models/CreateServiceDocRequestExtensionsValue.ts
+models/CreateServiceDocRequestExtensionsValueOneOfInner.ts
 models/CreateServiceDocResponse.ts
 models/DeleteServiceDocResponse.ts
 models/GetApiKeyResponseDto.ts
