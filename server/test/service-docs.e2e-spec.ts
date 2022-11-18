@@ -328,18 +328,20 @@ describe('ServiceDocsController (e2e)', () => {
       .send({
         name: 'test-service',
         providedAPIs: ['myApi'],
-        'x-myExtension1': '123',
-        'x-myExtension2': 123,
-        'x-myExtension3': false,
-        'x-myExtension4': ['asd', 'def'],
+        extensions: {
+          'x-myExtension1': '123',
+          'x-myExtension2': 123,
+          'x-myExtension3': false,
+          'x-myExtension4': ['asd', 'def'],
+        },
       })
       .expect(201);
 
-    expect(creationResponse.body['x-myExtension1']).toEqual('123');
-    expect(creationResponse.body['x-myExtension2']).toEqual(123);
-    expect(creationResponse.body['x-myExtension3']).toEqual(false);
-    expect(creationResponse.body['x-myExtension4'][0]).toEqual('asd');
-    expect(creationResponse.body['x-myExtension4'][1]).toEqual('def');
+    expect(creationResponse.body.extensions['x-myExtension1']).toEqual('123');
+    expect(creationResponse.body.extensions['x-myExtension2']).toEqual(123);
+    expect(creationResponse.body.extensions['x-myExtension3']).toEqual(false);
+    expect(creationResponse.body.extensions['x-myExtension4'][0]).toEqual('asd');
+    expect(creationResponse.body.extensions['x-myExtension4'][1]).toEqual('def');
   });
 
   describe('/service-docs (GET)', () => {
