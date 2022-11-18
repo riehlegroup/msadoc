@@ -11,6 +11,10 @@
  * Do not edit the class manually.
  */
 
+import type {
+    CreateServiceDocRequestExtensionsValue,
+} from './';
+
 /**
  * @export
  * @interface CreateServiceDocRequest
@@ -100,4 +104,9 @@ export interface CreateServiceDocRequest {
      * @memberof CreateServiceDocRequest
      */
     responsibles?: Array<string>;
+    /**
+     * @type {{ [key: string]: CreateServiceDocRequestExtensionsValue; }}
+     * @memberof CreateServiceDocRequest
+     */
+    extensions: { [key: string]: CreateServiceDocRequestExtensionsValue; };
 }
