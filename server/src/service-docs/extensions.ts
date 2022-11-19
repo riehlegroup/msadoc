@@ -26,11 +26,11 @@ export function isExtensionValueType(
         return false;
       }
     }
-  } else if (!isExtensionPrimitiveValueType(extensionValue)) {
-    return false;
+
+    return true;
   }
 
-  return true;
+  return isExtensionPrimitiveValueType(extensionValue);
 }
 
 export function isExtensionObject(
