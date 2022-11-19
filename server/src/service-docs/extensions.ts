@@ -40,11 +40,7 @@ export function isExtensionObject(
     return false;
   }
 
-  const extensionKeys = Object.keys(extensionObject);
-  for (const extensionKey of extensionKeys) {
-    const extensionValue = (extensionObject as Record<string, unknown>)[
-      extensionKey
-    ];
+  for (const extensionValue of Object.values(extensionObject)) {
     if (!isExtensionValueType(extensionValue)) {
       return false;
     }
