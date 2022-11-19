@@ -7,7 +7,7 @@
 - Generate higher-level documentation like dependency graphs.
 - Arrange microservices in an hierarchical structure (groups) to keep an overview.
 - Find the responsible person if you need to get in touch with the service owner.
-- Extend the documentation format to your needs (**Upcoming**).
+- Extend the documentation format with custom fields according to your very specific needs.
 
 ## Mission
 
