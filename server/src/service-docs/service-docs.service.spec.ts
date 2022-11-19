@@ -115,32 +115,32 @@ describe('ServiceDocs ORM conversion', () => {
     const model = {
       name: 'test',
       extensions: {
-        'x-test1': 123,
-        'x-test2': 'asd',
-        'x-test3': false,
-        'x-test4': [123, 'asd', false],
+        test1: 123,
+        test2: 'asd',
+        test3: false,
+        test4: [123, 'asd', false],
       },
     };
 
     const orm = toOrm(model);
     expect(orm.extensions).not.toBeNull();
     const ormExtensions = orm.extensions as ExtensionObject;
-    expect(ormExtensions['x-test1']).toEqual(123);
-    expect(ormExtensions['x-test2']).toEqual('asd');
-    expect(ormExtensions['x-test3']).toEqual(false);
-    expect(ormExtensions['x-test4']).toContain(123);
-    expect(ormExtensions['x-test4']).toContain('asd');
-    expect(ormExtensions['x-test4']).toContain(false);
+    expect(ormExtensions['test1']).toEqual(123);
+    expect(ormExtensions['test2']).toEqual('asd');
+    expect(ormExtensions['test3']).toEqual(false);
+    expect(ormExtensions['test4']).toContain(123);
+    expect(ormExtensions['test4']).toContain('asd');
+    expect(ormExtensions['test4']).toContain(false);
   });
 
   it('should convert back extension fields', () => {
     const orm: ServiceDocOrm = {
       name: 'test',
       extensions: {
-        'x-test1': 123,
-        'x-test2': 'asd',
-        'x-test3': false,
-        'x-test4': [123, 'asd', false],
+        test1: 123,
+        test2: 'asd',
+        test3: false,
+        test4: [123, 'asd', false],
       },
       group: null,
       tags: null,
@@ -160,11 +160,11 @@ describe('ServiceDocs ORM conversion', () => {
     };
 
     const model = fromOrm(orm) as unknown as any;
-    expect(model.extensions['x-test1']).toEqual(123);
-    expect(model.extensions['x-test2']).toEqual('asd');
-    expect(model.extensions['x-test3']).toEqual(false);
-    expect(model.extensions['x-test4']).toContain(123);
-    expect(model.extensions['x-test4']).toContain('asd');
-    expect(model.extensions['x-test4']).toContain(false);
+    expect(model.extensions['test1']).toEqual(123);
+    expect(model.extensions['test2']).toEqual('asd');
+    expect(model.extensions['test3']).toEqual(false);
+    expect(model.extensions['test4']).toContain(123);
+    expect(model.extensions['test4']).toContain('asd');
+    expect(model.extensions['test4']).toContain(false);
   });
 });
