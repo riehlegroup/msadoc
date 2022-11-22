@@ -31,7 +31,7 @@ function useServiceDocsService(
   };
 }
 
-const AuthDataServiceContext = React.createContext<
+const ServiceDocsServiceContext = React.createContext<
   ServiceDocsService | undefined
 >(undefined);
 
@@ -43,14 +43,14 @@ export const ServiceDocsServiceContextProvider: React.FC<Props> = (props) => {
   const serviceDocsService = useServiceDocsService(props.serviceDocs);
 
   return (
-    <AuthDataServiceContext.Provider value={serviceDocsService}>
+    <ServiceDocsServiceContext.Provider value={serviceDocsService}>
       {props.children}
-    </AuthDataServiceContext.Provider>
+    </ServiceDocsServiceContext.Provider>
   );
 };
 
 export const useServiceDocsServiceContext = (): ServiceDocsService => {
-  const context = React.useContext(AuthDataServiceContext);
+  const context = React.useContext(ServiceDocsServiceContext);
   if (!context) {
     throw Error(
       'Your component does not seem to be part of the ServiceDocsServiceContext!',
