@@ -14,8 +14,6 @@ import {
 } from './auth-data-service';
 
 interface HttpService {
-  state: State;
-
   /**
    * Login using the given username and password.
    * If the login succeeds, the returned auth/refresh tokens will automatically be stored.
@@ -99,13 +97,9 @@ function useHttpService(): HttpService {
         data: response,
       };
     } catch (error) {
-      let status: 0 | 401 = 0;
       const errorStatus = getErrorStatus(error);
-      if (errorStatus === 401) {
-        status = 401;
-      }
       return {
-        status: status,
+        status: errorStatus === 401 ? 401 : 0,
         data: undefined,
       };
     }
@@ -193,7 +187,6 @@ function useHttpService(): HttpService {
   });
 
   return {
-    state: state,
     performLogin: performLogin,
     refreshAuthToken: refreshAuthToken,
     createConfiguration: createConfiguration,
