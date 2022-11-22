@@ -58,7 +58,7 @@ export const ServiceDetails: React.FC = () => {
                     <Icons.Group />
                   </ListItemIcon>
                   <ListItemText
-                    primary={controller.service.group.name}
+                    primary={controller.service.group.identifier}
                     secondary="Group"
                   />
                 </ListItem>
