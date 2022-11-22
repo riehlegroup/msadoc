@@ -5,7 +5,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { APP_ROUTES } from '../../routes';
-import { useHttpServiceContext } from '../../services/http-service';
+import { useAuthHttpServiceContext } from '../../services/auth.http-service';
 
 enum ViewState {
   Default,
@@ -164,7 +164,7 @@ function useController(): Controller {
   });
 
   const navigate = useNavigate();
-  const httpService = useHttpServiceContext();
+  const authHttpService = useAuthHttpServiceContext();
 
   return {
     state: state,
@@ -177,7 +177,7 @@ function useController(): Controller {
     },
     performLogin: async (): Promise<void> => {
       setState((state) => ({ ...state, viewState: ViewState.IsLoading }));
-      const loginResponse = await httpService.performLogin(
+      const loginResponse = await authHttpService.performLogin(
         state.username,
         state.password,
       );
