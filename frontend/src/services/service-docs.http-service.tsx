@@ -23,11 +23,9 @@ function useServiceDocsHttpService(): ServiceDocsHttpService {
   const httpService = useHttpServiceContext();
 
   /**
-   * @param refreshOn401 Should we try to refresh the Access Token if the server returns 401?
    * @param accessToken The Access Token to use when performing the request. If no token is specified, the one provided by the AuthDataService is used.
    */
   async function listAllServiceDocs(
-    refreshOn401: boolean,
     accessToken?: string,
   ): Promise<ListAllServiceDocsHttpResponse | UnknownHttpError> {
     if (accessToken === undefined) {
@@ -53,33 +51,10 @@ function useServiceDocsHttpService(): ServiceDocsHttpService {
         data: response,
       };
     } catch (error) {
-      if (!refreshOn401) {
-        return {
-          status: 0,
-          data: undefined,
-        };
-      }
-
-      const errorStatus = httpService.getErrorStatus(error);
-
-      if (errorStatus !== 401) {
-        return {
-          status: 0,
-          data: undefined,
-        };
-      }
-
-      // We might have an expired Access Token. --> Try refreshing it and then retry.
-
-      const refreshResult = await httpService.refreshAuthToken();
-      if (!refreshResult) {
-        return {
-          status: 0,
-          data: undefined,
-        };
-      }
-
-      return await listAllServiceDocs(false, refreshResult.accessToken);
+      return {
+        status: 0,
+        data: undefined,
+      };
     }
   }
 
@@ -87,7 +62,7 @@ function useServiceDocsHttpService(): ServiceDocsHttpService {
     listAllServiceDocs: (): Promise<
       ListAllServiceDocsHttpResponse | UnknownHttpError
     > => {
-      return listAllServiceDocs(true);
+      return listAllServiceDocs();
     },
   };
 }
