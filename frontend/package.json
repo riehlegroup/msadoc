@@ -17,6 +17,8 @@
     "@mui/lab": "^5.0.0-alpha.108",
     "@mui/material": "^5.10.14",
     "@nivo/sankey": "^0.80.0",
+    "escape-string-regexp": "^5.0.0",
+    "ohm-js": "^16.4.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.4.3",
