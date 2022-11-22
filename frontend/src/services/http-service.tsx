@@ -14,6 +14,8 @@ import {
 } from './auth-data-service';
 
 interface HttpService {
+  state: State;
+
   /**
    * Login using the given username and password.
    * If the login succeeds, the returned auth/refresh tokens will automatically be stored.
@@ -28,9 +30,19 @@ interface HttpService {
   createConfiguration(accessToken?: string): Configuration;
   getErrorStatus(error: unknown): number | undefined;
 }
+
+interface State {
+  isSignedIn: boolean;
+}
+
 function useHttpService(): HttpService {
   const navigate = useNavigate();
   const authDataService = useAuthDataServiceContext();
+
+  const [state, setState] = React.useState<State>({
+    isSignedIn:
+      authDataService.state.accessAndRefreshToken?.refreshToken !== undefined,
+  });
 
   function createConfiguration(accessToken?: string): Configuration {
     if (accessToken === undefined) {
@@ -82,7 +94,6 @@ function useHttpService(): HttpService {
         accessToken: response.access_token,
         refreshToken: response.refresh_token,
       });
-
       return {
         status: 200,
         data: response,
@@ -93,7 +104,6 @@ function useHttpService(): HttpService {
       if (errorStatus === 401) {
         status = 401;
       }
-
       return {
         status: status,
         data: undefined,
@@ -132,7 +142,6 @@ function useHttpService(): HttpService {
         accessToken: response.access_token,
         refreshToken: response.refresh_token,
       });
-
       return {
         accessToken: response.access_token,
         refreshToken: response.refresh_token,
@@ -162,7 +171,29 @@ function useHttpService(): HttpService {
     return status;
   }
 
+  // Whenever the auth token are deleted from local storage, update the state accordingly.
+  React.useEffect(() => {
+    setState({
+      isSignedIn:
+        authDataService.state.accessAndRefreshToken?.refreshToken === undefined,
+    });
+  }, [authDataService.state.accessAndRefreshToken]);
+
+  const TOKEN_REFRESH_INTERVAL_MS = 60000;
+  // Whenever signed in, refresh the auth tokens regularly.
+  React.useEffect(() => {
+    const interval = setInterval(() => {
+      if (!state.isSignedIn) {
+        return;
+      }
+      void refreshAuthToken();
+    }, TOKEN_REFRESH_INTERVAL_MS);
+
+    return () => clearInterval(interval);
+  });
+
   return {
+    state: state,
     performLogin: performLogin,
     refreshAuthToken: refreshAuthToken,
     createConfiguration: createConfiguration,
