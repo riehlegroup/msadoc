@@ -11,7 +11,7 @@ import {
 import { GetServiceDocResponse } from 'msadoc-client';
 import React from 'react';
 
-import { useHttpServiceContext } from '../../services/http-service';
+import { useServiceDocsHttpServiceContext } from '../../services/service-docs.http-service';
 
 import { LeftMenu } from './left-menu';
 import { MainPageRouter } from './router';
@@ -95,7 +95,7 @@ interface Controller {
   loadServiceDocs: () => Promise<void>;
 }
 function useController(): Controller {
-  const httpService = useHttpServiceContext();
+  const serviceDocsHttpService = useServiceDocsHttpServiceContext();
 
   const [state, setState] = React.useState<State>({
     isLoading: true,
@@ -105,7 +105,8 @@ function useController(): Controller {
 
   async function loadServiceDocs(): Promise<void> {
     setState((state) => ({ ...state, isLoading: true, error: false }));
-    const serviceDocsResponse = await httpService.listAllServiceDocs();
+    const serviceDocsResponse =
+      await serviceDocsHttpService.listAllServiceDocs();
     setState((state) => ({ ...state, isLoading: false }));
 
     if (serviceDocsResponse.status === 200) {
