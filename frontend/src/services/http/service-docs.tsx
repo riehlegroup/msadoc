@@ -22,15 +22,11 @@ function useServiceDocsHttpService(): ServiceDocsHttpService {
   const authDataService = useAuthDataServiceContext();
   const httpService = useHttpServiceContext();
 
-  /**
-   * @param accessToken The Access Token to use when performing the request. If no token is specified, the one provided by the AuthDataService is used.
-   */
-  async function listAllServiceDocs(
-    accessToken?: string,
-  ): Promise<ListAllServiceDocsHttpResponse | UnknownHttpError> {
-    if (accessToken === undefined) {
-      accessToken = authDataService.state.accessAndRefreshToken?.accessToken;
-    }
+  async function listAllServiceDocs(): Promise<
+    ListAllServiceDocsHttpResponse | UnknownHttpError
+  > {
+    const accessToken =
+      authDataService.state.accessAndRefreshToken?.accessToken;
     if (accessToken === undefined) {
       navigate(APP_ROUTES.login);
       return {
