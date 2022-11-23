@@ -3,14 +3,14 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { firstValueFrom } from 'rxjs';
 
-import { LoginHttpResponse, UnknownHttpError } from '../models/api';
-import { APP_ROUTES } from '../routes';
-
+import { LoginHttpResponse, UnknownHttpError } from '../../models/api';
+import { APP_ROUTES } from '../../routes';
 import {
   AccessAndRefreshToken,
   useAuthDataServiceContext,
-} from './auth-data-service';
-import { useHttpServiceContext } from './http-service';
+} from '../auth-data-service';
+
+import { useHttpServiceContext } from './http-base';
 
 interface AuthHttpService {
   /**

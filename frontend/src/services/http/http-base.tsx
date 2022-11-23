@@ -2,7 +2,7 @@ import { Configuration } from 'msadoc-client';
 import React from 'react';
 import { AjaxConfig } from 'rxjs/ajax';
 
-import { ENVIRONMENT } from '../env';
+import { ENVIRONMENT } from '../../env';
 
 interface HttpService {
   createConfiguration(accessToken?: string): Configuration;

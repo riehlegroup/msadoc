@@ -6,11 +6,11 @@ import { firstValueFrom } from 'rxjs';
 import {
   ListAllServiceDocsHttpResponse,
   UnknownHttpError,
-} from '../models/api';
-import { APP_ROUTES } from '../routes';
+} from '../../models/api';
+import { APP_ROUTES } from '../../routes';
+import { useAuthDataServiceContext } from '../auth-data-service';
 
-import { useAuthDataServiceContext } from './auth-data-service';
-import { useHttpServiceContext } from './http-service';
+import { useHttpServiceContext } from './http-base';
 
 interface ServiceDocsHttpService {
   listAllServiceDocs: () => Promise<

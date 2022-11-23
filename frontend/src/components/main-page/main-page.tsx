@@ -11,7 +11,7 @@ import {
 import { GetServiceDocResponse } from 'msadoc-client';
 import React from 'react';
 
-import { useServiceDocsHttpServiceContext } from '../../services/service-docs.http-service';
+import { useServiceDocsHttpServiceContext } from '../../services/http';
 
 import { LeftMenu } from './left-menu';
 import { MainPageRouter } from './router';
