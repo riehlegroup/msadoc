@@ -108,7 +108,7 @@ export interface DeleteServiceDocResponse {
      * @type {{ [key: string]: CreateServiceDocRequestExtensionsValue; }}
      * @memberof DeleteServiceDocResponse
      */
-    extensions: { [key: string]: CreateServiceDocRequestExtensionsValue; };
+    extensions?: { [key: string]: CreateServiceDocRequestExtensionsValue; };
     /**
      * @type {string}
      * @memberof DeleteServiceDocResponse

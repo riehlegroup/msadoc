@@ -108,5 +108,5 @@ export interface CreateServiceDocRequest {
      * @type {{ [key: string]: CreateServiceDocRequestExtensionsValue; }}
      * @memberof CreateServiceDocRequest
      */
-    extensions: { [key: string]: CreateServiceDocRequestExtensionsValue; };
+    extensions?: { [key: string]: CreateServiceDocRequestExtensionsValue; };
 }

@@ -108,7 +108,7 @@ export interface GetServiceDocResponse {
      * @type {{ [key: string]: CreateServiceDocRequestExtensionsValue; }}
      * @memberof GetServiceDocResponse
      */
-    extensions: { [key: string]: CreateServiceDocRequestExtensionsValue; };
+    extensions?: { [key: string]: CreateServiceDocRequestExtensionsValue; };
     /**
      * @type {string}
      * @memberof GetServiceDocResponse

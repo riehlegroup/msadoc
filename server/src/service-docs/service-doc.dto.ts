@@ -139,6 +139,7 @@ export class CreateServiceDocRequest {
         },
       ],
     },
+    required: false,
   })
   @IsExtensionObject()
   @IsOptional()
