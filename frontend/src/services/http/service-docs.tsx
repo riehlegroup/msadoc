@@ -12,6 +12,7 @@ import { APP_ROUTES } from '../../routes';
 import { useAuthDataServiceContext } from '../auth-data-service';
 
 import { useHttpServiceContext } from './http-base';
+import { ServiceDocsMockData } from './mock-data/service-docs';
 
 export interface ServiceDocsHttpService {
   listAllServiceDocs: () => Promise<
@@ -56,38 +57,7 @@ function useServiceDocsHttpService(): ServiceDocsHttpService {
   ): Promise<ListServiceDocResponse> {
     if (ENVIRONMENT.REACT_APP_DEMO_MODE) {
       return {
-        serviceDocs: [
-          {
-            name: 'ExtractionService',
-            group: 'etl',
-            tags: ['app=ods'],
-
-            repository: 'https://github.com/jvalue/ods.git',
-            taskBoard: 'https://github.com/jvalue/ods/projects',
-
-            providedAPIs: [
-              '/extractions/config',
-              '/extractions/execution-stats',
-            ],
-
-            subscribedEvents: ['extraction.execution.triggered'],
-            publishedEvents: [
-              'extraction.config.created',
-              'extraction.config.updated',
-              'extraction.config.deleted',
-              'extraction.execution.success',
-              'extraction.execution.failure',
-            ],
-
-            deploymentDocumentation: 'https://github.com/jvalue/ods-deployment',
-
-            responsibles: ['schwarz@group.riehle.org'],
-            responsibleTeam: 'jvalue-core',
-            creationTimestamp: new Date().toISOString(),
-            updateTimestamp: new Date().toISOString(),
-            extensions: {},
-          },
-        ],
+        serviceDocs: ServiceDocsMockData.allServiceDocs,
       };
     }
 
