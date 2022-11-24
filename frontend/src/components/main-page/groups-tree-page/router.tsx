@@ -1,10 +1,16 @@
 import React from 'react';
-import { Navigate, RouteObject, useRoutes } from 'react-router-dom';
+import {
+  Navigate,
+  RouteObject,
+  useNavigate,
+  useRoutes,
+} from 'react-router-dom';
 
 import {
   GROUPS_TREE_ROUTES_ABS,
   GROUPS_TREE_ROUTES_REL,
 } from '../../../routes';
+import { useSelectedTreeItem } from '../utils/router-utils';
 
 import { GroupDetails } from './group-details';
 import { ServiceDetails } from './service-details';
@@ -35,6 +41,15 @@ export const GroupsTreePageRouter: React.FC = () => {
     },
   ];
   const routeElement = useRoutes(routes);
+
+  const navigate = useNavigate();
+  const selectedTreeItem = useSelectedTreeItem();
+  // The tree item as found in the URL does not exist? Then navigate to the root.
+  React.useEffect(() => {
+    if (!selectedTreeItem) {
+      navigate(GROUPS_TREE_ROUTES_ABS.root);
+    }
+  }, [navigate, selectedTreeItem]);
 
   return <React.Fragment>{routeElement}</React.Fragment>;
 };
