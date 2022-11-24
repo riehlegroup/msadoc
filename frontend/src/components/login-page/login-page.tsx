@@ -1,9 +1,10 @@
 import { LoadingButton } from '@mui/lab';
-import { Box, Stack, TextField, Typography } from '@mui/material';
+import { Alert, Box, Stack, TextField, Typography } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import { ENVIRONMENT } from '../../env';
 import { APP_ROUTES } from '../../routes';
 import { useAuthHttpServiceContext } from '../../services/http';
 
@@ -133,6 +134,12 @@ export const LoginPage: React.FC = () => {
                 >
                   Login
                 </LoadingButton>
+
+                {ENVIRONMENT.REACT_APP_DEMO_MODE && (
+                  <Alert severity="info">
+                    <b>Demo Mode:</b> Login with any unsername/password!
+                  </Alert>
+                )}
               </Stack>
             </form>
           </Box>
