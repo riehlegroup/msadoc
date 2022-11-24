@@ -11,6 +11,7 @@
   ],
   "scripts": {
     "build": "npm run build --workspaces",
+    "test": "npm run test --workspaces",
     "lint": "npm run lint --workspaces && npm run lint-additional-files",
     "lint-additional-files": "prettier --check **/*.{md,json,yaml,yml}"
   },

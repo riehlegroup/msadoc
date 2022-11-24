@@ -13,6 +13,7 @@
   "scripts": {
     "build": "rimraf dist/ && tsc",
     "prepare": "npm run build",
-    "lint": "echo 'Ignoring the lint command in client-generated'"
+    "lint": "echo 'Ignoring the lint command in client-generated'",
+    "test": "echo 'Ignoring the test command in client-generated'"
   }
 }
