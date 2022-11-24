@@ -160,9 +160,9 @@ interface SankeyNodeWithDepth extends CustomSankeyNode {
   depth: number;
 }
 function getNodeAlignment(node: SankeyNodeWithDepth, maxDepth: number): number {
-  // Important: It is possible that the diagram has less than 3 columns (e.g. if there are no source nodes). This makes it hard to determine where a particular node shall be positioned. To solve this issue for now, we simply use the node depth. This is probably not ideal (it could produce unexpected alignments). However, this should be fine for now given that most of our diagrams contain enough data to produce 3-column layouts.
+  // Important: It is possible that the diagram has less than 3 columns (e.g. if there are no source nodes). This makes it hard to determine where a particular node shall be positioned. To solve this issue for now, we simply use the node depth. This is probably not ideal (it could produce unexpected alignments). However, this should be fine for now given that most of our diagrams contain enough data to produce 3-column layouts. Also, please note that, for some reason, the total depth (i.e. maxDepth) is defined as "one plus the maximum node.depth". So we know that, for instance, maxDepth===2 means that we have 2 columns.
 
-  if (maxDepth < 2) {
+  if (maxDepth < 3) {
     return node.depth;
   }
 
