@@ -12,7 +12,7 @@ import {
 
 import { useHttpServiceContext } from './http-base';
 
-interface AuthHttpService {
+export interface AuthHttpService {
   /**
    * Login using the given username and password.
    * If the login succeeds, the returned auth/refresh tokens will automatically be stored.
