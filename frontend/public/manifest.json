@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "MSAdoc",
+  "name": "Microservice Documentation Tool",
   "icons": [
     {
       "src": "favicon.ico",
