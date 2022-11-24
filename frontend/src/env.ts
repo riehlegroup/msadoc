@@ -1,11 +1,16 @@
 interface EnvironmentVariables {
   REACT_APP_BACKEND_URL: string;
+  REACT_APP_DEMO_MODE: boolean;
 }
 
 export const ENVIRONMENT: EnvironmentVariables = {
   REACT_APP_BACKEND_URL: getEnvAsStringOrThrow<EnvironmentVariables>(
     'REACT_APP_BACKEND_URL',
   ),
+  REACT_APP_DEMO_MODE:
+    getEnvAsString<EnvironmentVariables>(
+      'REACT_APP_DEMO_MODE',
+    )?.toLowerCase() === 'true',
 };
 
 /**

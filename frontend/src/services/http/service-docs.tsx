@@ -12,7 +12,7 @@ import { useAuthDataServiceContext } from '../auth-data-service';
 
 import { useHttpServiceContext } from './http-base';
 
-interface ServiceDocsHttpService {
+export interface ServiceDocsHttpService {
   listAllServiceDocs: () => Promise<
     ListAllServiceDocsHttpResponse | UnknownHttpError
   >;
