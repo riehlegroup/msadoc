@@ -1,8 +1,9 @@
-import { AuthApi } from 'msadoc-client';
+import { AuthApi, LoginResponseDto } from 'msadoc-client';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { firstValueFrom } from 'rxjs';
 
+import { ENVIRONMENT } from '../../env';
 import { LoginHttpResponse, UnknownHttpError } from '../../models/api';
 import { APP_ROUTES } from '../../routes';
 import {
@@ -44,14 +45,7 @@ function useAuthHttpService(): AuthHttpService {
     password: string,
   ): Promise<LoginHttpResponse | UnknownHttpError> {
     try {
-      const response = await firstValueFrom(
-        new AuthApi(httpService.createConfiguration()).authControllerLogin({
-          loginRequestDto: {
-            username: username,
-            password: password,
-          },
-        }),
-      );
+      const response = await doPerformLogin(username, password);
 
       authDataService.setAccessAndRefreshToken({
         accessToken: response.access_token,
@@ -70,6 +64,27 @@ function useAuthHttpService(): AuthHttpService {
     }
   }
 
+  async function doPerformLogin(
+    username: string,
+    password: string,
+  ): Promise<LoginResponseDto> {
+    if (ENVIRONMENT.REACT_APP_DEMO_MODE) {
+      return {
+        access_token: 'mock-access-token',
+        refresh_token: 'mock-refresh-token',
+      };
+    }
+
+    return await firstValueFrom(
+      new AuthApi(httpService.createConfiguration()).authControllerLogin({
+        loginRequestDto: {
+          username: username,
+          password: password,
+        },
+      }),
+    );
+  }
+
   /**
    * Use the Refresh Token to generate a new Auth Token.
    */
@@ -84,17 +99,8 @@ function useAuthHttpService(): AuthHttpService {
     }
 
     try {
-      const response = await firstValueFrom(
-        new AuthApi(
-          httpService.createConfiguration(
-            authDataService.state.accessAndRefreshToken.refreshToken,
-          ),
-        ).authControllerRefreshToken({
-          refreshTokenRequestDto: {
-            refresh_token:
-              authDataService.state.accessAndRefreshToken.refreshToken,
-          },
-        }),
+      const response = await doRefreshAuthToken(
+        authDataService.state.accessAndRefreshToken.refreshToken,
       );
 
       authDataService.setAccessAndRefreshToken({
@@ -111,6 +117,27 @@ function useAuthHttpService(): AuthHttpService {
       navigate(APP_ROUTES.login);
       return undefined;
     }
+  }
+
+  async function doRefreshAuthToken(
+    refreshToken: string,
+  ): Promise<LoginResponseDto> {
+    if (ENVIRONMENT.REACT_APP_DEMO_MODE) {
+      return {
+        access_token: 'mock-access-token',
+        refresh_token: 'mock-refresh-token',
+      };
+    }
+
+    return await firstValueFrom(
+      new AuthApi(
+        httpService.createConfiguration(refreshToken),
+      ).authControllerRefreshToken({
+        refreshTokenRequestDto: {
+          refresh_token: refreshToken,
+        },
+      }),
+    );
   }
 
   // Whenever the auth token are deleted from local storage, update the state accordingly.
