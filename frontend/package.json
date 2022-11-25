@@ -11,7 +11,7 @@
     "test-interactive": "react-scripts test",
     "eject": "react-scripts eject",
     "lint": "eslint src --max-warnings=0",
-    "deploy:demo": "NODE_ENV=demo npm run build & gh-pages -d build"
+    "deploy:demo": "NODE_ENV=demo npm run build && gh-pages -d build"
   },
   "dependencies": {
     "@emotion/react": "^11.10.5",
