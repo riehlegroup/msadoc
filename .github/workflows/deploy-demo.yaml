@@ -2,70 +2,25 @@ name: Deploy Frontend-Demo to GitHub Pages
 
 on: [workflow_dispatch]
 
+# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Allow one concurrent deployment
+concurrency:
+  group: 'pages'
+  cancel-in-progress: true
+
 jobs:
-  check-package-lock:
-    name: Check if package-lock.json is up-to-date
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/setup-node@v2
-        with:
-          node-version: '16'
-
-      - uses: actions/checkout@v2
-
-      - name: Calculate the original hash sum
-        run: echo "original_package_lock_hash_sum=$(sha256sum package-lock.json)" >> $GITHUB_ENV
-
-      - name: Install npm dependencies
-        run: npm install --package-lock-only
-
-      - name: Calculate the new hash sum
-        run: echo "new_package_lock_hash_sum=$(sha256sum package-lock.json)" >> $GITHUB_ENV
-
-      - name: Fail if the old and new hash sums are different
-        if: env.original_package_lock_hash_sum != env.new_package_lock_hash_sum
-        run: |
-          echo "It seems like your package-lock.json file is not up-to-date. Try running 'npm install' and commit the changes."
-          exit 1
-
-  lint:
-    name: Lint frontend
-
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 16.x
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Run the linter
-        run: npm run lint -w frontend
-
-  test:
-    name: Test frontend
-
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 16.x
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Run the tests
-        run: npm test -w frontend
-
   deploy:
     name: Deloy frontend
 
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -77,5 +32,18 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Run deployment script
-        run: npm run deploy:demo -w frontend
+      - name: Build in demo mode
+        run: npm run build:demo -w frontend
+
+      - name: Setup GitHub Pages
+        uses: actions/configure-pages@v2
+
+      - name: Upload artifact to GitHub Pages
+        uses: actions/upload-pages-artifact@v1
+        with:
+          # Upload entire repository
+          path: './frontend/build'
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v1
