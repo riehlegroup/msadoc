@@ -9,7 +9,8 @@
     "generate": "npm run generate:ts-rxjs",
     "generate:ts-rxjs": "openapi-generator-cli generate --generator-key=ts-rxjs",
     "build": "echo 'Ignoring the build command in client-generator'",
-    "lint": "echo 'Ignoring the lint command in client-generator'"
+    "lint": "echo 'Ignoring the lint command in client-generator'",
+    "test": "echo 'Ignoring the test command in client-generator'"
   },
   "devDependencies": {
     "@openapitools/openapi-generator-cli": "^2.5.2"

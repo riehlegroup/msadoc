@@ -47,6 +47,23 @@ jobs:
       - name: Run the linter
         run: npm run lint
 
+  test:
+    name: Test everything
+
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16.x
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run the tests
+        run: npm test
+
   build:
     name: Build everything
 

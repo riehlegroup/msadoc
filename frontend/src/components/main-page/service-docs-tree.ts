@@ -37,6 +37,11 @@ export interface ServiceNode
   > {
   type: ServiceDocsTreeNodeType.Service;
 
+  /**
+   * The "raw" Service Doc as provided by the server.
+   */
+  rawData: GetServiceDocResponse;
+
   group: RegularGroupNode | RootGroupNode;
 
   providedAPIs: APINode[];
@@ -211,6 +216,8 @@ function buildAndInsertServiceItems(
 
     const newServiceDocNode: ServiceNode = {
       ...singleServiceDoc,
+
+      rawData: singleServiceDoc,
 
       type: ServiceDocsTreeNodeType.Service,
 
