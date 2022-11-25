@@ -7,7 +7,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "build:demo": "NODE_ENV=demo npm run build",
+    "build:demo": "REACT_APP_DEMO_MODE=true npm run build",
     "test": "react-scripts test --watchAll=false",
     "test-interactive": "react-scripts test",
     "eject": "react-scripts eject",
