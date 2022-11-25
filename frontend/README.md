@@ -46,3 +46,8 @@ You don’t have to ever use `eject`. The curated feature set is suitable for sm
 ### `npm run lint`
 
 This will run ESLint in order to lint the app.
+
+
+### `npm run deploy:demo`
+
+This will deploy the current version to GitHub pages in demo-mode.
