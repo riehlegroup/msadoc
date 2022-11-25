@@ -70,7 +70,7 @@ export const LoginPage: React.FC = () => {
                   marginLeft: '1.5rem',
                 }}
               >
-                Recentralize decentralized documentation!
+                The entrypoint to your microservice documentation!
               </Typography>
             </Box>
           </Box>
