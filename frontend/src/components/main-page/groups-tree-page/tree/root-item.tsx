@@ -87,7 +87,7 @@ function useController(): Controller {
       return;
     }
 
-    buttonRef.current.scrollIntoView({ behavior: 'smooth' });
+    buttonRef.current.scrollIntoView({ block: 'nearest' });
   }, [isSelected]);
 
   return {

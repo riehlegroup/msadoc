@@ -159,7 +159,7 @@ function useController(props: Props): Controller {
       return;
     }
 
-    buttonRef.current.scrollIntoView({ behavior: 'smooth' });
+    buttonRef.current.scrollIntoView({ block: 'nearest' });
   }, [isSelected]);
 
   // Automatically un-collapse this group if a child tree item gets selected using the Router.
