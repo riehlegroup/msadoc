@@ -60,8 +60,13 @@ export const GroupsTreePage: React.FC = () => {
             </Box>
           </Box>
 
-          <Box sx={{ height: '100%', overflow: 'auto', flexGrow: 1 }}>
-            <GroupsTreePageRouter />
+          <Box
+            ref={controller.mainContentRef}
+            sx={{ height: '100%', overflow: 'auto', flexGrow: 1 }}
+          >
+            <GroupsTreePageRouter
+              onChangeTreeItem={(): void => controller.scrollMainContentToTop()}
+            />
           </Box>
         </Box>
       </ServiceDocsServiceContextProvider>
@@ -93,6 +98,9 @@ interface State {
 interface Controller {
   state: State;
 
+  mainContentRef: React.RefObject<HTMLDivElement>;
+  scrollMainContentToTop: () => void;
+
   setShowFilterDialog: (show: boolean) => void;
   applyFilter: (filter: FilterNode, rawQuery: string) => void;
   removeFilter: () => void;
@@ -112,8 +120,15 @@ function useController(): Controller {
     };
   });
 
+  const mainContentRef = React.useRef<HTMLDivElement>(null);
+
   return {
     state: state,
+
+    mainContentRef: mainContentRef,
+    scrollMainContentToTop: (): void => {
+      mainContentRef.current?.scrollTo(0, 0);
+    },
 
     setShowFilterDialog: (show): void => {
       setState((state) => ({ ...state, showFilterDialog: show }));

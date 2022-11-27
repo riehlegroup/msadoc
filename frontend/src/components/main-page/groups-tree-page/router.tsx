@@ -15,7 +15,13 @@ import { useSelectedTreeItem } from '../utils/router-utils';
 import { GroupDetails } from './group-details';
 import { ServiceDetails } from './service-details';
 
-export const GroupsTreePageRouter: React.FC = () => {
+interface Props {
+  /**
+   * This function is called whenever the selected tree item changes (e.g. when a different service is selected).
+   */
+  onChangeTreeItem: () => void;
+}
+export const GroupsTreePageRouter: React.FC<Props> = (props) => {
   const routes: RouteObject[] = [
     {
       path: '/',
@@ -50,6 +56,11 @@ export const GroupsTreePageRouter: React.FC = () => {
       navigate(GROUPS_TREE_ROUTES_ABS.root);
     }
   }, [navigate, selectedTreeItem]);
+
+  // Whenever a new Tree Item is selected, call the function passed in Props.
+  React.useEffect(() => {
+    props.onChangeTreeItem();
+  }, [props, selectedTreeItem]);
 
   return <React.Fragment>{routeElement}</React.Fragment>;
 };
