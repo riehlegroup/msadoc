@@ -12,6 +12,7 @@ import {
 } from '../../../routes';
 import { useSelectedTreeItem } from '../utils/router-utils';
 
+import { DependencyGraph } from './graph-page/dependency-graph-view';
 import { GroupDetails } from './group-details';
 import { ServiceDetails } from './service-details';
 
@@ -29,7 +30,8 @@ export const GroupsTreePageRouter: React.FC<Props> = (props) => {
     },
     {
       path: GROUPS_TREE_ROUTES_REL.root,
-      element: <GroupDetails />,
+      // Element: <GroupDetails />,
+      element: <DependencyGraph />,
     },
     {
       path: GROUPS_TREE_ROUTES_REL.group,
