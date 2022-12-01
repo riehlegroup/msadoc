@@ -1,3 +1,4 @@
+import { blue, green, grey, orange, red, yellow } from '@mui/material/colors';
 import cytoscape, { ElementDefinition, Stylesheet } from 'cytoscape';
 import cola from 'cytoscape-cola';
 import React from 'react';
@@ -50,8 +51,8 @@ export const DependencyGraph: React.FC = () => {
       style: {
         'line-color': 'data(lineColor)',
         'curve-style': 'bezier',
-        'target-arrow-color': '#ccc',
         'target-arrow-shape': 'triangle',
+        'target-arrow-color': 'data(lineColor)',
       },
     },
   ];
@@ -91,10 +92,10 @@ function useController(): Controller {
   let elements: ElementDefinition[] = [];
   if (selectedGroup !== undefined) {
     elements = new CyptoScapeBuilder({
-      serviceBackgroundColorFn: () => '#F71735',
+      serviceBackgroundColorFn: () => red[600],
       groupBackgroundColorFn: getGroupColor,
-      apiEdgeColorFn: () => '#41EAD4',
-      eventEdgeColorFn: () => '#FF9F1C',
+      apiEdgeColorFn: () => yellow[600],
+      eventEdgeColorFn: () => blue[300],
     })
       .fromGroup(selectedGroup)
       .build();
@@ -118,6 +119,25 @@ function getGroupColor(group: RegularGroupNode): string {
     currentGroup = currentGroup.parent;
     ++distanceToRoot;
   }
-  const hex = Number.parseInt(`${Math.min(6 + distanceToRoot, 16)}`, 16);
-  return '#' + `${hex}`.repeat(6);
+
+  switch (distanceToRoot) {
+    case 0:
+      return grey[100];
+    case 1:
+      return grey[200];
+    case 2:
+      return grey[300];
+    case 3:
+      return grey[400];
+    case 4:
+      return grey[500];
+    case 5:
+      return grey[600];
+    case 6:
+      return grey[700];
+    case 7:
+      return grey[800];
+    default:
+      return grey[900];
+  }
 }
