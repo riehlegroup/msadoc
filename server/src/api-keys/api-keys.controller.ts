@@ -84,6 +84,7 @@ export class ApiKeysController {
   @ApiParam({
     name: 'keyId',
     description: 'ID of the api key to be deleted',
+    type: Number,
   })
   @ApiResponse({
     status: 200,

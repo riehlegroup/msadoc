@@ -27,7 +27,7 @@ export interface ApiKeysControllerCreateApiKeyRequest {
 }
 
 export interface ApiKeysControllerDeleteApiKeyRequest {
-    keyId: any;
+    keyId: number;
 }
 
 /**
