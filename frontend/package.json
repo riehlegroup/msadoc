@@ -22,6 +22,7 @@
     "@mui/material": "^5.10.14",
     "@nivo/sankey": "^0.80.0",
     "cytoscape": "^3.23.0",
+    "cytoscape-cola": "^2.5.1",
     "escape-string-regexp": "^5.0.0",
     "ohm-js": "^16.4.0",
     "react": "^18.2.0",
@@ -35,8 +36,8 @@
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^14.4.3",
     "@types/react": "^18.0.21",
-    "@types/react-dom": "^18.0.9",
     "@types/react-cytoscapejs": "^1.2.2",
+    "@types/react-dom": "^18.0.9",
     "gh-pages": "^4.0.0",
     "sass": "^1.56.1"
   }

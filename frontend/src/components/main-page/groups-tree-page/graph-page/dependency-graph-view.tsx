@@ -1,4 +1,5 @@
-import { ElementDefinition, Stylesheet } from 'cytoscape';
+import cytoscape, { ElementDefinition, Stylesheet } from 'cytoscape';
+import cola from 'cytoscape-cola';
 import React from 'react';
 import CytoscapeComponent from 'react-cytoscapejs';
 
@@ -14,7 +15,13 @@ import { CyptoScapeBuilder } from './cytoscape-builder';
 export const DependencyGraph: React.FC = () => {
   const controller = useController();
 
-  const layout = { name: 'breadthfirst' };
+  cytoscape.use(cola);
+  const layout = {
+    name: 'cola',
+    flow: { axis: 'y', minSeparation: 100 },
+    nodeSpacing: () => 60,
+  };
+
   const styleSheets: Stylesheet[] = [
     {
       selector: 'node',
@@ -42,6 +49,7 @@ export const DependencyGraph: React.FC = () => {
       style: {
         // Label: 'data(label)',
         'line-color': 'data(lineColor)',
+        'curve-style': 'bezier',
       },
     },
   ];
