@@ -72,10 +72,11 @@ export class CyptoScapeBuilder implements ICyptoScapeBuilder {
     for (const consumedApi of service.consumedAPIs) {
       for (const apiProvider of consumedApi.providedBy) {
         const nodeDefinition: EdgeDefinition = {
+          group: 'edges',
           data: {
+            type: 'api',
             source: this.getServiceIdentifier(service),
             target: this.getServiceIdentifier(apiProvider),
-            label: `[API] ${service.name} consumes API from ${apiProvider.name}: ${consumedApi.name}`,
             lineColor: this.options.apiEdgeColorFn(consumedApi),
           },
         };
@@ -86,10 +87,11 @@ export class CyptoScapeBuilder implements ICyptoScapeBuilder {
     for (const providedApi of service.providedAPIs) {
       for (const apiConsumer of providedApi.consumedBy) {
         const nodeDefinition: EdgeDefinition = {
+          group: 'edges',
           data: {
+            type: 'api',
             source: this.getServiceIdentifier(apiConsumer),
             target: this.getServiceIdentifier(service),
-            label: `[API] ${service.name} provides API to ${apiConsumer.name}: ${providedApi.name}`,
             lineColor: this.options.apiEdgeColorFn(providedApi),
           },
         };
@@ -100,10 +102,11 @@ export class CyptoScapeBuilder implements ICyptoScapeBuilder {
     for (const subscribedEvent of service.subscribedEvents) {
       for (const eventPublisher of subscribedEvent.publishedBy) {
         const nodeDefinition: EdgeDefinition = {
+          group: 'edges',
           data: {
+            type: 'event',
             source: this.getServiceIdentifier(service),
             target: this.getServiceIdentifier(eventPublisher),
-            label: `[Event] ${service.name} subscribes to ${eventPublisher.name}: ${subscribedEvent.name}`,
             lineColor: this.options.eventEdgeColorFn(subscribedEvent),
           },
         };
@@ -114,10 +117,11 @@ export class CyptoScapeBuilder implements ICyptoScapeBuilder {
     for (const publishedEvent of service.publishedEvents) {
       for (const eventSubscriber of publishedEvent.subscribedBy) {
         const nodeDefinition: EdgeDefinition = {
+          group: 'edges',
           data: {
-            target: this.getServiceIdentifier(service),
+            type: 'event',
             source: this.getServiceIdentifier(eventSubscriber),
-            label: `[Event] ${service.name} publishes to ${eventSubscriber.name}: ${publishedEvent.name}`,
+            target: this.getServiceIdentifier(service),
             lineColor: this.options.eventEdgeColorFn(publishedEvent),
           },
         };
@@ -137,6 +141,7 @@ export class CyptoScapeBuilder implements ICyptoScapeBuilder {
 
   private doAddGroup(group: RegularGroupNode): void {
     const nodeDefinition: NodeDefinition = {
+      group: 'nodes',
       data: {
         id: group.identifier,
         label: group.name,
@@ -150,6 +155,20 @@ export class CyptoScapeBuilder implements ICyptoScapeBuilder {
   }
 
   build(): ElementDefinition[] {
+    this.removeDuplicateEdges();
     return this.elementDefinitions;
+  }
+
+  removeDuplicateEdges(): void {
+    const allEdges = this.elementDefinitions.filter((x) => x.group === 'edges');
+    const otherNodes = this.elementDefinitions.filter(
+      (x) => x.group !== 'edges',
+    );
+
+    const edgeSet = new Set<string>();
+    allEdges.forEach((x) => edgeSet.add(JSON.stringify(x)));
+    edgeSet.forEach((x) => otherNodes.push(JSON.parse(x) as EdgeDefinition));
+
+    this.elementDefinitions = otherNodes;
   }
 }
