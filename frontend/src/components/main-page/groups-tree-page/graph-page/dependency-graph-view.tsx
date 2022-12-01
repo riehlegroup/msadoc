@@ -1,4 +1,4 @@
-import { blue, green, grey, orange, red, yellow } from '@mui/material/colors';
+import { blue, grey, red, yellow } from '@mui/material/colors';
 import cytoscape, { ElementDefinition, Stylesheet } from 'cytoscape';
 import cola from 'cytoscape-cola';
 import React from 'react';
@@ -9,7 +9,7 @@ import {
   RootGroupNode,
   ServiceDocsTreeNodeType,
 } from '../../service-docs-tree';
-import { useSelectedTreeItem } from '../../utils/router-utils';
+import { useServiceDocsServiceContext } from '../../services/service-docs-service';
 
 import { CyptoScapeBuilder } from './cytoscape-builder';
 
@@ -60,7 +60,7 @@ export const DependencyGraph: React.FC = () => {
   return (
     <React.Fragment>
       <CytoscapeComponent
-        elements={controller.state.cytoScapeElements}
+        elements={controller.cytoScapeElements}
         layout={layout}
         style={{ width: '100%', height: '100%' }}
         stylesheet={styleSheets}
@@ -70,44 +70,27 @@ export const DependencyGraph: React.FC = () => {
   );
 };
 
-interface State {
-  selectedGroup: RegularGroupNode | RootGroupNode | undefined;
+interface Controller {
   cytoScapeElements: ElementDefinition[];
 }
-interface Controller {
-  state: State;
-}
 function useController(): Controller {
-  const selectedTreeItem = useSelectedTreeItem();
+  const serviceDocsService = useServiceDocsServiceContext();
 
-  let selectedGroup: RegularGroupNode | RootGroupNode | undefined = undefined;
-  if (
-    selectedTreeItem &&
-    (selectedTreeItem.type === ServiceDocsTreeNodeType.RootGroup ||
-      selectedTreeItem.type === ServiceDocsTreeNodeType.RegularGroup)
-  ) {
-    selectedGroup = selectedTreeItem;
-  }
-
-  let elements: ElementDefinition[] = [];
-  if (selectedGroup !== undefined) {
-    elements = new CyptoScapeBuilder({
-      serviceBackgroundColorFn: () => red[600],
-      groupBackgroundColorFn: getGroupColor,
-      apiEdgeColorFn: () => yellow[600],
-      eventEdgeColorFn: () => blue[300],
-    })
-      .fromGroup(selectedGroup)
-      .build();
-  }
-
-  const [state, setState] = React.useState<State>({
-    selectedGroup: selectedGroup,
-    cytoScapeElements: elements,
-  });
+  const elements = React.useMemo(
+    () =>
+      new CyptoScapeBuilder({
+        serviceBackgroundColorFn: () => red[600],
+        groupBackgroundColorFn: getGroupColor,
+        apiEdgeColorFn: () => yellow[600],
+        eventEdgeColorFn: () => blue[300],
+      })
+        .fromGroup(serviceDocsService.groupsTree)
+        .build(),
+    [serviceDocsService.groupsTree],
+  );
 
   return {
-    state: state,
+    cytoScapeElements: elements,
   };
 }
 
