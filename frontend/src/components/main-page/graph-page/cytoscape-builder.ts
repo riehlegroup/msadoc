@@ -7,7 +7,7 @@ import {
   RootGroupNode,
   ServiceDocsTreeNodeType,
   ServiceNode,
-} from '../../service-docs-tree';
+} from '../service-docs-tree';
 
 export interface ICyptoScapeBuilder {
   fromGroup(group: RegularGroupNode | RootGroupNode): ICyptoScapeBuilder;

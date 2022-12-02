@@ -8,8 +8,8 @@ import {
   RegularGroupNode,
   RootGroupNode,
   ServiceDocsTreeNodeType,
-} from '../../service-docs-tree';
-import { useServiceDocsServiceContext } from '../../services/service-docs-service';
+} from '../service-docs-tree';
+import { useServiceDocsServiceContext } from '../services/service-docs-service';
 
 import { CyptoScapeBuilder } from './cytoscape-builder';
 
