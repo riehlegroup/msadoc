@@ -14,6 +14,7 @@ export const APP_ROUTES = {
 } as const;
 
 export const MAIN_PAGE_ROUTES_REL = {
+  graph: '/graph',
   groupsTree: '/groups-tree',
   authTokens: '/auth-tokens',
 } as const;
