@@ -27,8 +27,6 @@ export class CyptoScapeBuilder implements ICyptoScapeBuilder {
   constructor(private options: CytoScapeBuilderOptions) {}
 
   fromGroup(group: RegularGroupNode | RootGroupNode): CyptoScapeBuilder {
-    // TODO: clarify if there may be dependencies that may have no source/target
-
     for (const childGroup of Object.values(group.childGroups)) {
       this.addGroup(childGroup);
       this.fromGroup(childGroup);
@@ -67,8 +65,6 @@ export class CyptoScapeBuilder implements ICyptoScapeBuilder {
   }
 
   private doAddServiceDependencies(service: ServiceNode): void {
-    // TODO: clarify if adding duplicates is an issue
-
     for (const consumedApi of service.consumedAPIs) {
       for (const apiProvider of consumedApi.providedBy) {
         const nodeDefinition: EdgeDefinition = {
@@ -136,7 +132,6 @@ export class CyptoScapeBuilder implements ICyptoScapeBuilder {
     for (const childGroup of Object.values(group.childGroups)) {
       this.fromGroup(childGroup);
     }
-    // TODO: add aggregated dependencies
   }
 
   private doAddGroup(group: RegularGroupNode): void {
