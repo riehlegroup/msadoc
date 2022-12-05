@@ -14,6 +14,38 @@ export interface ICyptoScapeBuilder {
   build(): ElementDefinition[];
 }
 
+interface MyNodeDefinition<Type extends 'service' | 'group'>
+  extends NodeDefinition {
+  group: 'nodes';
+  data: {
+    type: Type;
+    id: string;
+    name: string;
+    parent?: string | undefined;
+  };
+  style: {
+    'background-color': string;
+  };
+}
+type ServiceNodeDefinition = MyNodeDefinition<'service'>;
+type GroupNodeDefinition = MyNodeDefinition<'group'>;
+
+interface MyEdgeDefinition<Type extends 'api' | 'event'>
+  extends EdgeDefinition {
+  group: 'edges';
+  data: {
+    type: Type;
+    source: string;
+    target: string;
+  };
+  style: {
+    'line-color': string;
+    'target-arrow-color': string;
+  };
+}
+type ApiEdgeDefinition = MyEdgeDefinition<'api'>;
+type EventEdgeDefinition = MyEdgeDefinition<'event'>;
+
 interface CytoScapeBuilderOptions {
   apiEdgeColorFn: (apiNode: APINode) => string;
   eventEdgeColorFn: (eventNode: EventNode) => string;
@@ -43,11 +75,15 @@ export class CyptoScapeBuilder implements ICyptoScapeBuilder {
   }
 
   private doAddService(service: ServiceNode): void {
-    const nodeDefinition: NodeDefinition = {
+    const nodeDefinition: ServiceNodeDefinition = {
+      group: 'nodes',
       data: {
+        type: 'service',
         id: this.getServiceIdentifier(service),
-        label: service.name,
-        backgroundColor: this.options.serviceBackgroundColorFn(service),
+        name: service.name,
+      },
+      style: {
+        'background-color': this.options.serviceBackgroundColorFn(service),
       },
     };
     if (service.group.type === ServiceDocsTreeNodeType.RegularGroup) {
@@ -67,13 +103,17 @@ export class CyptoScapeBuilder implements ICyptoScapeBuilder {
   private doAddServiceDependencies(service: ServiceNode): void {
     for (const consumedApi of service.consumedAPIs) {
       for (const apiProvider of consumedApi.providedBy) {
-        const nodeDefinition: EdgeDefinition = {
+        const edgeColor = this.options.apiEdgeColorFn(consumedApi);
+        const nodeDefinition: ApiEdgeDefinition = {
           group: 'edges',
           data: {
             type: 'api',
             source: this.getServiceIdentifier(service),
             target: this.getServiceIdentifier(apiProvider),
-            lineColor: this.options.apiEdgeColorFn(consumedApi),
+          },
+          style: {
+            'line-color': edgeColor,
+            'target-arrow-color': edgeColor,
           },
         };
         this.elementDefinitions.push(nodeDefinition);
@@ -82,13 +122,17 @@ export class CyptoScapeBuilder implements ICyptoScapeBuilder {
 
     for (const providedApi of service.providedAPIs) {
       for (const apiConsumer of providedApi.consumedBy) {
-        const nodeDefinition: EdgeDefinition = {
+        const edgeColor = this.options.apiEdgeColorFn(providedApi);
+        const nodeDefinition: ApiEdgeDefinition = {
           group: 'edges',
           data: {
             type: 'api',
             source: this.getServiceIdentifier(apiConsumer),
             target: this.getServiceIdentifier(service),
-            lineColor: this.options.apiEdgeColorFn(providedApi),
+          },
+          style: {
+            'line-color': edgeColor,
+            'target-arrow-color': edgeColor,
           },
         };
         this.elementDefinitions.push(nodeDefinition);
@@ -97,13 +141,17 @@ export class CyptoScapeBuilder implements ICyptoScapeBuilder {
 
     for (const subscribedEvent of service.subscribedEvents) {
       for (const eventPublisher of subscribedEvent.publishedBy) {
-        const nodeDefinition: EdgeDefinition = {
+        const edgeColor = this.options.eventEdgeColorFn(subscribedEvent);
+        const nodeDefinition: EventEdgeDefinition = {
           group: 'edges',
           data: {
             type: 'event',
             source: this.getServiceIdentifier(service),
             target: this.getServiceIdentifier(eventPublisher),
-            lineColor: this.options.eventEdgeColorFn(subscribedEvent),
+          },
+          style: {
+            'line-color': edgeColor,
+            'target-arrow-color': edgeColor,
           },
         };
         this.elementDefinitions.push(nodeDefinition);
@@ -112,13 +160,17 @@ export class CyptoScapeBuilder implements ICyptoScapeBuilder {
 
     for (const publishedEvent of service.publishedEvents) {
       for (const eventSubscriber of publishedEvent.subscribedBy) {
-        const nodeDefinition: EdgeDefinition = {
+        const edgeColor = this.options.eventEdgeColorFn(publishedEvent);
+        const nodeDefinition: EventEdgeDefinition = {
           group: 'edges',
           data: {
             type: 'event',
             source: this.getServiceIdentifier(eventSubscriber),
             target: this.getServiceIdentifier(service),
-            lineColor: this.options.eventEdgeColorFn(publishedEvent),
+          },
+          style: {
+            'line-color': edgeColor,
+            'target-arrow-color': edgeColor,
           },
         };
         this.elementDefinitions.push(nodeDefinition);
@@ -135,12 +187,15 @@ export class CyptoScapeBuilder implements ICyptoScapeBuilder {
   }
 
   private doAddGroup(group: RegularGroupNode): void {
-    const nodeDefinition: NodeDefinition = {
+    const nodeDefinition: GroupNodeDefinition = {
       group: 'nodes',
       data: {
+        type: 'group',
         id: group.identifier,
-        label: group.name,
-        backgroundColor: this.options.groupBackgroundColorFn(group),
+        name: group.name,
+      },
+      style: {
+        'background-color': this.options.groupBackgroundColorFn(group),
       },
     };
     if (group.parent.type !== ServiceDocsTreeNodeType.RootGroup) {
