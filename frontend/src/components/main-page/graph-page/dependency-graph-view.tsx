@@ -19,8 +19,8 @@ export const DependencyGraph: React.FC = () => {
   cytoscape.use(cola);
   const layout = {
     name: 'cola',
-    nodeSpacing: (node: { data: (s: 'label') => string }): number => {
-      return node.data('label').length * 5; // Adapt spacing to name length
+    nodeSpacing: (node: { data: (s: 'name') => string }): number => {
+      return node.data('name').length * 5; // Adapt spacing to name length
     },
   };
 
@@ -29,15 +29,14 @@ export const DependencyGraph: React.FC = () => {
       selector: 'node',
       style: {
         color: 'black',
-        'background-color': 'data(backgroundColor)',
-        label: 'data(label)',
+        label: 'data(name)',
         'font-size': 20,
       },
     },
     {
       selector: 'node:parent',
       style: {
-        label: 'data(label)',
+        label: 'data(name)',
         'text-valign': 'top',
         'text-halign': 'center',
         'text-max-width': '100px',
@@ -49,10 +48,8 @@ export const DependencyGraph: React.FC = () => {
     {
       selector: 'edge',
       style: {
-        'line-color': 'data(lineColor)',
         'curve-style': 'bezier',
         'target-arrow-shape': 'triangle',
-        'target-arrow-color': 'data(lineColor)',
       },
     },
   ];
