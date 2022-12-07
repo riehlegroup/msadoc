@@ -38,7 +38,6 @@ export const DepthSlider: React.FC<Props> = (props) => {
           defaultValue={props.maxDepth}
           min={1}
           max={props.maxDepth}
-          aria-label="Small"
           marks={graphDepthMarks}
           step={1}
           onChange={handleDepthChange}
