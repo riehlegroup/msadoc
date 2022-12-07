@@ -1,4 +1,4 @@
-import { Box } from '@mui/material';
+import { Box, Button } from '@mui/material';
 import { blue, grey, red, yellow } from '@mui/material/colors';
 import cytoscape, { ElementDefinition, Stylesheet } from 'cytoscape';
 import cola from 'cytoscape-cola';
@@ -60,6 +60,23 @@ export const DependencyGraph: React.FC = () => {
   const controller = useController();
   cytoscape.use(cola);
 
+  let cyInstance: cytoscape.Core | undefined;
+
+  const onDownload = async (): Promise<void> => {
+    if (cyInstance === undefined) {
+      return;
+    }
+    const pngBlob = await cyInstance.png({
+      output: 'blob-promise',
+    });
+
+    const fileName = 'msadoc-dependency-graph.png';
+    const downloadLink = document.createElement('a');
+    downloadLink.href = URL.createObjectURL(pngBlob);
+    downloadLink.download = fileName;
+    downloadLink.click();
+  };
+
   return (
     <React.Fragment>
       <Box
@@ -73,6 +90,16 @@ export const DependencyGraph: React.FC = () => {
           maxDepth={controller.state.maxGraphDepth}
           onChange={controller.updateGraphDepth}
         />
+        <Box height="auto" marginRight="auto" paddingTop="2em">
+          <Button
+            variant="contained"
+            onClick={(): void => {
+              void onDownload();
+            }}
+          >
+            Download PNG
+          </Button>
+        </Box>
       </Box>
 
       <Box
@@ -88,6 +115,7 @@ export const DependencyGraph: React.FC = () => {
           stylesheet={cyStyleSheets}
           cy={(cy): void => {
             cy.center();
+            cyInstance = cy;
           }}
         />
       </Box>
