@@ -18,7 +18,7 @@ import { DepthSlider } from './DepthSlider';
 
 export const DependencyGraph: React.FC = () => {
   const controller = useController();
-  console.log(controller.state);
+
   cytoscape.use(cola);
   const layout = {
     name: 'cola',
@@ -112,6 +112,7 @@ function useController(): Controller {
   const elements = React.useMemo(
     () =>
       new CyptoScapeBuilder({
+        depth: state.graphDepth,
         serviceBackgroundColorFn: () => red[600],
         groupBackgroundColorFn: getGroupColor,
         apiEdgeColorFn: () => yellow[600],
@@ -119,7 +120,7 @@ function useController(): Controller {
       })
         .fromGroup(serviceDocsService.groupsTree)
         .build(),
-    [serviceDocsService.groupsTree],
+    [serviceDocsService.groupsTree, state.graphDepth],
   );
 
   return {
