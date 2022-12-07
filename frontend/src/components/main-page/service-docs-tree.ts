@@ -331,3 +331,43 @@ export function getGroupByIdentifier(
   }
   return currentGroup as RegularGroupNode;
 }
+
+/**
+ * Calculates the depth level of a node, starting from root with depth 0.
+ */
+export function getDepthLevel(
+  node: RootGroupNode | RegularGroupNode | ServiceNode,
+): number {
+  if (node.type === ServiceDocsTreeNodeType.RootGroup) {
+    return 0;
+  }
+
+  if (node.type === ServiceDocsTreeNodeType.RegularGroup) {
+    return 1 + getDepthLevel(node.parent);
+  }
+
+  return 1 + getDepthLevel(node.group);
+}
+
+/**
+ * Calculates the depth of a start node, starting from the start node with depth 0.
+ */
+export function getDepth(
+  node: RootGroupNode | RegularGroupNode | ServiceNode,
+): number {
+  if (node.type === ServiceDocsTreeNodeType.Service) {
+    return 0;
+  }
+
+  const childDepths = Object.values(node.childGroups).map((child) => {
+    return getDepth(child);
+  });
+  childDepths.push(
+    ...Object.values(node.services).map((service) => {
+      return getDepth(service);
+    }),
+  );
+
+  console.log(childDepths);
+  return Math.max(...childDepths) + 1;
+}

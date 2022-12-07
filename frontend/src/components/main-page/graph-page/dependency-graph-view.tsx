@@ -9,6 +9,7 @@ import {
   RegularGroupNode,
   RootGroupNode,
   ServiceDocsTreeNodeType,
+  getDepth,
 } from '../service-docs-tree';
 import { useServiceDocsServiceContext } from '../services/service-docs-service';
 
@@ -17,7 +18,7 @@ import { DepthSlider } from './DepthSlider';
 
 export const DependencyGraph: React.FC = () => {
   const controller = useController();
-
+  console.log(controller.state);
   cytoscape.use(cola);
   const layout = {
     name: 'cola',
@@ -56,8 +57,6 @@ export const DependencyGraph: React.FC = () => {
     },
   ];
 
-  const graphDepth = 5;
-
   return (
     <React.Fragment>
       <Box
@@ -68,7 +67,7 @@ export const DependencyGraph: React.FC = () => {
         }}
       >
         <DepthSlider
-          maxDepth={graphDepth}
+          maxDepth={controller.state.maxGraphDepth}
           onChange={controller.updateGraphDepth}
         />
       </Box>
@@ -92,6 +91,7 @@ export const DependencyGraph: React.FC = () => {
 
 interface State {
   graphDepth: number;
+  maxGraphDepth: number;
 }
 
 interface Controller {
@@ -102,8 +102,11 @@ interface Controller {
 function useController(): Controller {
   const serviceDocsService = useServiceDocsServiceContext();
 
+  const maxDepth = getDepth(serviceDocsService.groupsTree);
+
   const [state, setState] = React.useState<State>({
-    graphDepth: 1,
+    graphDepth: maxDepth,
+    maxGraphDepth: maxDepth,
   });
 
   const elements = React.useMemo(
@@ -125,6 +128,7 @@ function useController(): Controller {
     updateGraphDepth: (newDepth: number): void => {
       setState({
         graphDepth: newDepth,
+        maxGraphDepth: state.maxGraphDepth,
       });
     },
   };
