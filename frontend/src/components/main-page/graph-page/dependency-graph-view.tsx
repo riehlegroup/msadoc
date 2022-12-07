@@ -37,9 +37,10 @@ export const DependencyGraph: React.FC = () => {
       },
     },
     {
-      selector: 'node:parent',
+      selector: 'node[type = "group"]',
       style: {
         label: 'data(name)',
+        shape: 'rectangle',
         'text-valign': 'top',
         'text-halign': 'center',
         'text-max-width': '100px',
