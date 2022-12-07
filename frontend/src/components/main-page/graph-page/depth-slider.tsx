@@ -25,7 +25,7 @@ export const DepthSlider: React.FC<Props> = (props) => {
 
   const handleDepthChange = (event: Event, value: number | number[]): void => {
     if (typeof value === 'number') {
-      controller.updateDepth(value);
+      controller.setState({ ...controller.state, selectedDepth: value });
       props.onChange(value);
     }
   };
@@ -49,25 +49,27 @@ export const DepthSlider: React.FC<Props> = (props) => {
 };
 
 interface State {
-  depth: number;
+  selectedDepth: number;
+  maxDepth: number;
 }
 
 interface Controller {
   state: State;
-  updateDepth: (newDepth: number) => void;
+  setState: (newState: State) => void;
 }
 
 function useController(props: Props): Controller {
   const [state, setState] = React.useState<State>({
-    depth: props.maxDepth,
+    selectedDepth: props.maxDepth,
+    maxDepth: props.maxDepth,
   });
+
+  React.useEffect(() => {
+    setState((state) => ({ ...state, maxDepth: props.maxDepth }));
+  }, [props.maxDepth]);
 
   return {
     state: state,
-    updateDepth: (newDepth: number): void => {
-      setState({
-        depth: newDepth,
-      });
-    },
+    setState: setState,
   };
 }
