@@ -14,7 +14,7 @@ import {
 import { useServiceDocsServiceContext } from '../services/service-docs-service';
 
 import { CyptoScapeBuilder } from './cytoscape-builder';
-import { DepthSlider } from './DepthSlider';
+import { DepthSlider } from './depth-slider';
 
 export const DependencyGraph: React.FC = () => {
   const controller = useController();
