@@ -9,20 +9,6 @@ interface Props {
 export const DepthSlider: React.FC<Props> = (props) => {
   const controller = useController(props);
 
-  const graphDepthMarks = [
-    {
-      value: props.maxDepth,
-      label: `full depth`,
-    },
-  ];
-  let i = 1;
-  for (; i < props.maxDepth; ++i) {
-    graphDepthMarks.push({
-      value: i,
-      label: `${i}`,
-    });
-  }
-
   const handleDepthChange = (event: Event, value: number | number[]): void => {
     if (typeof value === 'number') {
       controller.setState({ ...controller.state, selectedDepth: value });
@@ -35,10 +21,10 @@ export const DepthSlider: React.FC<Props> = (props) => {
       <Box width={300} marginLeft="auto" marginRight="auto" paddingTop="2em">
         <Slider
           size="small"
-          defaultValue={props.maxDepth}
+          defaultValue={controller.state.maxDepth}
           min={1}
-          max={props.maxDepth}
-          marks={graphDepthMarks}
+          max={controller.state.maxDepth}
+          marks={controller.getSliderMarks()}
           step={1}
           onChange={handleDepthChange}
         />
@@ -55,6 +41,7 @@ interface State {
 interface Controller {
   state: State;
   setState: (newState: State) => void;
+  getSliderMarks(): Array<{ value: number; label: string }>;
 }
 
 function useController(props: Props): Controller {
@@ -70,5 +57,19 @@ function useController(props: Props): Controller {
   return {
     state: state,
     setState: setState,
+    getSliderMarks: (): Array<{ value: number; label: string }> => {
+      const graphDepthMarks = [];
+      for (let i = 1; i < props.maxDepth; ++i) {
+        graphDepthMarks.push({
+          value: i,
+          label: `${i}`,
+        });
+      }
+      graphDepthMarks.push({
+        value: props.maxDepth,
+        label: `full depth`,
+      });
+      return graphDepthMarks;
+    },
   };
 }
