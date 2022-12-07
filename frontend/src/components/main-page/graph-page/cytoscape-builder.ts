@@ -15,11 +15,10 @@ export interface ICyptoScapeBuilder {
   build(): ElementDefinition[];
 }
 
-interface MyNodeDefinition<Type extends 'service' | 'group'>
-  extends NodeDefinition {
+interface MyNodeDefinition extends NodeDefinition {
   group: 'nodes';
   data: {
-    type: Type;
+    type: 'service' | 'group';
     id: string;
     name: string;
     parent?: string | undefined;
@@ -28,14 +27,13 @@ interface MyNodeDefinition<Type extends 'service' | 'group'>
     'background-color': string;
   };
 }
-type ServiceNodeDefinition = MyNodeDefinition<'service'>;
-type GroupNodeDefinition = MyNodeDefinition<'group'>;
+type ServiceNodeDefinition = MyNodeDefinition & { data: { type: 'service' } };
+type GroupNodeDefinition = MyNodeDefinition & { data: { type: 'group' } };
 
-interface MyEdgeDefinition<Type extends 'api' | 'event'>
-  extends EdgeDefinition {
+interface MyEdgeDefinition extends EdgeDefinition {
   group: 'edges';
   data: {
-    type: Type;
+    type: 'api' | 'event';
     source: string;
     target: string;
   };
@@ -44,8 +42,6 @@ interface MyEdgeDefinition<Type extends 'api' | 'event'>
     'target-arrow-color': string;
   };
 }
-type ApiEdgeDefinition = MyEdgeDefinition<'api'>;
-type EventEdgeDefinition = MyEdgeDefinition<'event'>;
 
 interface CytoScapeBuilderOptions {
   depth: number;
@@ -110,80 +106,56 @@ export class CyptoScapeBuilder implements ICyptoScapeBuilder {
   }
 
   private addServiceDependencies(service: ServiceNode): void {
-    this.doAddProvidingApiDependencies(service);
-    this.doAddConsumingApiDependencies(service);
-    this.doAddPublishingEventDependencies(service);
-    this.doAddSubscribingEventDependencies(service);
+    this.addProvidingApiDependencies(service);
+    this.addConsumingApiDependencies(service);
+    this.addPublishingEventDependencies(service);
+    this.addSubscribingEventDependencies(service);
   }
 
-  private doAddProvidingApiDependencies(service: ServiceNode): void {
+  private addProvidingApiDependencies(service: ServiceNode): void {
     for (const providedApi of service.providedAPIs) {
       for (const apiConsumer of providedApi.consumedBy) {
         const source = this.determineEdgeConnectorNodeByDepth(apiConsumer);
         const target = this.determineEdgeConnectorNodeByDepth(service);
         const edgeColor = this.options.apiEdgeColorFn(providedApi);
 
-        const nodeDefinition: ApiEdgeDefinition = this.doCreateEdgeDefinition(
-          'api',
-          source,
-          target,
-          edgeColor,
-        );
-        this.elementDefinitions.push(nodeDefinition);
+        this.doAddEdgeDefinition('api', source, target, edgeColor);
       }
     }
   }
 
-  private doAddConsumingApiDependencies(service: ServiceNode): void {
+  private addConsumingApiDependencies(service: ServiceNode): void {
     for (const consumedApi of service.consumedAPIs) {
       for (const apiProvider of consumedApi.providedBy) {
         const source = this.determineEdgeConnectorNodeByDepth(service);
         const target = this.determineEdgeConnectorNodeByDepth(apiProvider);
         const edgeColor = this.options.apiEdgeColorFn(consumedApi);
 
-        const nodeDefinition: ApiEdgeDefinition = this.doCreateEdgeDefinition(
-          'api',
-          source,
-          target,
-          edgeColor,
-        );
-        this.elementDefinitions.push(nodeDefinition);
+        this.doAddEdgeDefinition('api', source, target, edgeColor);
       }
     }
   }
 
-  private doAddSubscribingEventDependencies(service: ServiceNode): void {
+  private addSubscribingEventDependencies(service: ServiceNode): void {
     for (const subscribedEvent of service.subscribedEvents) {
       for (const eventPublisher of subscribedEvent.publishedBy) {
         const source = this.determineEdgeConnectorNodeByDepth(service);
         const target = this.determineEdgeConnectorNodeByDepth(eventPublisher);
         const edgeColor = this.options.eventEdgeColorFn(subscribedEvent);
 
-        const nodeDefinition: EventEdgeDefinition = this.doCreateEdgeDefinition(
-          'event',
-          source,
-          target,
-          edgeColor,
-        );
-        this.elementDefinitions.push(nodeDefinition);
+        this.doAddEdgeDefinition('event', source, target, edgeColor);
       }
     }
   }
 
-  private doAddPublishingEventDependencies(service: ServiceNode): void {
+  private addPublishingEventDependencies(service: ServiceNode): void {
     for (const publishedEvent of service.publishedEvents) {
       for (const eventSubscriber of publishedEvent.subscribedBy) {
         const source = this.determineEdgeConnectorNodeByDepth(eventSubscriber);
         const target = this.determineEdgeConnectorNodeByDepth(service);
         const edgeColor = this.options.eventEdgeColorFn(publishedEvent);
 
-        const nodeDefinition: EventEdgeDefinition = this.doCreateEdgeDefinition(
-          'event',
-          source,
-          target,
-          edgeColor,
-        );
-        this.elementDefinitions.push(nodeDefinition);
+        this.doAddEdgeDefinition('event', source, target, edgeColor);
       }
     }
   }
@@ -217,13 +189,17 @@ export class CyptoScapeBuilder implements ICyptoScapeBuilder {
     return this.determineEdgeConnectorNodeByDepth(node.parent);
   }
 
-  private doCreateEdgeDefinition<Type extends 'api' | 'event'>(
+  private doAddEdgeDefinition<Type extends 'api' | 'event'>(
     dependencyType: Type,
     source: ServiceNode | RegularGroupNode,
     target: ServiceNode | RegularGroupNode,
     edgeColor: string,
-  ): MyEdgeDefinition<Type> {
-    return {
+  ): void {
+    if (source === target) {
+      return;
+    }
+
+    const edge: MyEdgeDefinition = {
       group: 'edges',
       data: {
         type: dependencyType,
@@ -235,6 +211,7 @@ export class CyptoScapeBuilder implements ICyptoScapeBuilder {
         'target-arrow-color': edgeColor,
       },
     };
+    this.elementDefinitions.push(edge);
   }
 
   private addGroup(group: RegularGroupNode): void {
