@@ -7,6 +7,7 @@ import {
   RootGroupNode,
   ServiceDocsTreeNodeType,
   ServiceNode,
+  getDepthLevel,
 } from '../service-docs-tree';
 
 export interface ICyptoScapeBuilder {
@@ -47,6 +48,7 @@ type ApiEdgeDefinition = MyEdgeDefinition<'api'>;
 type EventEdgeDefinition = MyEdgeDefinition<'event'>;
 
 interface CytoScapeBuilderOptions {
+  depth: number;
   apiEdgeColorFn: (apiNode: APINode) => string;
   eventEdgeColorFn: (eventNode: EventNode) => string;
   serviceBackgroundColorFn: (groupNode: ServiceNode) => string;
@@ -58,10 +60,9 @@ export class CyptoScapeBuilder implements ICyptoScapeBuilder {
 
   constructor(private options: CytoScapeBuilderOptions) {}
 
-  fromGroup(group: RegularGroupNode | RootGroupNode): CyptoScapeBuilder {
+  fromGroup(group: RootGroupNode): CyptoScapeBuilder {
     for (const childGroup of Object.values(group.childGroups)) {
       this.addGroup(childGroup);
-      this.fromGroup(childGroup);
     }
     for (const childService of Object.values(group.services)) {
       this.addService(childService);
@@ -71,15 +72,19 @@ export class CyptoScapeBuilder implements ICyptoScapeBuilder {
 
   private addService(service: ServiceNode): void {
     this.doAddService(service);
-    this.doAddServiceDependencies(service);
+    this.addServiceDependencies(service);
   }
 
   private doAddService(service: ServiceNode): void {
+    if (getDepthLevel(service) > this.options.depth) {
+      return;
+    }
+
     const nodeDefinition: ServiceNodeDefinition = {
       group: 'nodes',
       data: {
         type: 'service',
-        id: this.getServiceIdentifier(service),
+        id: this.getIdentifier(service),
         name: service.name,
       },
       style: {
@@ -92,101 +97,161 @@ export class CyptoScapeBuilder implements ICyptoScapeBuilder {
     this.elementDefinitions.push(nodeDefinition);
   }
 
-  private getServiceIdentifier(service: ServiceNode): string {
+  private getIdentifier(node: ServiceNode | RegularGroupNode): string {
+    if (node.type === ServiceDocsTreeNodeType.RegularGroup) {
+      return node.identifier;
+    }
+
     return `${
-      service.group.type === ServiceDocsTreeNodeType.RegularGroup
-        ? service.group.identifier
+      node.group.type === ServiceDocsTreeNodeType.RegularGroup
+        ? node.group.identifier
         : '#/'
-    }/${service.name}`;
+    }/${node.name}`;
   }
 
-  private doAddServiceDependencies(service: ServiceNode): void {
-    for (const consumedApi of service.consumedAPIs) {
-      for (const apiProvider of consumedApi.providedBy) {
-        const edgeColor = this.options.apiEdgeColorFn(consumedApi);
-        const nodeDefinition: ApiEdgeDefinition = {
-          group: 'edges',
-          data: {
-            type: 'api',
-            source: this.getServiceIdentifier(service),
-            target: this.getServiceIdentifier(apiProvider),
-          },
-          style: {
-            'line-color': edgeColor,
-            'target-arrow-color': edgeColor,
-          },
-        };
-        this.elementDefinitions.push(nodeDefinition);
-      }
-    }
+  private addServiceDependencies(service: ServiceNode): void {
+    this.doAddProvidingApiDependencies(service);
+    this.doAddConsumingApiDependencies(service);
+    this.doAddPublishingEventDependencies(service);
+    this.doAddSubscribingEventDependencies(service);
+  }
 
+  private doAddProvidingApiDependencies(service: ServiceNode): void {
     for (const providedApi of service.providedAPIs) {
       for (const apiConsumer of providedApi.consumedBy) {
+        const source = this.determineEdgeConnectorNodeByDepth(apiConsumer);
+        const target = this.determineEdgeConnectorNodeByDepth(service);
         const edgeColor = this.options.apiEdgeColorFn(providedApi);
-        const nodeDefinition: ApiEdgeDefinition = {
-          group: 'edges',
-          data: {
-            type: 'api',
-            source: this.getServiceIdentifier(apiConsumer),
-            target: this.getServiceIdentifier(service),
-          },
-          style: {
-            'line-color': edgeColor,
-            'target-arrow-color': edgeColor,
-          },
-        };
+
+        const nodeDefinition: ApiEdgeDefinition = this.doCreateEdgeDefinition(
+          'api',
+          source,
+          target,
+          edgeColor,
+        );
         this.elementDefinitions.push(nodeDefinition);
       }
     }
+  }
 
+  private doAddConsumingApiDependencies(service: ServiceNode): void {
+    for (const consumedApi of service.consumedAPIs) {
+      for (const apiProvider of consumedApi.providedBy) {
+        const source = this.determineEdgeConnectorNodeByDepth(service);
+        const target = this.determineEdgeConnectorNodeByDepth(apiProvider);
+        const edgeColor = this.options.apiEdgeColorFn(consumedApi);
+
+        const nodeDefinition: ApiEdgeDefinition = this.doCreateEdgeDefinition(
+          'api',
+          source,
+          target,
+          edgeColor,
+        );
+        this.elementDefinitions.push(nodeDefinition);
+      }
+    }
+  }
+
+  private doAddSubscribingEventDependencies(service: ServiceNode): void {
     for (const subscribedEvent of service.subscribedEvents) {
       for (const eventPublisher of subscribedEvent.publishedBy) {
+        const source = this.determineEdgeConnectorNodeByDepth(service);
+        const target = this.determineEdgeConnectorNodeByDepth(eventPublisher);
         const edgeColor = this.options.eventEdgeColorFn(subscribedEvent);
-        const nodeDefinition: EventEdgeDefinition = {
-          group: 'edges',
-          data: {
-            type: 'event',
-            source: this.getServiceIdentifier(service),
-            target: this.getServiceIdentifier(eventPublisher),
-          },
-          style: {
-            'line-color': edgeColor,
-            'target-arrow-color': edgeColor,
-          },
-        };
+
+        const nodeDefinition: EventEdgeDefinition = this.doCreateEdgeDefinition(
+          'event',
+          source,
+          target,
+          edgeColor,
+        );
         this.elementDefinitions.push(nodeDefinition);
       }
     }
+  }
 
+  private doAddPublishingEventDependencies(service: ServiceNode): void {
     for (const publishedEvent of service.publishedEvents) {
       for (const eventSubscriber of publishedEvent.subscribedBy) {
+        const source = this.determineEdgeConnectorNodeByDepth(eventSubscriber);
+        const target = this.determineEdgeConnectorNodeByDepth(service);
         const edgeColor = this.options.eventEdgeColorFn(publishedEvent);
-        const nodeDefinition: EventEdgeDefinition = {
-          group: 'edges',
-          data: {
-            type: 'event',
-            source: this.getServiceIdentifier(eventSubscriber),
-            target: this.getServiceIdentifier(service),
-          },
-          style: {
-            'line-color': edgeColor,
-            'target-arrow-color': edgeColor,
-          },
-        };
+
+        const nodeDefinition: EventEdgeDefinition = this.doCreateEdgeDefinition(
+          'event',
+          source,
+          target,
+          edgeColor,
+        );
         this.elementDefinitions.push(nodeDefinition);
       }
     }
+  }
+
+  private determineEdgeConnectorNodeByDepth(
+    node: ServiceNode | RegularGroupNode,
+  ): ServiceNode | RegularGroupNode {
+    const depthLevel = getDepthLevel(node);
+    if (depthLevel <= this.options.depth) {
+      return node;
+    }
+
+    if (node.type === ServiceDocsTreeNodeType.Service) {
+      if (node.group.type === ServiceDocsTreeNodeType.RootGroup) {
+        throw new Error(
+          `Could not determine edge connector for node with identifier ${this.getIdentifier(
+            node,
+          )}`,
+        );
+      }
+      return this.determineEdgeConnectorNodeByDepth(node.group);
+    }
+
+    if (node.parent.type === ServiceDocsTreeNodeType.RootGroup) {
+      throw new Error(
+        `Could not determine edge connector for node with identifier ${this.getIdentifier(
+          node,
+        )}`,
+      );
+    }
+    return this.determineEdgeConnectorNodeByDepth(node.parent);
+  }
+
+  private doCreateEdgeDefinition<Type extends 'api' | 'event'>(
+    dependencyType: Type,
+    source: ServiceNode | RegularGroupNode,
+    target: ServiceNode | RegularGroupNode,
+    edgeColor: string,
+  ): MyEdgeDefinition<Type> {
+    return {
+      group: 'edges',
+      data: {
+        type: dependencyType,
+        source: this.getIdentifier(source),
+        target: this.getIdentifier(target),
+      },
+      style: {
+        'line-color': edgeColor,
+        'target-arrow-color': edgeColor,
+      },
+    };
   }
 
   private addGroup(group: RegularGroupNode): void {
     this.doAddGroup(group);
-
     for (const childGroup of Object.values(group.childGroups)) {
-      this.fromGroup(childGroup);
+      this.addGroup(childGroup);
+    }
+    for (const childService of Object.values(group.services)) {
+      this.addService(childService);
     }
   }
 
   private doAddGroup(group: RegularGroupNode): void {
+    if (getDepthLevel(group) > this.options.depth) {
+      return;
+    }
+
     const nodeDefinition: GroupNodeDefinition = {
       group: 'nodes',
       data: {

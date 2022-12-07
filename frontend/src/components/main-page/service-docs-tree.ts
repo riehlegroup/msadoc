@@ -368,6 +368,5 @@ export function getDepth(
     }),
   );
 
-  console.log(childDepths);
   return Math.max(...childDepths) + 1;
 }
