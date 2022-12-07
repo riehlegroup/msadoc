@@ -90,7 +90,13 @@ export const DependencyGraph: React.FC = () => {
           maxDepth={controller.state.maxGraphDepth}
           onChange={controller.updateGraphDepth}
         />
-        <Box height="auto" marginRight="auto" paddingTop="2em">
+        <Box
+          sx={{
+            height: 'auto',
+            marginRight: 'auto',
+            paddingTop: '1rem',
+          }}
+        >
           <Button
             variant="contained"
             onClick={(): void => {
