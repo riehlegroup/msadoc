@@ -17,19 +17,24 @@ export const DepthSlider: React.FC<Props> = (props) => {
   };
 
   return (
-    <React.Fragment>
-      <Box width={300} marginLeft="auto" marginRight="auto" paddingTop="2em">
-        <Slider
-          size="small"
-          defaultValue={controller.state.maxDepth}
-          min={1}
-          max={controller.state.maxDepth}
-          marks={controller.getSliderMarks()}
-          step={1}
-          onChange={handleDepthChange}
-        />
-      </Box>
-    </React.Fragment>
+    <Box
+      sx={{
+        width: '300px',
+        marginLeft: 'auto',
+        marginRight: 'auto',
+        paddingTop: '1rem',
+      }}
+    >
+      <Slider
+        size="small"
+        defaultValue={controller.state.maxDepth}
+        min={1}
+        max={controller.state.maxDepth}
+        marks={controller.getSliderMarks()}
+        step={1}
+        onChange={handleDepthChange}
+      />
+    </Box>
   );
 };
 
