@@ -25,6 +25,8 @@ export const DependencyGraph: React.FC = () => {
     nodeSpacing: (node: { data: (s: 'name') => string }): number => {
       return node.data('name').length * 5; // Adapt spacing to name length
     },
+    fit: false,
+    centerGraph: false,
   };
 
   const styleSheets: Stylesheet[] = [
@@ -84,6 +86,9 @@ export const DependencyGraph: React.FC = () => {
           layout={layout}
           style={{ width: '100%', height: '100%' }}
           stylesheet={styleSheets}
+          cy={(cy): void => {
+            cy.center();
+          }}
         />
       </Box>
     </React.Fragment>
