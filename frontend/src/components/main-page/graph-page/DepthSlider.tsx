@@ -12,7 +12,7 @@ export const DepthSlider: React.FC<Props> = (props) => {
   const graphDepthMarks = [
     {
       value: props.maxDepth,
-      label: `Full`,
+      label: `full depth`,
     },
   ];
   let i = 1;
