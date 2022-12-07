@@ -1,3 +1,4 @@
+import { Box } from '@mui/material';
 import { blue, grey, red, yellow } from '@mui/material/colors';
 import cytoscape, { ElementDefinition, Stylesheet } from 'cytoscape';
 import cola from 'cytoscape-cola';
@@ -12,6 +13,7 @@ import {
 import { useServiceDocsServiceContext } from '../services/service-docs-service';
 
 import { CyptoScapeBuilder } from './cytoscape-builder';
+import { DepthSlider } from './DepthSlider';
 
 export const DependencyGraph: React.FC = () => {
   const controller = useController();
@@ -54,24 +56,55 @@ export const DependencyGraph: React.FC = () => {
     },
   ];
 
+  const graphDepth = 5;
+
   return (
     <React.Fragment>
-      <CytoscapeComponent
-        elements={controller.cytoScapeElements}
-        layout={layout}
-        style={{ width: '100%', height: '100%' }}
-        stylesheet={styleSheets}
-      />
-      ;
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'row',
+          width: '100%',
+        }}
+      >
+        <DepthSlider
+          maxDepth={graphDepth}
+          onChange={controller.updateGraphDepth}
+        />
+      </Box>
+
+      <Box
+        sx={{
+          display: 'flex',
+          height: '100%',
+        }}
+      >
+        <CytoscapeComponent
+          elements={controller.cytoScapeElements}
+          layout={layout}
+          style={{ width: '100%', height: '100%' }}
+          stylesheet={styleSheets}
+        />
+      </Box>
     </React.Fragment>
   );
 };
 
+interface State {
+  graphDepth: number;
+}
+
 interface Controller {
+  state: State;
   cytoScapeElements: ElementDefinition[];
+  updateGraphDepth: (newDepth: number) => void;
 }
 function useController(): Controller {
   const serviceDocsService = useServiceDocsServiceContext();
+
+  const [state, setState] = React.useState<State>({
+    graphDepth: 1,
+  });
 
   const elements = React.useMemo(
     () =>
@@ -88,6 +121,12 @@ function useController(): Controller {
 
   return {
     cytoScapeElements: elements,
+    state: state,
+    updateGraphDepth: (newDepth: number): void => {
+      setState({
+        graphDepth: newDepth,
+      });
+    },
   };
 }
 
