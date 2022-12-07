@@ -9,13 +9,6 @@ interface Props {
 export const DepthSlider: React.FC<Props> = (props) => {
   const controller = useController(props);
 
-  const handleDepthChange = (event: Event, value: number | number[]): void => {
-    if (typeof value === 'number') {
-      controller.setState({ ...controller.state, selectedDepth: value });
-      props.onChange(value);
-    }
-  };
-
   return (
     <Box
       sx={{
@@ -32,7 +25,12 @@ export const DepthSlider: React.FC<Props> = (props) => {
         max={controller.state.maxDepth}
         marks={controller.getSliderMarks()}
         step={1}
-        onChange={handleDepthChange}
+        onChange={(event: Event, value: number | number[]): void => {
+          if (typeof value === 'number') {
+            controller.setState({ ...controller.state, selectedDepth: value });
+            props.onChange(value);
+          }
+        }}
       />
     </Box>
   );
