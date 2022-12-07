@@ -88,7 +88,9 @@ export const DependencyGraph: React.FC = () => {
       >
         <DepthSlider
           maxDepth={controller.state.maxGraphDepth}
-          onChange={controller.updateGraphDepth}
+          onChange={(newDepth: number): void =>
+            controller.setState({ ...controller.state, graphDepth: newDepth })
+          }
         />
         <Box
           sx={{
@@ -137,7 +139,7 @@ interface State {
 interface Controller {
   state: State;
   cytoScapeElements: ElementDefinition[];
-  updateGraphDepth: (newDepth: number) => void;
+  setState: (newState: State) => void;
 }
 function useController(): Controller {
   const serviceDocsService = useServiceDocsServiceContext();
@@ -166,12 +168,7 @@ function useController(): Controller {
   return {
     cytoScapeElements: elements,
     state: state,
-    updateGraphDepth: (newDepth: number): void => {
-      setState({
-        graphDepth: newDepth,
-        maxGraphDepth: state.maxGraphDepth,
-      });
-    },
+    setState: setState,
   };
 }
 
