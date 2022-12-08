@@ -15,7 +15,7 @@ concurrency:
 
 jobs:
   deploy:
-    name: Deloy frontend
+    name: Deploy frontend
 
     environment:
       name: github-pages
@@ -34,6 +34,23 @@ jobs:
 
       - name: Build in demo mode
         run: npm run build:demo -w frontend
+
+      # Create a custom 404 page that redirects the user to the root of our project.
+      - name: Inject a custom 404 page
+        run: |
+          cat <<EOF >> ./frontend/build/404.html
+          <!DOCTYPE html>
+          <html lang="en">
+            <head>
+              <title>msadoc</title>
+            </head>
+            <body>
+              <script>
+                window.location.replace('https://osrgroup.github.io/msadoc');
+              </script>
+            </body>
+          </html>
+          EOF
 
       - name: Setup GitHub Pages
         uses: actions/configure-pages@v2
