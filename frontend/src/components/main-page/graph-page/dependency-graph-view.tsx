@@ -16,45 +16,49 @@ import { useServiceDocsServiceContext } from '../services/service-docs-service';
 import { CyptoScapeBuilder } from './cytoscape-builder';
 import { DepthSlider } from './depth-slider';
 
-const cyLayout = {
-  name: 'cola',
-  nodeSpacing: (node: { data: (s: 'name') => string }): number => {
-    return node.data('name').length * 5; // Adapt spacing to name length
-  },
-  fit: false,
-  centerGraph: false,
-};
+function createCyLayout(): cytoscape.LayoutOptions {
+  return {
+    name: 'cola',
+    nodeSpacing: (node: { data: (s: 'name') => string }): number => {
+      return node.data('name').length * 5; // Adapt spacing to name length
+    },
+    fit: false,
+    centerGraph: false,
+  } as cytoscape.LayoutOptions;
+}
 
-const cyStyleSheets: Stylesheet[] = [
-  {
-    selector: 'node',
-    style: {
-      color: 'black',
-      label: 'data(name)',
-      'font-size': 20,
+function createCyStyleSheets(): Stylesheet[] {
+  return [
+    {
+      selector: 'node',
+      style: {
+        color: 'black',
+        label: 'data(name)',
+        'font-size': 20,
+      },
     },
-  },
-  {
-    selector: 'node[type = "group"]',
-    style: {
-      label: 'data(name)',
-      shape: 'rectangle',
-      'text-valign': 'top',
-      'text-halign': 'center',
-      'text-max-width': '100px',
-      'text-margin-y': 30,
-      'font-weight': 'bold',
-      'padding-top': '50px',
+    {
+      selector: 'node[type = "group"]',
+      style: {
+        label: 'data(name)',
+        shape: 'rectangle',
+        'text-valign': 'top',
+        'text-halign': 'center',
+        'text-max-width': '100px',
+        'text-margin-y': 30,
+        'font-weight': 'bold',
+        'padding-top': '50px',
+      },
     },
-  },
-  {
-    selector: 'edge',
-    style: {
-      'curve-style': 'bezier',
-      'target-arrow-shape': 'triangle',
+    {
+      selector: 'edge',
+      style: {
+        'curve-style': 'bezier',
+        'target-arrow-shape': 'triangle',
+      },
     },
-  },
-];
+  ];
+}
 
 export const DependencyGraph: React.FC = () => {
   const controller = useController();
@@ -101,9 +105,9 @@ export const DependencyGraph: React.FC = () => {
       >
         <CytoscapeComponent
           elements={controller.cyElements}
-          layout={cyLayout}
+          layout={createCyLayout()}
           style={{ width: '100%', height: '100%' }}
-          stylesheet={cyStyleSheets}
+          stylesheet={createCyStyleSheets()}
           cy={(cy): void => {
             cy.center();
             controller.cyRef.current = cy;
