@@ -87,7 +87,7 @@ export const DependencyGraph: React.FC = () => {
         }}
       >
         <DepthSlider
-          maxDepth={controller.state.maxGraphDepth}
+          maxDepth={controller.maxGraphDepth}
           onChange={(newDepth: number): void =>
             controller.setState({ ...controller.state, graphDepth: newDepth })
           }
@@ -117,7 +117,7 @@ export const DependencyGraph: React.FC = () => {
         }}
       >
         <CytoscapeComponent
-          elements={controller.cytoScapeElements}
+          elements={controller.cyElements}
           layout={cyLayout}
           style={{ width: '100%', height: '100%' }}
           stylesheet={cyStyleSheets}
@@ -133,22 +133,24 @@ export const DependencyGraph: React.FC = () => {
 
 interface State {
   graphDepth: number;
-  maxGraphDepth: number;
 }
 
 interface Controller {
   state: State;
-  cytoScapeElements: ElementDefinition[];
+  maxGraphDepth: number;
+  cyElements: ElementDefinition[];
   setState: (newState: State) => void;
 }
 function useController(): Controller {
   const serviceDocsService = useServiceDocsServiceContext();
 
-  const maxDepth = getDepth(serviceDocsService.groupsTree);
+  const maxDepth = React.useMemo(
+    () => getDepth(serviceDocsService.groupsTree),
+    [serviceDocsService.groupsTree],
+  );
 
   const [state, setState] = React.useState<State>({
     graphDepth: maxDepth,
-    maxGraphDepth: maxDepth,
   });
 
   const elements = React.useMemo(
@@ -166,7 +168,8 @@ function useController(): Controller {
   );
 
   return {
-    cytoScapeElements: elements,
+    cyElements: elements,
+    maxGraphDepth: maxDepth,
     state: state,
     setState: setState,
   };
