@@ -60,23 +60,6 @@ export const DependencyGraph: React.FC = () => {
   const controller = useController();
   cytoscape.use(cola);
 
-  let cyInstance: cytoscape.Core | undefined;
-
-  const onDownload = async (): Promise<void> => {
-    if (cyInstance === undefined) {
-      return;
-    }
-    const pngBlob = await cyInstance.png({
-      output: 'blob-promise',
-    });
-
-    const fileName = 'msadoc-dependency-graph.png';
-    const downloadLink = document.createElement('a');
-    downloadLink.href = URL.createObjectURL(pngBlob);
-    downloadLink.download = fileName;
-    downloadLink.click();
-  };
-
   return (
     <React.Fragment>
       <Box
@@ -102,7 +85,7 @@ export const DependencyGraph: React.FC = () => {
           <Button
             variant="contained"
             onClick={(): void => {
-              void onDownload();
+              void controller.performDownload();
             }}
           >
             Download PNG
@@ -123,7 +106,7 @@ export const DependencyGraph: React.FC = () => {
           stylesheet={cyStyleSheets}
           cy={(cy): void => {
             cy.center();
-            cyInstance = cy;
+            controller.cyRef.current = cy;
           }}
         />
       </Box>
@@ -139,7 +122,9 @@ interface Controller {
   state: State;
   maxGraphDepth: number;
   cyElements: ElementDefinition[];
+  cyRef: React.MutableRefObject<cytoscape.Core | undefined>;
   setState: (newState: State) => void;
+  performDownload: () => Promise<void>;
 }
 function useController(): Controller {
   const serviceDocsService = useServiceDocsServiceContext();
@@ -148,6 +133,8 @@ function useController(): Controller {
     () => getDepth(serviceDocsService.groupsTree),
     [serviceDocsService.groupsTree],
   );
+
+  const cyRef = React.useRef<cytoscape.Core>();
 
   const [state, setState] = React.useState<State>({
     graphDepth: maxDepth,
@@ -169,9 +156,24 @@ function useController(): Controller {
 
   return {
     cyElements: elements,
+    cyRef: cyRef,
     maxGraphDepth: maxDepth,
     state: state,
     setState: setState,
+    performDownload: async (): Promise<void> => {
+      if (cyRef.current === undefined) {
+        return;
+      }
+      const pngBlob = await cyRef.current.png({
+        output: 'blob-promise',
+      });
+
+      const fileName = 'msadoc-dependency-graph.png';
+      const downloadLink = document.createElement('a');
+      downloadLink.href = URL.createObjectURL(pngBlob);
+      downloadLink.download = fileName;
+      downloadLink.click();
+    },
   };
 }
 
