@@ -1,13 +1,15 @@
 import React from 'react';
 import { BrowserRouter } from 'react-router-dom';
 
+import { ENVIRONMENT } from './env';
 import { AppRouter } from './router';
 import { AuthDataServiceContextProvider } from './services/auth-data-service';
 import { HttpServiceFacadeProvider } from './services/http';
 
 export const App: React.FC = () => {
   return (
-    <BrowserRouter>
+    // When serving the page from a subfolder (e.g. example.com/foo), the Router by default simply rewrites the URLs so that the subfolder ("foo") gets removed from the URL. To fix this, we need to explicitly set the `basename` (here: "foo").
+    <BrowserRouter basename={ENVIRONMENT.REACT_APP_ROUTER_BASE}>
       <AuthDataServiceContextProvider>
         <HttpServiceFacadeProvider>
           <AppRouter />
