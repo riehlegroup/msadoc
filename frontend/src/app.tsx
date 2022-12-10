@@ -5,6 +5,7 @@ import { ENVIRONMENT } from './env';
 import { AppRouter } from './router';
 import { AuthDataServiceContextProvider } from './services/auth-data-service';
 import { HttpServiceFacadeProvider } from './services/http';
+import { SnackbarServiceContextProvider } from './services/snackbar-service';
 
 export const App: React.FC = () => {
   return (
@@ -12,7 +13,9 @@ export const App: React.FC = () => {
     <BrowserRouter basename={ENVIRONMENT.REACT_APP_ROUTER_BASE}>
       <AuthDataServiceContextProvider>
         <HttpServiceFacadeProvider>
-          <AppRouter />
+          <SnackbarServiceContextProvider>
+            <AppRouter />
+          </SnackbarServiceContextProvider>
         </HttpServiceFacadeProvider>
       </AuthDataServiceContextProvider>
     </BrowserRouter>
