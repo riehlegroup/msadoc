@@ -58,9 +58,11 @@ export const ApiKeyDeletionDialog: React.FC<Props> = (props) => {
 
       {controller.state.viewMode === ViewMode.IsDeletingKey && (
         <DialogContent>
-          <CircularProgress
-            sx={{ color: (theme) => theme.palette.grey[500] }}
-          />
+          <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+            <CircularProgress
+              sx={{ color: (theme) => theme.palette.grey[500] }}
+            />
+          </Box>
         </DialogContent>
       )}
 
