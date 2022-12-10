@@ -16,7 +16,7 @@ export const APP_ROUTES = {
 export const MAIN_PAGE_ROUTES_REL = {
   graph: '/graph',
   groupsTree: '/groups-tree',
-  authTokens: '/auth-tokens',
+  apiKeys: '/api-keys',
 } as const;
 export const MAIN_PAGE_ROUTES_ABS = buildAbsoluteRoutes(
   MAIN_PAGE_ROUTES_REL,

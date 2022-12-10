@@ -3,7 +3,7 @@ import { Navigate, RouteObject, useRoutes } from 'react-router-dom';
 
 import { MAIN_PAGE_ROUTES_ABS, MAIN_PAGE_ROUTES_REL } from '../../routes';
 
-import { AuthTokensPage } from './auth-tokens-page';
+import { AuthTokensPage } from './api-keys-page';
 import { DependencyGraph } from './graph-page/dependency-graph-view';
 import { GroupsTreePage } from './groups-tree-page';
 
@@ -22,7 +22,7 @@ export const MainPageRouter: React.FC = () => {
       element: <GroupsTreePage />,
     },
     {
-      path: MAIN_PAGE_ROUTES_REL.authTokens,
+      path: MAIN_PAGE_ROUTES_REL.apiKeys,
       element: <AuthTokensPage />,
     },
 

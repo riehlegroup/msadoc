@@ -37,8 +37,8 @@ export const LeftMenu: React.FC<Props> = (props) => {
         </NavButtonWithRouterTarget>
 
         <NavButtonWithRouterTarget
-          routerTarget={MAIN_PAGE_ROUTES_ABS.authTokens}
-          tooltipText="Auth Tokens"
+          routerTarget={MAIN_PAGE_ROUTES_ABS.apiKeys}
+          tooltipText="API Keys"
         >
           <Icons.Key fontSize="inherit" />
         </NavButtonWithRouterTarget>
