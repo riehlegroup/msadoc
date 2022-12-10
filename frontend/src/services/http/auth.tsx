@@ -26,19 +26,10 @@ export interface AuthHttpService {
   refreshAuthToken(): Promise<AccessAndRefreshToken | undefined>;
 }
 
-interface State {
-  isSignedIn: boolean;
-}
-
 function useAuthHttpService(): AuthHttpService {
   const navigate = useNavigate();
   const httpService = useHttpServiceContext();
   const authDataService = useAuthDataServiceContext();
-
-  const [state, setState] = React.useState<State>({
-    isSignedIn:
-      authDataService.state.accessAndRefreshToken?.refreshToken !== undefined,
-  });
 
   async function performLogin(
     username: string,
@@ -85,12 +76,33 @@ function useAuthHttpService(): AuthHttpService {
     );
   }
 
+  const doRefreshAuthToken = React.useCallback(
+    async (refreshToken: string): Promise<LoginResponseDto> => {
+      if (ENVIRONMENT.REACT_APP_DEMO_MODE) {
+        return {
+          access_token: 'mock-access-token',
+          refresh_token: 'mock-refresh-token',
+        };
+      }
+
+      return await firstValueFrom(
+        new AuthApi(
+          httpService.createConfiguration(refreshToken),
+        ).authControllerRefreshToken({
+          refreshTokenRequestDto: {
+            refresh_token: refreshToken,
+          },
+        }),
+      );
+    },
+    [httpService],
+  );
   /**
    * Use the Refresh Token to generate a new Auth Token.
    */
-  async function refreshAuthToken(): Promise<
+  const refreshAuthToken = React.useCallback(async (): Promise<
     AccessAndRefreshToken | undefined
-  > {
+  > => {
     if (
       authDataService.state.accessAndRefreshToken?.refreshToken === undefined
     ) {
@@ -112,54 +124,37 @@ function useAuthHttpService(): AuthHttpService {
         refreshToken: response.refresh_token,
       };
     } catch (error) {
-      // In the future, we might want to distinguish cases like "the client currently has no internet connection" and "the token is invalid". However, the following should be fine for now.
-      authDataService.deleteAccessAndRefreshToken();
-      navigate(APP_ROUTES.login);
+      const errorStatus = httpService.getErrorStatus(error);
+
+      if (errorStatus === 401) {
+        authDataService.deleteAccessAndRefreshToken();
+        navigate(APP_ROUTES.login);
+        return undefined;
+      }
+
+      // Something unexpected happened, e.g. the internet connection was lost.
       return undefined;
     }
-  }
-
-  async function doRefreshAuthToken(
-    refreshToken: string,
-  ): Promise<LoginResponseDto> {
-    if (ENVIRONMENT.REACT_APP_DEMO_MODE) {
-      return {
-        access_token: 'mock-access-token',
-        refresh_token: 'mock-refresh-token',
-      };
-    }
-
-    return await firstValueFrom(
-      new AuthApi(
-        httpService.createConfiguration(refreshToken),
-      ).authControllerRefreshToken({
-        refreshTokenRequestDto: {
-          refresh_token: refreshToken,
-        },
-      }),
-    );
-  }
-
-  // Whenever the auth token are deleted from local storage, update the state accordingly.
-  React.useEffect(() => {
-    setState({
-      isSignedIn:
-        authDataService.state.accessAndRefreshToken?.refreshToken === undefined,
-    });
-  }, [authDataService.state.accessAndRefreshToken]);
+  }, [authDataService, doRefreshAuthToken, httpService, navigate]);
 
   const TOKEN_REFRESH_INTERVAL_MS = 60000;
   // Whenever signed in, refresh the auth tokens regularly.
   React.useEffect(() => {
     const interval = setInterval(() => {
-      if (!state.isSignedIn) {
+      const isSignedIn =
+        authDataService.state.accessAndRefreshToken?.refreshToken !== undefined;
+
+      if (!isSignedIn) {
         return;
       }
       void refreshAuthToken();
     }, TOKEN_REFRESH_INTERVAL_MS);
 
     return () => clearInterval(interval);
-  });
+  }, [
+    authDataService.state.accessAndRefreshToken?.refreshToken,
+    refreshAuthToken,
+  ]);
 
   return {
     performLogin: performLogin,
