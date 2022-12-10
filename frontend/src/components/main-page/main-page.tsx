@@ -63,7 +63,14 @@ export const MainPage: React.FC = () => {
               </Backdrop>
             )}
             {controller.state.error && (
-              <Backdrop sx={{ color: '#ffffff', position: 'absolute' }} open>
+              <Backdrop
+                sx={{
+                  color: '#ffffff',
+                  position: 'absolute',
+                  zIndex: (theme) => theme.zIndex.modal + 1,
+                }}
+                open
+              >
                 <Card variant="outlined">
                   <CardContent>
                     <Typography variant="h5">Error</Typography>

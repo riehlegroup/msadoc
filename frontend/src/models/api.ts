@@ -1,4 +1,9 @@
-import { ListServiceDocResponse, LoginResponseDto } from 'msadoc-client';
+import {
+  CreateApiKeyResponseDto,
+  GetApiKeysResponseDto,
+  ListServiceDocResponse,
+  LoginResponseDto,
+} from 'msadoc-client';
 
 export interface HttpResponse<TStatus extends number, TData = undefined> {
   status: TStatus;
@@ -15,3 +20,11 @@ export type ListAllServiceDocsHttpResponse = HttpResponse<
   200,
   ListServiceDocResponse
 >;
+
+export type ListAllApiKeysHttpResponse = HttpResponse<
+  200,
+  GetApiKeysResponseDto
+>;
+
+export type CreateApiKeyResponse = HttpResponse<201, CreateApiKeyResponseDto>;
+export type DeleteSingleApiKeyResponse = HttpResponse<200, void>;
