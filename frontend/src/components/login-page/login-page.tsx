@@ -97,22 +97,12 @@ export const LoginPage: React.FC = () => {
 
                 {controller.state.viewState ===
                   ViewState.WrongUsernameOrPassword && (
-                  <Box
-                    sx={{
-                      color: (theme) => theme.palette.error.main,
-                    }}
-                  >
-                    Wrong username or password
-                  </Box>
+                  <Alert severity="error">Wrong username or password</Alert>
                 )}
                 {controller.state.viewState === ViewState.UnknownError && (
-                  <Box
-                    sx={{
-                      color: (theme) => theme.palette.error.main,
-                    }}
-                  >
+                  <Alert severity="error">
                     Unknown error, please try again
-                  </Box>
+                  </Alert>
                 )}
 
                 <TextField
