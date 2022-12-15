@@ -1,10 +1,10 @@
 import {
   ApiKeysApi,
+  Configuration,
   CreateApiKeyResponseDto,
   GetApiKeysResponseDto,
 } from 'msadoc-client';
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
 import { firstValueFrom } from 'rxjs';
 
 import { ENVIRONMENT } from '../../env';
@@ -14,8 +14,6 @@ import {
   ListAllApiKeysHttpResponse,
   UnknownHttpError,
 } from '../../models/api';
-import { APP_ROUTES } from '../../routes';
-import { useAuthDataServiceContext } from '../auth-data-service';
 
 import { useHttpServiceContext } from './http-base';
 import { ApiKeysMockData } from './mock-data/api-keys';
@@ -30,40 +28,28 @@ export interface ApiKeysHttpService {
   ) => Promise<DeleteSingleApiKeyResponse | UnknownHttpError>;
 }
 function useApiKeysHttpService(): ApiKeysHttpService {
-  const navigate = useNavigate();
-  const authDataService = useAuthDataServiceContext();
   const httpService = useHttpServiceContext();
 
   async function listAllApiKeys(): Promise<
     ListAllApiKeysHttpResponse | UnknownHttpError
   > {
-    const accessToken =
-      authDataService.state.accessAndRefreshToken?.accessToken;
-    if (accessToken === undefined) {
-      navigate(APP_ROUTES.login);
-      return {
-        status: 0,
-        data: undefined,
-      };
-    }
-
-    try {
-      const response = await doListAllApiKeys(accessToken);
-
+    const response = await httpService.performRegularApiRequest((accessToken) =>
+      doListAllApiKeys(accessToken),
+    );
+    if (response.success) {
       return {
         status: 200,
-        data: response,
-      };
-    } catch (error) {
-      return {
-        status: 0,
-        data: undefined,
+        data: response.data,
       };
     }
+    return {
+      status: 0,
+      data: undefined,
+    };
   }
 
   async function doListAllApiKeys(
-    accessToken: string,
+    configuration: Configuration,
   ): Promise<GetApiKeysResponseDto> {
     if (ENVIRONMENT.REACT_APP_DEMO_MODE) {
       return {
@@ -72,44 +58,32 @@ function useApiKeysHttpService(): ApiKeysHttpService {
     }
 
     return await firstValueFrom(
-      new ApiKeysApi(
-        httpService.createConfiguration(accessToken),
-      ).apiKeysControllerGetAllApiKeys(),
+      new ApiKeysApi(configuration).apiKeysControllerGetAllApiKeys(),
     );
   }
 
   async function createApiKey(
     apiKeyName: string,
   ): Promise<CreateApiKeyResponse | UnknownHttpError> {
-    const accessToken =
-      authDataService.state.accessAndRefreshToken?.accessToken;
-    if (accessToken === undefined) {
-      navigate(APP_ROUTES.login);
-      return {
-        status: 0,
-        data: undefined,
-      };
-    }
+    const response = await httpService.performRegularApiRequest(
+      (configuration) =>
+        doCreateApiKey(configuration, { apiKeyName: apiKeyName }),
+    );
 
-    try {
-      const response = await doCreateApiKey(accessToken, {
-        apiKeyName: apiKeyName,
-      });
-
+    if (response.success) {
       return {
         status: 201,
-        data: response,
-      };
-    } catch (error) {
-      return {
-        status: 0,
-        data: undefined,
+        data: response.data,
       };
     }
+    return {
+      status: 0,
+      data: undefined,
+    };
   }
 
   async function doCreateApiKey(
-    accessToken: string,
+    configuration: Configuration,
     data: {
       apiKeyName: string;
     },
@@ -122,9 +96,7 @@ function useApiKeysHttpService(): ApiKeysHttpService {
     }
 
     return await firstValueFrom(
-      new ApiKeysApi(
-        httpService.createConfiguration(accessToken),
-      ).apiKeysControllerCreateApiKey({
+      new ApiKeysApi(configuration).apiKeysControllerCreateApiKey({
         createApiKeyRequestDto: { keyName: data.apiKeyName },
       }),
     );
@@ -133,35 +105,25 @@ function useApiKeysHttpService(): ApiKeysHttpService {
   async function deleteSingleApiKey(
     apiKeyId: number,
   ): Promise<DeleteSingleApiKeyResponse | UnknownHttpError> {
-    const accessToken =
-      authDataService.state.accessAndRefreshToken?.accessToken;
-    if (accessToken === undefined) {
-      navigate(APP_ROUTES.login);
-      return {
-        status: 0,
-        data: undefined,
-      };
-    }
+    const response = await httpService.performRegularApiRequest(
+      (configuration) =>
+        doDeleteSingleApiKey(configuration, { apiKeyId: apiKeyId }),
+    );
 
-    try {
-      const response = await doDeleteSingleApiKey(accessToken, {
-        apiKeyId: apiKeyId,
-      });
-
+    if (response.success) {
       return {
         status: 200,
-        data: response,
-      };
-    } catch (error) {
-      return {
-        status: 0,
         data: undefined,
       };
     }
+    return {
+      status: 0,
+      data: undefined,
+    };
   }
 
   async function doDeleteSingleApiKey(
-    accessToken: string,
+    configuration: Configuration,
     data: {
       apiKeyId: number;
     },
@@ -171,9 +133,9 @@ function useApiKeysHttpService(): ApiKeysHttpService {
     }
 
     return await firstValueFrom(
-      new ApiKeysApi(
-        httpService.createConfiguration(accessToken),
-      ).apiKeysControllerDeleteApiKey({ keyId: data.apiKeyId }),
+      new ApiKeysApi(configuration).apiKeysControllerDeleteApiKey({
+        keyId: data.apiKeyId,
+      }),
     );
   }
 
