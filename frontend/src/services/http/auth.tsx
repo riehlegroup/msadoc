@@ -11,7 +11,7 @@ import {
   useAuthDataServiceContext,
 } from '../auth-data-service';
 
-import { useHttpServiceContext } from './http-base';
+import { getErrorStatus, useHttpServiceContext } from './http-base';
 
 export interface AuthHttpService {
   /**
@@ -47,7 +47,7 @@ function useAuthHttpService(): AuthHttpService {
         data: response,
       };
     } catch (error) {
-      const errorStatus = httpService.getErrorStatus(error);
+      const errorStatus = getErrorStatus(error);
       return {
         status: errorStatus === 401 ? 401 : 0,
         data: undefined,
@@ -124,7 +124,7 @@ function useAuthHttpService(): AuthHttpService {
         refreshToken: response.refresh_token,
       };
     } catch (error) {
-      const errorStatus = httpService.getErrorStatus(error);
+      const errorStatus = getErrorStatus(error);
 
       if (errorStatus === 401) {
         authDataService.deleteAccessAndRefreshToken();
@@ -135,7 +135,7 @@ function useAuthHttpService(): AuthHttpService {
       // Something unexpected happened, e.g. the internet connection was lost.
       return undefined;
     }
-  }, [authDataService, doRefreshAuthToken, httpService, navigate]);
+  }, [authDataService, doRefreshAuthToken, navigate]);
 
   const TOKEN_REFRESH_INTERVAL_MS = 60000;
   // Whenever signed in, refresh the auth tokens regularly.

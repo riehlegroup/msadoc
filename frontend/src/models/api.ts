@@ -27,4 +27,4 @@ export type ListAllApiKeysHttpResponse = HttpResponse<
 >;
 
 export type CreateApiKeyResponse = HttpResponse<201, CreateApiKeyResponseDto>;
-export type DeleteSingleApiKeyResponse = HttpResponse<200, void>;
+export type DeleteSingleApiKeyResponse = HttpResponse<200, undefined>;

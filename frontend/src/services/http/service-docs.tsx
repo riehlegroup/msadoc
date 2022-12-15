@@ -1,6 +1,9 @@
-import { ListServiceDocResponse, ServiceDocsApi } from 'msadoc-client';
+import {
+  Configuration,
+  ListServiceDocResponse,
+  ServiceDocsApi,
+} from 'msadoc-client';
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
 import { firstValueFrom } from 'rxjs';
 
 import { ENVIRONMENT } from '../../env';
@@ -8,8 +11,6 @@ import {
   ListAllServiceDocsHttpResponse,
   UnknownHttpError,
 } from '../../models/api';
-import { APP_ROUTES } from '../../routes';
-import { useAuthDataServiceContext } from '../auth-data-service';
 
 import { useHttpServiceContext } from './http-base';
 import { ServiceDocsMockData } from './mock-data/service-docs';
@@ -20,40 +21,28 @@ export interface ServiceDocsHttpService {
   >;
 }
 function useServiceDocsHttpService(): ServiceDocsHttpService {
-  const navigate = useNavigate();
-  const authDataService = useAuthDataServiceContext();
   const httpService = useHttpServiceContext();
 
   async function listAllServiceDocs(): Promise<
     ListAllServiceDocsHttpResponse | UnknownHttpError
   > {
-    const accessToken =
-      authDataService.state.accessAndRefreshToken?.accessToken;
-    if (accessToken === undefined) {
-      navigate(APP_ROUTES.login);
-      return {
-        status: 0,
-        data: undefined,
-      };
-    }
-
-    try {
-      const response = await doListAllServiceDocs(accessToken);
-
+    const response = await httpService.performRegularApiRequest(
+      (configuration) => doListAllServiceDocs(configuration),
+    );
+    if (response.success) {
       return {
         status: 200,
-        data: response,
-      };
-    } catch (error) {
-      return {
-        status: 0,
-        data: undefined,
+        data: response.data,
       };
     }
+    return {
+      status: 0,
+      data: undefined,
+    };
   }
 
   async function doListAllServiceDocs(
-    accessToken: string,
+    configuration: Configuration,
   ): Promise<ListServiceDocResponse> {
     if (ENVIRONMENT.REACT_APP_DEMO_MODE) {
       return {
@@ -63,7 +52,7 @@ function useServiceDocsHttpService(): ServiceDocsHttpService {
 
     return await firstValueFrom(
       new ServiceDocsApi(
-        httpService.createConfiguration(accessToken),
+        configuration,
       ).serviceDocsControllerListAllServiceDocs(),
     );
   }
