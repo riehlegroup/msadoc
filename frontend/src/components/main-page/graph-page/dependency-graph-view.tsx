@@ -21,7 +21,7 @@ const cyLayout = {
   nodeSpacing: (node: { data: (s: 'name') => string }): number => {
     return node.data('name').length * 5; // Adapt spacing to name length
   },
-  fit: true,
+  fit: false,
   centerGraph: true,
 } as cytoscape.LayoutOptions;
 
@@ -105,7 +105,7 @@ export const DependencyGraph: React.FC = () => {
           style={{ width: '100%', height: '100%' }}
           stylesheet={cyStyleSheets}
           cy={(cy): void => {
-            controller.cyRef.current = cy;
+            controller.onRenderGraph(cy);
           }}
         />
       </Box>
@@ -115,13 +115,21 @@ export const DependencyGraph: React.FC = () => {
 
 interface State {
   graphDepth: number;
+
+  /**
+   * Should the graph be re-layouted on the next render?
+   * This is particularly useful when the rendered elements change, e.g. when nodes get removed/added.
+   *
+   * We use State for this because we want to actually trigger the Cytoscape component to update.
+   */
+  reLayoutGraphOnNextRender: boolean;
 }
 
 interface Controller {
   state: State;
   maxGraphDepth: number;
   cyElements: ElementDefinition[];
-  cyRef: React.MutableRefObject<cytoscape.Core | undefined>;
+  onRenderGraph: (cy: cytoscape.Core) => void;
   setState: (newState: State) => void;
   performDownload: () => Promise<void>;
 }
@@ -137,6 +145,7 @@ function useController(): Controller {
 
   const [state, setState] = React.useState<State>({
     graphDepth: maxDepth,
+    reLayoutGraphOnNextRender: false,
   });
 
   const elements = React.useMemo(
@@ -153,12 +162,26 @@ function useController(): Controller {
     [serviceDocsService.groupsTree, state.graphDepth],
   );
 
+  // Whenever the graph data change, we want to re-layout the graph to prevent nodes from overlapping too much.
+  React.useEffect(() => {
+    setState((state) => ({ ...state, reLayoutGraphOnNextRender: true }));
+  }, [elements]);
+
   return {
     cyElements: elements,
-    cyRef: cyRef,
     maxGraphDepth: maxDepth,
     state: state,
     setState: setState,
+    onRenderGraph: (cy): void => {
+      cyRef.current = cy;
+
+      if (state.reLayoutGraphOnNextRender) {
+        setState((state) => ({ ...state, reLayoutGraphOnNextRender: false }));
+
+        // See https://github.com/plotly/react-cytoscapejs/issues/46
+        cy.layout(cyLayout).run();
+      }
+    },
     performDownload: async (): Promise<void> => {
       if (cyRef.current === undefined) {
         return;
