@@ -1,6 +1,6 @@
 {
   "name": "RestfulQueryService",
-  "group": "etl.load.query",
+  "group": "backend.etl.load.query",
   "tags": ["app=ods"],
 
   "repository": "https://github.com/jvalue/ods.git",

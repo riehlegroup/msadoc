@@ -1,5 +1,6 @@
 {
   "name": "NotificationService",
+  "group": "backend",
   "tags": ["app=ods"],
 
   "repository": "https://github.com/jvalue/ods.git",

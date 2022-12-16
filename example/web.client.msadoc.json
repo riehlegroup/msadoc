@@ -1,6 +1,6 @@
 {
   "name": "WebClient",
-  "group": "clients",
+  "group": "frontend",
   "tags": ["app=ods"],
 
   "repository": "https://github.com/jvalue/ods.git",

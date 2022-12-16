@@ -1,6 +1,6 @@
 {
   "name": "TransformationService",
-  "group": "etl",
+  "group": "backend.etl.transform",
   "tags": ["app=ods"],
 
   "repository": "https://github.com/jvalue/ods.git",
