@@ -26,7 +26,7 @@
     "transformation.config.deleted"
   ],
 
-  "deploymentDocumentation": "https://github.com/jvalue/ods-deployment",
+  "deploymentDocumentation": "https://github.com/jvalue/ods/tree/main/deployment",
   "developmentDocumentation": "https://github.com/jvalue/ods/blob/main/transformation/README.md",
 
   "responsibles": ["schwarz@group.riehle.org"],

@@ -23,7 +23,7 @@
     "transformation.execution.failure"
   ],
 
-  "deploymentDocumentation": "https://github.com/jvalue/ods-deployment",
+  "deploymentDocumentation": "https://github.com/jvalue/ods/tree/main/deployment",
 
   "responsibles": ["schwarz@group.riehle.org"],
   "responsibleTeam": "jvalue-core"
