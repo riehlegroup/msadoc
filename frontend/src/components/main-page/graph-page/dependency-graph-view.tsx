@@ -13,7 +13,7 @@ import {
 } from '../service-docs-tree';
 import { useServiceDocsServiceContext } from '../services/service-docs-service';
 
-import { CyptoScapeBuilder } from './cytoscape-builder';
+import { CytoScapeBuilder } from './cytoscape-builder';
 import { DepthSlider } from './depth-slider';
 
 const cyLayout = {
@@ -150,7 +150,7 @@ function useController(): Controller {
 
   const elements = React.useMemo(
     () =>
-      new CyptoScapeBuilder({
+      new CytoScapeBuilder({
         depth: state.graphDepth,
         serviceBackgroundColorFn: () => red[600],
         groupBackgroundColorFn: getGroupColor,

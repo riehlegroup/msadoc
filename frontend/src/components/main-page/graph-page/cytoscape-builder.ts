@@ -10,8 +10,8 @@ import {
   getDepthLevel,
 } from '../service-docs-tree';
 
-export interface ICyptoScapeBuilder {
-  fromGroup(group: RegularGroupNode | RootGroupNode): ICyptoScapeBuilder;
+export interface ICytoScapeBuilder {
+  fromGroup(group: RegularGroupNode | RootGroupNode): ICytoScapeBuilder;
   build(): ElementDefinition[];
 }
 
@@ -51,12 +51,12 @@ interface CytoScapeBuilderOptions {
   groupBackgroundColorFn: (groupNode: RegularGroupNode) => string;
 }
 
-export class CyptoScapeBuilder implements ICyptoScapeBuilder {
+export class CytoScapeBuilder implements ICytoScapeBuilder {
   elementDefinitions: ElementDefinition[] = [];
 
   constructor(private options: CytoScapeBuilderOptions) {}
 
-  fromGroup(group: RootGroupNode): CyptoScapeBuilder {
+  fromGroup(group: RootGroupNode): CytoScapeBuilder {
     for (const childGroup of Object.values(group.childGroups)) {
       this.addGroup(childGroup);
     }
