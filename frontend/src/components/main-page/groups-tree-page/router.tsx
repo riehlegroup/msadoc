@@ -60,7 +60,8 @@ export const GroupsTreePageRouter: React.FC<Props> = (props) => {
   // Whenever a new Tree Item is selected, call the function passed in Props.
   React.useEffect(() => {
     props.onChangeTreeItem();
-  }, [props, selectedTreeItem]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedTreeItem]);
 
   return <React.Fragment>{routeElement}</React.Fragment>;
 };
