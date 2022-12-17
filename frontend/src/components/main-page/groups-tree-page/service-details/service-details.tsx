@@ -18,6 +18,8 @@ import { Dependencies } from '../common/dependencies';
 import { Responsibilities } from '../common/responsibilities';
 import { Tags } from '../common/tags';
 
+import { ExtensionFields } from './extension-fields';
+
 export const ServiceDetails: React.FC = () => {
   const controller = useController();
 
@@ -179,6 +181,13 @@ export const ServiceDetails: React.FC = () => {
           <DataContainer>
             <Dependencies showDependenciesFor={controller.service} />
           </DataContainer>
+
+          {controller.service.extensions &&
+            Object.entries(controller.service.extensions).length > 0 && (
+              <DataContainer>
+                <ExtensionFields showExtensionFieldsFor={controller.service} />
+              </DataContainer>
+            )}
         </Box>
       )}
     </React.Fragment>
