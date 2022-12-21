@@ -191,6 +191,12 @@ function useController(props: Props): Controller {
         return;
       }
 
+      // Resetting our View State is especially important in demo mode, because triggering a deletion does not actually delete the Service Doc and because of this, we probably don't navigate away from this page.
+      setState((state) => ({
+        ...state,
+        viewState: ViewState.Default,
+      }));
+
       snackbarService.showSnackbar(
         `Service Doc "${props.correspondingService.name}" has been deleted`,
       );
