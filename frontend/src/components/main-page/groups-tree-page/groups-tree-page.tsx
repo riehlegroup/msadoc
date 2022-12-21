@@ -23,6 +23,7 @@ export const GroupsTreePage: React.FC = () => {
         This allows us to just "blindly" access the ServiceDocsService in the entire page without having to distinguish between "all services" and "filtered services".
       */}
       <ServiceDocsServiceContextProvider
+        serviceDocs={controller.rawFilteredServiceDocs}
         reloadServiceDocs={
           controller.originalServiceDocsService.reloadServiceDocs
         }
@@ -55,7 +56,7 @@ export const GroupsTreePage: React.FC = () => {
                 <Alert severity="info">The filter is active</Alert>
               )}
 
-              {controller.state.filteredServiceDocs.length > 0 ? (
+              {controller.rawFilteredServiceDocs.length > 0 ? (
                 <Tree />
               ) : (
                 <Alert severity="warning">No Service Docs found</Alert>
@@ -93,7 +94,7 @@ export const GroupsTreePage: React.FC = () => {
 };
 
 interface State {
-  filteredServiceDocs: GetServiceDocResponse[];
+  filter: FilterNode | undefined;
   rawFilterQuery: string | undefined;
 
   showFilterDialog: boolean;
@@ -105,24 +106,40 @@ interface Controller {
   scrollMainContentToTop: () => void;
 
   originalServiceDocsService: ServiceDocsService;
+
+  rawFilteredServiceDocs: GetServiceDocResponse[];
+
   setShowFilterDialog: (show: boolean) => void;
-  applyFilter: (filter: FilterNode, rawQuery: string) => void;
+  applyFilter: (filter: FilterNode, rawFilterQuery: string) => void;
   removeFilter: () => void;
 }
 function useController(): Controller {
   const serviceDocsService = useServiceDocsServiceContext();
 
-  const [state, setState] = React.useState<State>(() => {
-    const rawServiceDocs = serviceDocsService.serviceDocs.map(
+  const [state, setState] = React.useState<State>({
+    filter: undefined,
+    rawFilterQuery: undefined,
+    showFilterDialog: false,
+  });
+
+  const rawFilteredServiceDocs = React.useMemo(() => {
+    if (!state.filter) {
+      const rawServiceDocs = serviceDocsService.serviceDocs.map(
+        (singleServiceDoc) => singleServiceDoc.rawData,
+      );
+      return rawServiceDocs;
+    }
+
+    const filteredServiceDocs = applyFilter(
+      state.filter,
+      serviceDocsService.serviceDocs,
+    );
+    const rawFilteredServiceDocs = filteredServiceDocs.map(
       (singleServiceDoc) => singleServiceDoc.rawData,
     );
 
-    return {
-      filteredServiceDocs: rawServiceDocs,
-      rawFilterQuery: undefined,
-      showFilterDialog: false,
-    };
-  });
+    return rawFilteredServiceDocs;
+  }, [serviceDocsService.serviceDocs, state.filter]);
 
   const mainContentRef = React.useRef<HTMLDivElement>(null);
 
@@ -135,33 +152,23 @@ function useController(): Controller {
     },
 
     originalServiceDocsService: serviceDocsService,
+
+    rawFilteredServiceDocs: rawFilteredServiceDocs,
+
     setShowFilterDialog: (show): void => {
       setState((state) => ({ ...state, showFilterDialog: show }));
     },
-    applyFilter: (filter, rawQuery): void => {
-      const filteredServiceDocs = applyFilter(
-        filter,
-        serviceDocsService.serviceDocs,
-      );
-      const rawFilteredServiceDocs = filteredServiceDocs.map(
-        (singleServiceDoc) => singleServiceDoc.rawData,
-      );
-
+    applyFilter: (filter, rawFilterQuery): void => {
       setState((state) => ({
         ...state,
-        filteredServiceDocs: rawFilteredServiceDocs,
-        rawFilterQuery: rawQuery,
+        filter: filter,
+        rawFilterQuery: rawFilterQuery,
       }));
     },
-
     removeFilter: (): void => {
-      const allServiceDocs = serviceDocsService.serviceDocs.map(
-        (singleServiceDoc) => singleServiceDoc.rawData,
-      );
-
       setState((state) => ({
         ...state,
-        filteredServiceDocs: allServiceDocs,
+        filter: undefined,
         rawFilterQuery: undefined,
       }));
     },
