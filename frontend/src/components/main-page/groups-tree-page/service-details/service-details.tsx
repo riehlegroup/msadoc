@@ -18,6 +18,7 @@ import { Dependencies } from '../common/dependencies';
 import { Responsibilities } from '../common/responsibilities';
 import { Tags } from '../common/tags';
 
+import { DangerZone } from './danger-zone';
 import { ExtensionFields } from './extension-fields';
 
 export const ServiceDetails: React.FC = () => {
@@ -188,6 +189,10 @@ export const ServiceDetails: React.FC = () => {
                 <ExtensionFields showExtensionFieldsFor={controller.service} />
               </DataContainer>
             )}
+
+          <DataContainer>
+            <DangerZone correspondingService={controller.service} />
+          </DataContainer>
         </Box>
       )}
     </React.Fragment>

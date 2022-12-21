@@ -4,6 +4,7 @@ import React from 'react';
 
 import { Icons } from '../../../icons';
 import {
+  ServiceDocsService,
   ServiceDocsServiceContextProvider,
   useServiceDocsServiceContext,
 } from '../services/service-docs-service';
@@ -22,7 +23,9 @@ export const GroupsTreePage: React.FC = () => {
         This allows us to just "blindly" access the ServiceDocsService in the entire page without having to distinguish between "all services" and "filtered services".
       */}
       <ServiceDocsServiceContextProvider
-        serviceDocs={controller.state.filteredServiceDocs}
+        reloadServiceDocs={
+          controller.originalServiceDocsService.reloadServiceDocs
+        }
       >
         <Box sx={{ height: '100%', overflow: 'hidden', display: 'flex' }}>
           <Box
@@ -101,6 +104,7 @@ interface Controller {
   mainContentRef: React.RefObject<HTMLDivElement>;
   scrollMainContentToTop: () => void;
 
+  originalServiceDocsService: ServiceDocsService;
   setShowFilterDialog: (show: boolean) => void;
   applyFilter: (filter: FilterNode, rawQuery: string) => void;
   removeFilter: () => void;
@@ -130,6 +134,7 @@ function useController(): Controller {
       mainContentRef.current?.scrollTo(0, 0);
     },
 
+    originalServiceDocsService: serviceDocsService,
     setShowFilterDialog: (show): void => {
       setState((state) => ({ ...state, showFilterDialog: show }));
     },

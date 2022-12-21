@@ -8,12 +8,15 @@ import {
 } from '../service-docs-tree';
 import { extractAllServices } from '../utils/service-docs-tree-utils';
 
-interface ServiceDocsService {
+export interface ServiceDocsService {
   serviceDocs: ServiceNode[];
   groupsTree: RootGroupNode;
+
+  reloadServiceDocs: () => void;
 }
 function useServiceDocsService(
   serviceDocs: GetServiceDocResponse[],
+  reloadServiceDocs: () => void,
 ): ServiceDocsService {
   const groupsTree = React.useMemo(
     (): RootGroupNode => buildServiceDocsTree(serviceDocs),
@@ -28,6 +31,8 @@ function useServiceDocsService(
   return {
     serviceDocs: serviceDocsAsArray,
     groupsTree: groupsTree,
+
+    reloadServiceDocs: reloadServiceDocs,
   };
 }
 
@@ -37,10 +42,14 @@ const ServiceDocsServiceContext = React.createContext<
 
 interface Props {
   serviceDocs: GetServiceDocResponse[];
+  reloadServiceDocs: () => void;
   children?: React.ReactNode;
 }
 export const ServiceDocsServiceContextProvider: React.FC<Props> = (props) => {
-  const serviceDocsService = useServiceDocsService(props.serviceDocs);
+  const serviceDocsService = useServiceDocsService(
+    props.serviceDocs,
+    props.reloadServiceDocs,
+  );
 
   return (
     <ServiceDocsServiceContext.Provider value={serviceDocsService}>

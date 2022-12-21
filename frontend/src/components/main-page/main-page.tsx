@@ -92,12 +92,15 @@ export const MainPage: React.FC = () => {
             )}
 
             {/* 
-            When loading new Service Docs, we keep the following components as-is in order not to lose the component-internal state. 
-            Otherwise, whenever the Service Docs are reloaded, the user would potentially have to redo all of the commands that lead him/her to the current state. 
-          */}
+              When loading new Service Docs, we keep the following components as-is in order not to lose the component-internal state.
+              Otherwise, whenever the Service Docs are reloaded, the user would potentially have to redo all of the commands that lead him/her to the current state.
+            */}
             {controller.state.serviceDocs && (
               <ServiceDocsServiceContextProvider
                 serviceDocs={controller.state.serviceDocs}
+                reloadServiceDocs={(): void =>
+                  void controller.loadServiceDocs()
+                }
               >
                 <MainPageRouter />
               </ServiceDocsServiceContextProvider>
