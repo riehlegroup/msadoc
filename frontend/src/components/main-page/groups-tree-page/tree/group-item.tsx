@@ -18,6 +18,7 @@ import {
 import { useSelectedTreeItem } from '../../utils/router-utils';
 import {
   isGroupXDescendantOfGroupY,
+  sortGroupsByName,
   sortServicesByName,
 } from '../../utils/service-docs-tree-utils';
 
@@ -242,17 +243,4 @@ function isXDescendantOfY(params: { x: MainNode; y: MainNode }): boolean {
     xGroup: params.x,
     yGroup: params.y,
   });
-}
-
-/**
- * Sort the given Groups by their name.
- */
-function sortGroupsByName(groups: RegularGroupNode[]): RegularGroupNode[] {
-  const result = [...groups];
-
-  result.sort((a, b) => {
-    return a.name.localeCompare(b.name);
-  });
-
-  return result;
 }
