@@ -95,3 +95,18 @@ export function sortServicesByName(services: ServiceNode[]): ServiceNode[] {
 
   return result;
 }
+
+/**
+ * Sort the given Groups by their name.
+ */
+export function sortGroupsByName(
+  groups: RegularGroupNode[],
+): RegularGroupNode[] {
+  const result = [...groups];
+
+  result.sort((a, b) => {
+    return a.name.localeCompare(b.name);
+  });
+
+  return result;
+}

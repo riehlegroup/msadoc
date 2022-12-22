@@ -1,5 +1,6 @@
 import {
   Configuration,
+  DeleteServiceDocResponse,
   ListServiceDocResponse,
   ServiceDocsApi,
 } from 'msadoc-client';
@@ -8,6 +9,7 @@ import { firstValueFrom } from 'rxjs';
 
 import { ENVIRONMENT } from '../../env';
 import {
+  DeleteSingleServiceDocResponse,
   ListAllServiceDocsHttpResponse,
   UnknownHttpError,
 } from '../../models/api';
@@ -19,6 +21,9 @@ export interface ServiceDocsHttpService {
   listAllServiceDocs: () => Promise<
     ListAllServiceDocsHttpResponse | UnknownHttpError
   >;
+  deleteSingleServiceDoc: (
+    serviceName: string,
+  ) => Promise<DeleteSingleServiceDocResponse | UnknownHttpError>;
 }
 function useServiceDocsHttpService(): ServiceDocsHttpService {
   const httpService = useHttpServiceContext();
@@ -57,12 +62,49 @@ function useServiceDocsHttpService(): ServiceDocsHttpService {
     );
   }
 
-  return {
-    listAllServiceDocs: (): Promise<
-      ListAllServiceDocsHttpResponse | UnknownHttpError
-    > => {
-      return listAllServiceDocs();
+  async function deleteSingleServiceDoc(
+    serviceName: string,
+  ): Promise<DeleteSingleServiceDocResponse | UnknownHttpError> {
+    const response = await httpService.performRegularApiRequest(
+      (configuration) =>
+        doDeleteSingleServiceDoc(configuration, { serviceName: serviceName }),
+    );
+
+    if (response.success) {
+      return {
+        status: 200,
+        data: response.data,
+      };
+    }
+    return {
+      status: 0,
+      data: undefined,
+    };
+  }
+
+  async function doDeleteSingleServiceDoc(
+    configuration: Configuration,
+    data: {
+      serviceName: string;
     },
+  ): Promise<DeleteServiceDocResponse> {
+    if (ENVIRONMENT.REACT_APP_DEMO_MODE) {
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      return ServiceDocsMockData.allServiceDocs[0]!;
+    }
+
+    return await firstValueFrom(
+      new ServiceDocsApi(
+        configuration,
+      ).serviceDocsControllerDeleteServiceDocByName({
+        serviceName: data.serviceName,
+      }),
+    );
+  }
+
+  return {
+    listAllServiceDocs: listAllServiceDocs,
+    deleteSingleServiceDoc: deleteSingleServiceDoc,
   };
 }
 

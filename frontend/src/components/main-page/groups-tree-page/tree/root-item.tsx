@@ -1,14 +1,25 @@
-import { ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
+import {
+  List,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+} from '@mui/material';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { Icons } from '../../../../icons';
 import { GROUPS_TREE_ROUTES_ABS } from '../../../../routes';
 import {
+  RegularGroupNode,
   RootGroupNode,
   ServiceDocsTreeNodeType,
+  ServiceNode,
 } from '../../service-docs-tree';
 import { useSelectedTreeItem } from '../../utils/router-utils';
+import {
+  sortGroupsByName,
+  sortServicesByName,
+} from '../../utils/service-docs-tree-utils';
 
 import { GroupItem } from './group-item';
 import { ServiceItem } from './service-item';
@@ -17,7 +28,7 @@ interface Props {
   rootGroup: RootGroupNode;
 }
 export const RootItem: React.FC<Props> = (props) => {
-  const controller = useController();
+  const controller = useController(props);
 
   return (
     <React.Fragment>
@@ -47,13 +58,23 @@ export const RootItem: React.FC<Props> = (props) => {
         <ListItemText primary="Root" />
       </ListItemButton>
 
-      {Object.values(props.rootGroup.childGroups).map((childGroup) => (
-        <GroupItem key={childGroup.identifier} group={childGroup} depth={1} />
-      ))}
+      <React.Fragment>
+        <List component="div" disablePadding>
+          {controller.sortedChildGroups.map((childGroup) => (
+            <GroupItem
+              key={childGroup.identifier}
+              group={childGroup}
+              depth={1}
+            />
+          ))}
+        </List>
 
-      {props.rootGroup.services.map((service) => (
-        <ServiceItem key={service.name} service={service} depth={1} />
-      ))}
+        <List component="div" disablePadding>
+          {controller.sortedServices.map((service) => (
+            <ServiceItem key={service.name} service={service} depth={1} />
+          ))}
+        </List>
+      </React.Fragment>
     </React.Fragment>
   );
 };
@@ -63,9 +84,12 @@ interface Controller {
 
   buttonRef: React.RefObject<HTMLDivElement>;
 
+  sortedChildGroups: RegularGroupNode[];
+  sortedServices: ServiceNode[];
+
   navigateToRoot: () => void;
 }
-function useController(): Controller {
+function useController(props: Props): Controller {
   const navigate = useNavigate();
   const selectedTreeItem = useSelectedTreeItem();
 
@@ -90,10 +114,21 @@ function useController(): Controller {
     buttonRef.current.scrollIntoView({ block: 'nearest' });
   }, [isSelected]);
 
+  const sortedChildGroups = React.useMemo((): RegularGroupNode[] => {
+    return sortGroupsByName(Object.values(props.rootGroup.childGroups));
+  }, [props.rootGroup.childGroups]);
+
+  const sortedServices = React.useMemo((): ServiceNode[] => {
+    return sortServicesByName(props.rootGroup.services);
+  }, [props.rootGroup.services]);
+
   return {
     isSelected: isSelected,
 
     buttonRef: buttonRef,
+
+    sortedChildGroups: sortedChildGroups,
+    sortedServices: sortedServices,
 
     navigateToRoot: (): void => {
       navigate(GROUPS_TREE_ROUTES_ABS.root);
