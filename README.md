@@ -1,4 +1,4 @@
-![Logo](./docs/logo.png)
+<img src="./assets/logo-full.svg" width="300px" alt="MSAdoc Logo">
 
 **The entrypoint to your microservice documentation.**
 
