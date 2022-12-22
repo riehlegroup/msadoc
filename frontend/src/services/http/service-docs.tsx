@@ -67,7 +67,7 @@ function useServiceDocsHttpService(): ServiceDocsHttpService {
   ): Promise<DeleteSingleServiceDocResponse | UnknownHttpError> {
     const response = await httpService.performRegularApiRequest(
       (configuration) =>
-        doDeleteSingleApiKey(configuration, { serviceName: serviceName }),
+        doDeleteSingleServiceDoc(configuration, { serviceName: serviceName }),
     );
 
     if (response.success) {
@@ -82,7 +82,7 @@ function useServiceDocsHttpService(): ServiceDocsHttpService {
     };
   }
 
-  async function doDeleteSingleApiKey(
+  async function doDeleteSingleServiceDoc(
     configuration: Configuration,
     data: {
       serviceName: string;
