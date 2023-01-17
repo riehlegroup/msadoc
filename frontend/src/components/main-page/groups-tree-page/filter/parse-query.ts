@@ -1,155 +1,176 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-unsafe-return */
-
-import ohm from 'ohm-js';
+import {
+  ExpressionNode,
+  ExpressionNodeType,
+  AndNode as SEPAndNode,
+  KeyValueNode as SEPKeyValueNode,
+  NotNode as SEPNotNode,
+  OrNode as SEPOrNode,
+  ValueNode as SEPValueNode,
+  parse,
+} from 'search-expression-parser';
 
 import { Result } from '../../../../models/result';
 
-import { FilterNode, FilterNodeType, allowedLiteralNodeKeys } from './models';
+import {
+  FilterAndNode,
+  FilterKeyValueNode,
+  FilterNode,
+  FilterNotNode,
+  FilterOrNode,
+  FilterParseError,
+  isAllowedLiteralNodeKey,
+} from './models';
 
-/*
-  Regarding operator precedence:
-  We want "NOT" to bind tighter than "AND". And we want "AND" to bind tighter than "OR".
-  To achieve this, we follow the idea of the Ohm example regarding math arithmetics, which basically says that the weaker binding operators should come first and "call" the stronger-binding ones.
-  In the math example, the following is defined:
-  Exp
-    = AddExp
-
-  AddExp
-    = AddExp "+" MulExp  -- plus
-    | AddExp "-" MulExp  -- minus
-    | MulExp
-
-  MulExp
-    = MulExp "*" ExpExp  -- times
-    | MulExp "/" ExpExp  -- divide
-    | ExpExp
-
-  Here, we use the same structure, but of course with "OR", "AND", and "NOT".
-*/
-
-const allowedKeysPreparedForGrammar = allowedLiteralNodeKeys.map(
-  (singleKey) => `caseInsensitive<"${singleKey}">`,
-);
-
-const grammarSource = String.raw`
-  MyGrammar {
-    Exp 
-      = OrExpression
-
-    OrExpression 
-      = OrExpression caseInsensitive<"OR"> AndExpression -- recurse
-      | AndExpression                                    -- passthrough
-
-    AndExpression 
-      = AndExpression caseInsensitive<"AND"> NotExpression -- recurseWithExplicitAnd
-      | AndExpression NotExpression                        -- recurseWithImplicitAnd
-      | NotExpression                                      -- passthrough
-
-    NotExpression 
-      = caseInsensitive<"NOT"> SingleExpression -- default
-      | SingleExpression                        -- passthrough
-
-    SingleExpression 
-      = "(" Exp ")"                                   -- brackets
-      | SingleExpressionKey ":" SingleExpressionValue -- default
-
-    SingleExpressionKey 
-      = ${allowedKeysPreparedForGrammar.join('|')}
-
-    SingleExpressionValue 
-      = SingleExpressionValueWithoutQuotes | SingleExpressionValueWithQuotes
-
-    // A value that is not enclosed in double quotes. We allow any string that does not contain double quotes, round brackets, or spaces.
-    SingleExpressionValueWithoutQuotes 
-      = #((~"\"" ~"(" ~")" ~space any)+)
-
-    // A value that is enclosed in double quotes. We allow any string within this (except for double quotes of course, since they terminate this string).
-    SingleExpressionValueWithQuotes 
-      = #("\""(~"\"" any)+"\"")
-  }
-  `;
-
-const grammar = ohm.grammar(grammarSource);
-
-const semantics = grammar
-  .createSemantics()
-  .addOperation<FilterNode | string>('eval', {
-    Exp(a): FilterNode {
-      return a.eval();
-    },
-    OrExpression_recurse(a, _b, c): FilterNode {
-      return {
-        type: FilterNodeType.Or,
-        leftChild: a.eval(),
-        rightChild: c.eval(),
-      };
-    },
-    OrExpression_passthrough(a): FilterNode {
-      return a.eval();
-    },
-    AndExpression_recurseWithExplicitAnd(a, _b, c): FilterNode {
-      return {
-        type: FilterNodeType.And,
-        leftChild: a.eval(),
-        rightChild: c.eval(),
-      };
-    },
-    AndExpression_recurseWithImplicitAnd(a, b): FilterNode {
-      return {
-        type: FilterNodeType.And,
-        leftChild: a.eval(),
-        rightChild: b.eval(),
-      };
-    },
-    AndExpression_passthrough(a): FilterNode {
-      return a.eval();
-    },
-    NotExpression_default(_a, b): FilterNode {
-      return {
-        type: FilterNodeType.Not,
-        child: b.eval(),
-      };
-    },
-    NotExpression_passthrough(a): FilterNode {
-      return a.eval();
-    },
-    SingleExpression_brackets(_a, b, _c): FilterNode {
-      return b.eval();
-    },
-    SingleExpression_default(a, _b, c): FilterNode {
-      return {
-        type: FilterNodeType.Literal,
-        key: a.eval(),
-        value: c.eval(),
-      };
-    },
-    SingleExpressionKey(a): string {
-      // We use ".toLowerCase()" because we allow users to also use uppercase keys.
-      return a.sourceString.toLowerCase();
-    },
-    SingleExpressionValue(a): string {
-      return a.eval();
-    },
-    SingleExpressionValueWithoutQuotes(a): string {
-      return a.sourceString;
-    },
-    SingleExpressionValueWithQuotes(_a, b, _c): string {
-      return b.sourceString;
-    },
-  });
-
-export function parseFilterQuery(query: string): Result<FilterNode> {
-  const matchResult = grammar.match(query);
-  if (!matchResult.succeeded()) {
-    return { success: false };
+export function parseFilterQuery(
+  query: string,
+): Result<FilterNode, FilterParseError> {
+  const parserResult = parse(query);
+  if (!parserResult.success) {
+    return {
+      success: false,
+      error: {
+        errorMessages: [],
+      },
+    };
   }
 
-  const filterTree = semantics(matchResult).eval();
+  return transformToInternalRepresentation(parserResult.data);
+}
+
+function transformToInternalRepresentation(
+  node: ExpressionNode,
+): Result<FilterNode, FilterParseError> {
+  switch (node.type) {
+    case ExpressionNodeType.And:
+      return transformAndNodeToInternalRepresentation(node);
+    case ExpressionNodeType.Or:
+      return transformOrNodeToInternalRepresentation(node);
+    case ExpressionNodeType.Not:
+      return transformNotNodeToInternalRepresentation(node);
+    case ExpressionNodeType.KeyValue:
+      return transformKeyValueNodeToInternalRepresentation(node);
+    case ExpressionNodeType.Value:
+      return transformValueNodeToInternalRepresentation(node);
+  }
+}
+
+function transformAndNodeToInternalRepresentation(
+  node: SEPAndNode,
+): Result<FilterAndNode, FilterParseError> {
+  const leftChildResult = transformToInternalRepresentation(node.leftChild);
+  const rightChildResult = transformToInternalRepresentation(node.rightChild);
+
+  if (leftChildResult.success && rightChildResult.success) {
+    return {
+      success: true,
+      data: {
+        type: ExpressionNodeType.And,
+        leftChild: leftChildResult.data,
+        rightChild: rightChildResult.data,
+      },
+    };
+  }
+
+  const errorMessages: string[] = [];
+  if (!leftChildResult.success) {
+    errorMessages.push(...leftChildResult.error.errorMessages);
+  }
+  if (!rightChildResult.success) {
+    errorMessages.push(...rightChildResult.error.errorMessages);
+  }
+
+  return {
+    success: false,
+    error: {
+      errorMessages: errorMessages,
+    },
+  };
+}
+
+function transformOrNodeToInternalRepresentation(
+  node: SEPOrNode,
+): Result<FilterOrNode, FilterParseError> {
+  const leftChildResult = transformToInternalRepresentation(node.leftChild);
+  const rightChildResult = transformToInternalRepresentation(node.rightChild);
+
+  if (leftChildResult.success && rightChildResult.success) {
+    return {
+      success: true,
+      data: {
+        type: ExpressionNodeType.Or,
+        leftChild: leftChildResult.data,
+        rightChild: rightChildResult.data,
+      },
+    };
+  }
+
+  const errorMessages: string[] = [];
+  if (!leftChildResult.success) {
+    errorMessages.push(...leftChildResult.error.errorMessages);
+  }
+  if (!rightChildResult.success) {
+    errorMessages.push(...rightChildResult.error.errorMessages);
+  }
+
+  return {
+    success: false,
+    error: {
+      errorMessages: errorMessages,
+    },
+  };
+}
+
+function transformNotNodeToInternalRepresentation(
+  node: SEPNotNode,
+): Result<FilterNotNode, FilterParseError> {
+  const childResult = transformToInternalRepresentation(node.child);
+
+  if (childResult.success) {
+    return {
+      success: true,
+      data: {
+        type: ExpressionNodeType.Not,
+        child: childResult.data,
+      },
+    };
+  }
+
+  return childResult;
+}
+
+function transformKeyValueNodeToInternalRepresentation(
+  node: SEPKeyValueNode,
+): Result<FilterKeyValueNode, FilterParseError> {
+  const key = node.key.content.toLowerCase();
+  if (!isAllowedLiteralNodeKey(key)) {
+    return {
+      success: false,
+      error: {
+        errorMessages: [`Unknown key "${node.key.content}".`],
+      },
+    };
+  }
 
   return {
     success: true,
-    data: filterTree,
+    data: {
+      type: ExpressionNodeType.KeyValue,
+
+      key: key,
+      value: node.value.content,
+    },
+  };
+}
+
+function transformValueNodeToInternalRepresentation(
+  node: SEPValueNode,
+): Result<FilterKeyValueNode, FilterParseError> {
+  return {
+    success: false,
+    error: {
+      errorMessages: [
+        `Expression "${node.value.content}" is not following the "key:value" format.`,
+      ],
+    },
   };
 }

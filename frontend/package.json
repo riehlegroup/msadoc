@@ -24,12 +24,12 @@
     "cytoscape": "^3.23.0",
     "cytoscape-cola": "^2.5.1",
     "escape-string-regexp": "^5.0.0",
-    "ohm-js": "^16.4.0",
     "react": "^18.2.0",
     "react-cytoscapejs": "^2.0.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.4.3",
-    "react-scripts": "5.0.1"
+    "react-scripts": "5.0.1",
+    "search-expression-parser": "0.0.2"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^5.16.5",

@@ -1,14 +1,14 @@
 import escapeStringRegexp from 'escape-string-regexp';
+import { ExpressionNodeType } from 'search-expression-parser';
 
 import { ServiceNode } from '../../service-docs-tree';
 
 import {
-  AndNode,
+  FilterAndNode,
+  FilterKeyValueNode,
   FilterNode,
-  FilterNodeType,
-  LiteralNode,
-  NotNode,
-  OrNode,
+  FilterNotNode,
+  FilterOrNode,
   QUERY_KEY_TO_SERVICEDOC_MAP,
   SPECIAL_EMPTY_TAG,
 } from './models';
@@ -33,49 +33,54 @@ function doesServiceDocMatchFilter(
   serviceDoc: ServiceNode,
 ): boolean {
   switch (filter.type) {
-    case FilterNodeType.And:
+    case ExpressionNodeType.And:
       return doesMatchAndNode(filter, serviceDoc);
-    case FilterNodeType.Or:
+    case ExpressionNodeType.Or:
       return doesMatchOrNode(filter, serviceDoc);
-    case FilterNodeType.Not:
+    case ExpressionNodeType.Not:
       return doesMatchNotNode(filter, serviceDoc);
-    case FilterNodeType.Literal:
-      return doesMatchLiteralNode(filter, serviceDoc);
+    case ExpressionNodeType.KeyValue:
+      return doesMatchKeyValueNode(filter, serviceDoc);
   }
 }
 
-function doesMatchAndNode(filter: AndNode, serviceDoc: ServiceNode): boolean {
+function doesMatchAndNode(
+  filter: FilterAndNode,
+  serviceDoc: ServiceNode,
+): boolean {
   if (!doesServiceDocMatchFilter(filter.leftChild, serviceDoc)) {
     return false;
   }
   return doesServiceDocMatchFilter(filter.rightChild, serviceDoc);
 }
-function doesMatchOrNode(filter: OrNode, serviceDoc: ServiceNode): boolean {
+function doesMatchOrNode(
+  filter: FilterOrNode,
+  serviceDoc: ServiceNode,
+): boolean {
   if (doesServiceDocMatchFilter(filter.leftChild, serviceDoc)) {
     return true;
   }
   return doesServiceDocMatchFilter(filter.rightChild, serviceDoc);
 }
-function doesMatchNotNode(filter: NotNode, serviceDoc: ServiceNode): boolean {
+function doesMatchNotNode(
+  filter: FilterNotNode,
+  serviceDoc: ServiceNode,
+): boolean {
   return !doesServiceDocMatchFilter(filter.child, serviceDoc);
 }
 
-function doesMatchLiteralNode(
-  filter: LiteralNode,
+function doesMatchKeyValueNode(
+  filter: FilterKeyValueNode,
   serviceDoc: ServiceNode,
 ): boolean {
   const serviceDocKey = QUERY_KEY_TO_SERVICEDOC_MAP[filter.key];
-  if (serviceDocKey !== undefined) {
-    // We use the raw Service Doc here, because there are less different types we need to distinguish compared to the processed ones in the containing Service Doc.
-    const serviceDocEntry = serviceDoc.rawData[serviceDocKey];
-    return doesEntryMatchFilter(filter, serviceDocEntry);
-  }
 
-  console.warn('An invalid filter has been applied', filter);
-  return false;
+  // We use the raw Service Doc here, because there are less different data types we need to distinguish compared to the processed ones in the containing Service Doc.
+  const serviceDocEntry = serviceDoc.rawData[serviceDocKey];
+  return doesEntryMatchFilter(filter, serviceDocEntry);
 }
 function doesEntryMatchFilter(
-  filter: LiteralNode,
+  filter: FilterKeyValueNode,
   serviceDocEntry: unknown,
 ): boolean {
   if (filter.value.toLowerCase() === SPECIAL_EMPTY_TAG) {

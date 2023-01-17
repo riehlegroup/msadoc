@@ -15,7 +15,7 @@ import React from 'react';
 
 import { Icons } from '../../../../icons';
 
-import { FilterNode } from './models';
+import { FilterNode, FilterParseError } from './models';
 import { parseFilterQuery } from './parse-query';
 import { SyntaxDocumentation } from './syntax-documentation';
 
@@ -34,9 +34,33 @@ export const FilterDialog: React.FC<Props> = (props) => {
       <DialogTitle>Filter</DialogTitle>
 
       <DialogContent sx={{ width: '900px', maxWidth: '100%' }} dividers>
-        {controller.state.showInfoAboutInvalidFilterQuery && (
+        {controller.state.filterParseError && (
           <Alert sx={{ marginBottom: 2 }} severity="error">
-            The filter query is invalid.
+            {controller.state.filterParseError.errorMessages.length < 1 && (
+              <span>The filter query is invalid.</span>
+            )}
+
+            {controller.state.filterParseError.errorMessages.length === 1 && (
+              <span>
+                {`The filter query is invalid: ${
+                  controller.state.filterParseError.errorMessages[0] ?? ''
+                }`}
+              </span>
+            )}
+            {controller.state.filterParseError.errorMessages.length > 1 && (
+              <React.Fragment>
+                <span>The filter query is invalid.</span>
+
+                <ul>
+                  {controller.state.filterParseError.errorMessages.map(
+                    (singleErrorMessage, index) => (
+                      // eslint-disable-next-line react/no-array-index-key
+                      <li key={index}>{singleErrorMessage}</li>
+                    ),
+                  )}
+                </ul>
+              </React.Fragment>
+            )}
           </Alert>
         )}
 
@@ -92,7 +116,8 @@ export const FilterDialog: React.FC<Props> = (props) => {
 interface State {
   filterQuery: string;
 
-  showInfoAboutInvalidFilterQuery: boolean;
+  filterParseError: FilterParseError | undefined;
+
   showSyntaxDocumentation: boolean;
 }
 interface Controller {
@@ -108,7 +133,8 @@ function useController(props: Props): Controller {
   const [state, setState] = React.useState<State>({
     filterQuery: props.currentRawFilterQuery ?? '',
 
-    showInfoAboutInvalidFilterQuery: false,
+    filterParseError: undefined,
+
     showSyntaxDocumentation: false,
   });
 
@@ -129,7 +155,7 @@ function useController(props: Props): Controller {
       if (!filterQueryParseResult.success) {
         setState((state) => ({
           ...state,
-          showInfoAboutInvalidFilterQuery: true,
+          filterParseError: filterQueryParseResult.error,
         }));
         return;
       }
