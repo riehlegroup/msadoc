@@ -3,7 +3,7 @@ import { Navigate, RouteObject, useRoutes } from 'react-router-dom';
 
 import { MAIN_PAGE_ROUTES_ABS, MAIN_PAGE_ROUTES_REL } from '../../routes';
 
-import { AuthTokensPage } from './api-keys-page';
+import { ApiKeysPage } from './api-keys-page';
 import { DependencyGraph } from './graph-page/dependency-graph-view';
 import { ServiceDocsExplorerPage } from './service-docs-explorer-page';
 
@@ -23,7 +23,7 @@ export const MainPageRouter: React.FC = () => {
     },
     {
       path: MAIN_PAGE_ROUTES_REL.apiKeys,
-      element: <AuthTokensPage />,
+      element: <ApiKeysPage />,
     },
 
     // Fallback route in case an unknown route has been navigated to.
