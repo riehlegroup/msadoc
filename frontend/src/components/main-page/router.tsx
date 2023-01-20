@@ -5,7 +5,7 @@ import { MAIN_PAGE_ROUTES_ABS, MAIN_PAGE_ROUTES_REL } from '../../routes';
 
 import { AuthTokensPage } from './api-keys-page';
 import { DependencyGraph } from './graph-page/dependency-graph-view';
-import { GroupsTreePage } from './groups-tree-page';
+import { ServiceDocsExplorerPage } from './service-docs-explorer-page';
 
 export const MainPageRouter: React.FC = () => {
   const routes: RouteObject[] = [
@@ -18,8 +18,8 @@ export const MainPageRouter: React.FC = () => {
       element: <DependencyGraph />,
     },
     {
-      path: MAIN_PAGE_ROUTES_REL.groupsTree + '/*',
-      element: <GroupsTreePage />,
+      path: MAIN_PAGE_ROUTES_REL.serviceDocsExplorer + '/*',
+      element: <ServiceDocsExplorerPage />,
     },
     {
       path: MAIN_PAGE_ROUTES_REL.apiKeys,
@@ -29,7 +29,7 @@ export const MainPageRouter: React.FC = () => {
     // Fallback route in case an unknown route has been navigated to.
     {
       path: '*',
-      element: <Navigate to={MAIN_PAGE_ROUTES_ABS.groupsTree} />,
+      element: <Navigate to={MAIN_PAGE_ROUTES_ABS.serviceDocsExplorer} />,
     },
   ];
   const routeElement = useRoutes(routes);

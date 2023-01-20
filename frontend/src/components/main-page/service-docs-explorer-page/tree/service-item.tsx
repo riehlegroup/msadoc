@@ -3,7 +3,7 @@ import React from 'react';
 import { generatePath, useNavigate } from 'react-router-dom';
 
 import { Icons } from '../../../../icons';
-import { GROUPS_TREE_ROUTES_ABS } from '../../../../routes';
+import { SERVICE_DOCS_EXPLORER_ROUTES_ABS } from '../../../../routes';
 import { ServiceDocsTreeNodeType, ServiceNode } from '../../service-docs-tree';
 import { useSelectedTreeItem } from '../../utils/router-utils';
 
@@ -91,7 +91,7 @@ function useController(props: Props): Controller {
 
     navigateToThisService: (): void => {
       navigate(
-        generatePath(GROUPS_TREE_ROUTES_ABS.service, {
+        generatePath(SERVICE_DOCS_EXPLORER_ROUTES_ABS.service, {
           service: props.service.name,
         }),
       );

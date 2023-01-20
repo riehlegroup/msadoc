@@ -8,7 +8,7 @@ import React from 'react';
 import { generatePath, useNavigate } from 'react-router-dom';
 
 import { Icons } from '../../../../icons';
-import { GROUPS_TREE_ROUTES_ABS } from '../../../../routes';
+import { SERVICE_DOCS_EXPLORER_ROUTES_ABS } from '../../../../routes';
 import {
   MainNode,
   RegularGroupNode,
@@ -194,7 +194,7 @@ function useController(props: Props): Controller {
 
     navigateToThisGroup: (): void => {
       navigate(
-        generatePath(GROUPS_TREE_ROUTES_ABS.group, {
+        generatePath(SERVICE_DOCS_EXPLORER_ROUTES_ABS.group, {
           group: props.group.identifier,
         }),
       );

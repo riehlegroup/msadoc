@@ -30,8 +30,8 @@ export const LeftMenu: React.FC<Props> = (props) => {
           <Icons.Insights fontSize="inherit" />
         </NavButtonWithRouterTarget>
         <NavButtonWithRouterTarget
-          routerTarget={MAIN_PAGE_ROUTES_ABS.groupsTree}
-          tooltipText="Groups Tree"
+          routerTarget={MAIN_PAGE_ROUTES_ABS.serviceDocsExplorer}
+          tooltipText="Service Docs Explorer"
         >
           <Icons.AccountTree fontSize="inherit" />
         </NavButtonWithRouterTarget>

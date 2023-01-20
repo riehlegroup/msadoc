@@ -2,7 +2,7 @@ import { Alert, Box, Chip, Typography } from '@mui/material';
 import React from 'react';
 import { generatePath, useNavigate } from 'react-router-dom';
 
-import { GROUPS_TREE_ROUTES_ABS } from '../../../../../routes';
+import { SERVICE_DOCS_EXPLORER_ROUTES_ABS } from '../../../../../routes';
 import { addMultipleItemsToSet } from '../../../../../utils/set';
 import { RegularGroupNode, RootGroupNode } from '../../../service-docs-tree';
 import { extractAllServices } from '../../../utils/service-docs-tree-utils';
@@ -171,7 +171,7 @@ function useController(props: Props): Controller {
 
     goToService: (serviceName: string): void => {
       navigate(
-        generatePath(GROUPS_TREE_ROUTES_ABS.service, {
+        generatePath(SERVICE_DOCS_EXPLORER_ROUTES_ABS.service, {
           service: serviceName,
         }),
       );

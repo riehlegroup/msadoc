@@ -10,10 +10,10 @@ import {
 } from '../services/service-docs-service';
 
 import { FilterDialog, FilterNode, applyFilter } from './filter';
-import { GroupsTreePageRouter } from './router';
+import { ServiceDocsExplorerPageRouter } from './router';
 import { Tree } from './tree';
 
-export const GroupsTreePage: React.FC = () => {
+export const ServiceDocsExplorerPage: React.FC = () => {
   const controller = useController();
 
   return (
@@ -68,7 +68,7 @@ export const GroupsTreePage: React.FC = () => {
             ref={controller.mainContentRef}
             sx={{ height: '100%', overflow: 'auto', flexGrow: 1 }}
           >
-            <GroupsTreePageRouter
+            <ServiceDocsExplorerPageRouter
               onChangeTreeItem={(): void => controller.scrollMainContentToTop()}
             />
           </Box>

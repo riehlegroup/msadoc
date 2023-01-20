@@ -8,7 +8,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { Icons } from '../../../../icons';
-import { GROUPS_TREE_ROUTES_ABS } from '../../../../routes';
+import { SERVICE_DOCS_EXPLORER_ROUTES_ABS } from '../../../../routes';
 import {
   RegularGroupNode,
   RootGroupNode,
@@ -131,7 +131,7 @@ function useController(props: Props): Controller {
     sortedServices: sortedServices,
 
     navigateToRoot: (): void => {
-      navigate(GROUPS_TREE_ROUTES_ABS.root);
+      navigate(SERVICE_DOCS_EXPLORER_ROUTES_ABS.root);
     },
   };
 }

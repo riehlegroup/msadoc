@@ -15,7 +15,7 @@ export const APP_ROUTES = {
 
 export const MAIN_PAGE_ROUTES_REL = {
   graph: '/graph',
-  groupsTree: '/groups-tree',
+  serviceDocsExplorer: '/service-docs-explorer',
   apiKeys: '/api-keys',
 } as const;
 export const MAIN_PAGE_ROUTES_ABS = buildAbsoluteRoutes(
@@ -23,14 +23,14 @@ export const MAIN_PAGE_ROUTES_ABS = buildAbsoluteRoutes(
   APP_ROUTES.main,
 );
 
-export const GROUPS_TREE_ROUTES_REL = {
+export const SERVICE_DOCS_EXPLORER_ROUTES_REL = {
   root: '/root',
   group: '/group/:group',
   service: '/service/:service',
 } as const;
-export const GROUPS_TREE_ROUTES_ABS = buildAbsoluteRoutes(
-  GROUPS_TREE_ROUTES_REL,
-  MAIN_PAGE_ROUTES_ABS.groupsTree,
+export const SERVICE_DOCS_EXPLORER_ROUTES_ABS = buildAbsoluteRoutes(
+  SERVICE_DOCS_EXPLORER_ROUTES_REL,
+  MAIN_PAGE_ROUTES_ABS.serviceDocsExplorer,
 );
 
 /**
