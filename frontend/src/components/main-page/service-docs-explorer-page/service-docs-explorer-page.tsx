@@ -10,8 +10,8 @@ import {
 } from '../services/service-docs-service';
 
 import { FilterDialog, FilterNode, applyFilter } from './filter';
+import { Navigator } from './navigator';
 import { ServiceDocsExplorerPageRouter } from './router';
-import { Tree } from './tree';
 
 export const ServiceDocsExplorerPage: React.FC = () => {
   const controller = useController();
@@ -57,7 +57,7 @@ export const ServiceDocsExplorerPage: React.FC = () => {
               )}
 
               {controller.rawFilteredServiceDocs.length > 0 ? (
-                <Tree />
+                <Navigator />
               ) : (
                 <Alert severity="warning">No Service Docs found</Alert>
               )}

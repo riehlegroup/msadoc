@@ -2,10 +2,13 @@ import { ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
 import React from 'react';
 import { generatePath, useNavigate } from 'react-router-dom';
 
-import { Icons } from '../../../../icons';
-import { SERVICE_DOCS_EXPLORER_ROUTES_ABS } from '../../../../routes';
-import { ServiceDocsTreeNodeType, ServiceNode } from '../../service-docs-tree';
-import { useSelectedTreeItem } from '../../utils/router-utils';
+import { Icons } from '../../../../../icons';
+import { SERVICE_DOCS_EXPLORER_ROUTES_ABS } from '../../../../../routes';
+import {
+  ServiceDocsTreeNodeType,
+  ServiceNode,
+} from '../../../service-docs-tree';
+import { useSelectedTreeItem } from '../../../utils/router-utils';
 
 interface Props {
   service: ServiceNode;

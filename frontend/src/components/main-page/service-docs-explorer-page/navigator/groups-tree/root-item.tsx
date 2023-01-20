@@ -7,19 +7,19 @@ import {
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { Icons } from '../../../../icons';
-import { SERVICE_DOCS_EXPLORER_ROUTES_ABS } from '../../../../routes';
+import { Icons } from '../../../../../icons';
+import { SERVICE_DOCS_EXPLORER_ROUTES_ABS } from '../../../../../routes';
 import {
   RegularGroupNode,
   RootGroupNode,
   ServiceDocsTreeNodeType,
   ServiceNode,
-} from '../../service-docs-tree';
-import { useSelectedTreeItem } from '../../utils/router-utils';
+} from '../../../service-docs-tree';
+import { useSelectedTreeItem } from '../../../utils/router-utils';
 import {
   sortGroupsByName,
   sortServicesByName,
-} from '../../utils/service-docs-tree-utils';
+} from '../../../utils/service-docs-tree-utils';
 
 import { GroupItem } from './group-item';
 import { ServiceItem } from './service-item';
