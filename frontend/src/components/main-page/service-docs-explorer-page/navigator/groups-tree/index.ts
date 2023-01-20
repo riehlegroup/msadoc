@@ -1,1 +1,1 @@
-export { GroupsTree } from './tree';
+export { GroupsTree } from './groups-tree';

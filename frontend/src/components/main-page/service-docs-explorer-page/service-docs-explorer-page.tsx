@@ -51,7 +51,7 @@ export const ServiceDocsExplorerPage: React.FC = () => {
 
             <Divider />
 
-            <Box sx={{ overflow: 'auto', minWidth: 0, flexGrow: 1 }}>
+            <Box sx={{ overflow: 'hidden', minWidth: 0, flexGrow: 1 }}>
               {controller.state.rawFilterQuery !== undefined && (
                 <Alert severity="info">The filter is active</Alert>
               )}

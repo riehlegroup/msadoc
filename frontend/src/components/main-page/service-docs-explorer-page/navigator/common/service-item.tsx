@@ -1,4 +1,3 @@
-import { ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
 import React from 'react';
 import { generatePath, useNavigate } from 'react-router-dom';
 
@@ -10,45 +9,25 @@ import {
 } from '../../../service-docs-tree';
 import { useSelectedTreeItem } from '../../../utils/router-utils';
 
+import { NavigatorListItemButton } from './navigator-list-item-button';
+
 interface Props {
   service: ServiceNode;
 
-  /**
-   * How deep is this item in the tree?
-   * This value is especially used to properly indent the item.
-   */
-  depth: number;
+  indent: number;
 }
 export const ServiceItem: React.FC<Props> = (props) => {
   const controller = useController(props);
 
   return (
-    <ListItemButton
-      ref={controller.buttonRef}
-      sx={{
-        pl: props.depth * 4,
-        background: (theme) =>
-          controller.isSelected ? theme.palette.primary.main : undefined,
-        color: (theme) =>
-          controller.isSelected
-            ? theme.palette.primary.contrastText
-            : undefined,
-        '&:hover': {
-          background: (theme) =>
-            controller.isSelected ? theme.palette.primary.main : undefined,
-          color: (theme) =>
-            controller.isSelected
-              ? theme.palette.primary.contrastText
-              : undefined,
-        },
-      }}
+    <NavigatorListItemButton
+      icon={<Icons.CenterFocusStrongOutlined />}
+      text={props.service.name}
+      indent={props.indent}
+      isSelected={controller.isSelected}
+      buttonRef={controller.buttonRef}
       onClick={(): void => controller.navigateToThisService()}
-    >
-      <ListItemIcon sx={{ color: 'inherit' }}>
-        <Icons.CenterFocusStrongOutlined />
-      </ListItemIcon>
-      <ListItemText primary={props.service.name} />
-    </ListItemButton>
+    />
   );
 };
 
