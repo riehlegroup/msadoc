@@ -1,6 +1,6 @@
 import { Box, IconButton, Stack, Tooltip } from '@mui/material';
 import React from 'react';
-import { useMatch, useNavigate, useResolvedPath } from 'react-router-dom';
+import { useMatch, useNavigate } from 'react-router-dom';
 
 import { Icons } from '../../icons';
 import { MAIN_PAGE_ROUTES_ABS } from '../../routes';
@@ -122,16 +122,13 @@ const NavButtonWithRouterTarget: React.FC<NavButtonWithRouterTragetProps> = (
 ) => {
   const navigate = useNavigate();
 
-  // This is similar to the example on https://github.com/remix-run/react-router/blob/8b00e7a4ff4bd75f161c3f882b9508cb206063a6/examples/custom-link/src/App.tsx
-
-  const resolvedPath = useResolvedPath(props.routerTarget);
-  const isMatching =
-    useMatch({ path: resolvedPath.pathname, end: true }) != null;
+  const isRouteMatching =
+    useMatch({ path: props.routerTarget, end: false }) != null;
 
   return (
     <NavButton
       {...props}
-      highlight={isMatching}
+      highlight={isRouteMatching}
       onClick={(): void => navigate(props.routerTarget)}
     />
   );
