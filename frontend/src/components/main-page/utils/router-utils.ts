@@ -1,7 +1,7 @@
 import React from 'react';
 import { useMatch } from 'react-router-dom';
 
-import { GROUPS_TREE_ROUTES_ABS } from '../../../routes';
+import { SERVICE_DOCS_EXPLORER_ROUTES_ABS } from '../../../routes';
 import {
   MainNode,
   ServiceNode,
@@ -13,9 +13,9 @@ import { useServiceDocsServiceContext } from '../services/service-docs-service';
  * Get the selected Tree Item using the Router.
  */
 export function useSelectedTreeItem(): MainNode | undefined {
-  const serviceRouterMatch = useMatch(GROUPS_TREE_ROUTES_ABS.service);
-  const groupRouterMatch = useMatch(GROUPS_TREE_ROUTES_ABS.group);
-  const rootRouterMatch = useMatch(GROUPS_TREE_ROUTES_ABS.root);
+  const serviceRouterMatch = useMatch(SERVICE_DOCS_EXPLORER_ROUTES_ABS.service);
+  const groupRouterMatch = useMatch(SERVICE_DOCS_EXPLORER_ROUTES_ABS.group);
+  const rootRouterMatch = useMatch(SERVICE_DOCS_EXPLORER_ROUTES_ABS.root);
   const serviceDocsService = useServiceDocsServiceContext();
 
   const result = React.useMemo((): MainNode | undefined => {

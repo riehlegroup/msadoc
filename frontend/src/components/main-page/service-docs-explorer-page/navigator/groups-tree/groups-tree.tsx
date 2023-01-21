@@ -1,12 +1,12 @@
 import { List } from '@mui/material';
 import React from 'react';
 
-import { RootGroupNode } from '../../service-docs-tree';
-import { useServiceDocsServiceContext } from '../../services/service-docs-service';
+import { RootGroupNode } from '../../../service-docs-tree';
+import { useServiceDocsServiceContext } from '../../../services/service-docs-service';
 
 import { RootItem } from './root-item';
 
-export const Tree: React.FC = () => {
+export const GroupsTree: React.FC = () => {
   const controller = useController();
 
   return (

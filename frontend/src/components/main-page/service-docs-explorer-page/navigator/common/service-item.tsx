@@ -1,51 +1,39 @@
-import { ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
 import React from 'react';
 import { generatePath, useNavigate } from 'react-router-dom';
 
-import { Icons } from '../../../../icons';
-import { GROUPS_TREE_ROUTES_ABS } from '../../../../routes';
-import { ServiceDocsTreeNodeType, ServiceNode } from '../../service-docs-tree';
-import { useSelectedTreeItem } from '../../utils/router-utils';
+import { Icons } from '../../../../../icons';
+import { SERVICE_DOCS_EXPLORER_ROUTES_ABS } from '../../../../../routes';
+import {
+  ServiceDocsTreeNodeType,
+  ServiceNode,
+} from '../../../service-docs-tree';
+import { useSelectedTreeItem } from '../../../utils/router-utils';
+
+import { NavigatorListItemButton } from './navigator-list-item-button';
 
 interface Props {
   service: ServiceNode;
 
+  indent: number;
+
   /**
-   * How deep is this item in the tree?
-   * This value is especially used to properly indent the item.
+   * Should the item be scrolled into view when the corresponding Service is selected in the router?
+   * This should be set to `false` if the item is potentially rendered more than once for the same Service.
    */
-  depth: number;
+  autoScrollIntoView: boolean;
 }
 export const ServiceItem: React.FC<Props> = (props) => {
   const controller = useController(props);
 
   return (
-    <ListItemButton
-      ref={controller.buttonRef}
-      sx={{
-        pl: props.depth * 4,
-        background: (theme) =>
-          controller.isSelected ? theme.palette.primary.main : undefined,
-        color: (theme) =>
-          controller.isSelected
-            ? theme.palette.primary.contrastText
-            : undefined,
-        '&:hover': {
-          background: (theme) =>
-            controller.isSelected ? theme.palette.primary.main : undefined,
-          color: (theme) =>
-            controller.isSelected
-              ? theme.palette.primary.contrastText
-              : undefined,
-        },
-      }}
+    <NavigatorListItemButton
+      icon={<Icons.CenterFocusStrongOutlined />}
+      text={props.service.name}
+      indent={props.indent}
+      isSelected={controller.isSelected}
+      buttonRef={controller.buttonRef}
       onClick={(): void => controller.navigateToThisService()}
-    >
-      <ListItemIcon sx={{ color: 'inherit' }}>
-        <Icons.CenterFocusStrongOutlined />
-      </ListItemIcon>
-      <ListItemText primary={props.service.name} />
-    </ListItemButton>
+    />
   );
 };
 
@@ -77,12 +65,16 @@ function useController(props: Props): Controller {
 
   // Whenever the item gets selected, scroll it into our viewport.
   React.useEffect(() => {
+    if (!props.autoScrollIntoView) {
+      return;
+    }
+
     if (!isSelected || !buttonRef.current) {
       return;
     }
 
     buttonRef.current.scrollIntoView({ block: 'nearest' });
-  }, [isSelected]);
+  }, [isSelected, props.autoScrollIntoView]);
 
   return {
     isSelected: isSelected,
@@ -91,7 +83,7 @@ function useController(props: Props): Controller {
 
     navigateToThisService: (): void => {
       navigate(
-        generatePath(GROUPS_TREE_ROUTES_ABS.service, {
+        generatePath(SERVICE_DOCS_EXPLORER_ROUTES_ABS.service, {
           service: props.service.name,
         }),
       );

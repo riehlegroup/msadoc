@@ -1,1 +1,1 @@
-export { ApiKeysPage as AuthTokensPage } from './api-keys-page';
+export { ApiKeysPage } from './api-keys-page';

@@ -7,8 +7,8 @@ import {
 } from 'react-router-dom';
 
 import {
-  GROUPS_TREE_ROUTES_ABS,
-  GROUPS_TREE_ROUTES_REL,
+  SERVICE_DOCS_EXPLORER_ROUTES_ABS,
+  SERVICE_DOCS_EXPLORER_ROUTES_REL,
 } from '../../../routes';
 import { useSelectedTreeItem } from '../utils/router-utils';
 
@@ -21,29 +21,29 @@ interface Props {
    */
   onChangeTreeItem: () => void;
 }
-export const GroupsTreePageRouter: React.FC<Props> = (props) => {
+export const ServiceDocsExplorerPageRouter: React.FC<Props> = (props) => {
   const routes: RouteObject[] = [
     {
       path: '/',
-      element: <Navigate to={GROUPS_TREE_ROUTES_ABS.root} />,
+      element: <Navigate to={SERVICE_DOCS_EXPLORER_ROUTES_ABS.root} />,
     },
     {
-      path: GROUPS_TREE_ROUTES_REL.root,
+      path: SERVICE_DOCS_EXPLORER_ROUTES_REL.root,
       element: <GroupDetails />,
     },
     {
-      path: GROUPS_TREE_ROUTES_REL.group,
+      path: SERVICE_DOCS_EXPLORER_ROUTES_REL.group,
       element: <GroupDetails />,
     },
     {
-      path: GROUPS_TREE_ROUTES_REL.service,
+      path: SERVICE_DOCS_EXPLORER_ROUTES_REL.service,
       element: <ServiceDetails />,
     },
 
     // Fallback route in case an unknown route has been navigated to.
     {
       path: '*',
-      element: <Navigate to={GROUPS_TREE_ROUTES_ABS.root} />,
+      element: <Navigate to={SERVICE_DOCS_EXPLORER_ROUTES_ABS.root} />,
     },
   ];
   const routeElement = useRoutes(routes);
@@ -53,7 +53,7 @@ export const GroupsTreePageRouter: React.FC<Props> = (props) => {
   // The tree item as found in the URL does not exist? Then navigate to the root.
   React.useEffect(() => {
     if (!selectedTreeItem) {
-      navigate(GROUPS_TREE_ROUTES_ABS.root);
+      navigate(SERVICE_DOCS_EXPLORER_ROUTES_ABS.root);
     }
   }, [navigate, selectedTreeItem]);
 

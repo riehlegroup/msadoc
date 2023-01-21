@@ -1,28 +1,24 @@
-import {
-  List,
-  ListItemButton,
-  ListItemIcon,
-  ListItemText,
-} from '@mui/material';
+import { List } from '@mui/material';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { Icons } from '../../../../icons';
-import { GROUPS_TREE_ROUTES_ABS } from '../../../../routes';
+import { Icons } from '../../../../../icons';
+import { SERVICE_DOCS_EXPLORER_ROUTES_ABS } from '../../../../../routes';
 import {
   RegularGroupNode,
   RootGroupNode,
   ServiceDocsTreeNodeType,
   ServiceNode,
-} from '../../service-docs-tree';
-import { useSelectedTreeItem } from '../../utils/router-utils';
+} from '../../../service-docs-tree';
+import { useSelectedTreeItem } from '../../../utils/router-utils';
 import {
   sortGroupsByName,
   sortServicesByName,
-} from '../../utils/service-docs-tree-utils';
+} from '../../../utils/service-docs-tree-utils';
+import { NavigatorListItemButton } from '../common/navigator-list-item-button';
+import { ServiceItem } from '../common/service-item';
 
 import { GroupItem } from './group-item';
-import { ServiceItem } from './service-item';
 
 interface Props {
   rootGroup: RootGroupNode;
@@ -32,31 +28,13 @@ export const RootItem: React.FC<Props> = (props) => {
 
   return (
     <React.Fragment>
-      <ListItemButton
-        ref={controller.buttonRef}
-        sx={{
-          background: (theme) =>
-            controller.isSelected ? theme.palette.primary.main : undefined,
-          color: (theme) =>
-            controller.isSelected
-              ? theme.palette.primary.contrastText
-              : undefined,
-          '&:hover': {
-            background: (theme) =>
-              controller.isSelected ? theme.palette.primary.main : undefined,
-            color: (theme) =>
-              controller.isSelected
-                ? theme.palette.primary.contrastText
-                : undefined,
-          },
-        }}
+      <NavigatorListItemButton
+        icon={<Icons.DatasetOutlined />}
+        text="Root"
+        isSelected={controller.isSelected}
+        buttonRef={controller.buttonRef}
         onClick={(): void => controller.navigateToRoot()}
-      >
-        <ListItemIcon sx={{ color: 'inherit' }}>
-          <Icons.DatasetOutlined />
-        </ListItemIcon>
-        <ListItemText primary="Root" />
-      </ListItemButton>
+      />
 
       <React.Fragment>
         <List component="div" disablePadding>
@@ -71,7 +49,12 @@ export const RootItem: React.FC<Props> = (props) => {
 
         <List component="div" disablePadding>
           {controller.sortedServices.map((service) => (
-            <ServiceItem key={service.name} service={service} depth={1} />
+            <ServiceItem
+              key={service.name}
+              service={service}
+              indent={1}
+              autoScrollIntoView
+            />
           ))}
         </List>
       </React.Fragment>
@@ -131,7 +114,7 @@ function useController(props: Props): Controller {
     sortedServices: sortedServices,
 
     navigateToRoot: (): void => {
-      navigate(GROUPS_TREE_ROUTES_ABS.root);
+      navigate(SERVICE_DOCS_EXPLORER_ROUTES_ABS.root);
     },
   };
 }

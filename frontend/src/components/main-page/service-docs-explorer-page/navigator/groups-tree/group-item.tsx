@@ -1,35 +1,30 @@
-import {
-  List,
-  ListItemButton,
-  ListItemIcon,
-  ListItemText,
-} from '@mui/material';
+import { List } from '@mui/material';
 import React from 'react';
 import { generatePath, useNavigate } from 'react-router-dom';
 
-import { Icons } from '../../../../icons';
-import { GROUPS_TREE_ROUTES_ABS } from '../../../../routes';
+import { Icons } from '../../../../../icons';
+import { SERVICE_DOCS_EXPLORER_ROUTES_ABS } from '../../../../../routes';
 import {
   MainNode,
   RegularGroupNode,
   ServiceDocsTreeNodeType,
   ServiceNode,
-} from '../../service-docs-tree';
-import { useSelectedTreeItem } from '../../utils/router-utils';
+} from '../../../service-docs-tree';
+import { useSelectedTreeItem } from '../../../utils/router-utils';
 import {
   isGroupXDescendantOfGroupY,
   sortGroupsByName,
   sortServicesByName,
-} from '../../utils/service-docs-tree-utils';
-
-import { ServiceItem } from './service-item';
+} from '../../../utils/service-docs-tree-utils';
+import { NavigatorListItemButton } from '../common/navigator-list-item-button';
+import { ServiceItem } from '../common/service-item';
 
 interface Props {
   group: RegularGroupNode;
 
   /**
    * How deep is this item in the tree?
-   * This value is especially used to properly indent the item.
+   * This value is used to properly indent the item.
    */
   depth: number;
 }
@@ -38,55 +33,21 @@ export const GroupItem: React.FC<Props> = (props) => {
 
   return (
     <React.Fragment>
-      <ListItemButton
-        ref={controller.buttonRef}
-        sx={{
-          pl: props.depth * 4,
-          background: (theme) =>
-            controller.isSelected ? theme.palette.primary.main : undefined,
-          color: (theme) =>
-            controller.isSelected
-              ? theme.palette.primary.contrastText
-              : undefined,
-          '&:hover': {
-            background: (theme) =>
-              controller.isSelected ? theme.palette.primary.main : undefined,
-            color: (theme) =>
-              controller.isSelected
-                ? theme.palette.primary.contrastText
-                : undefined,
-          },
-        }}
-        onClick={(): void => controller.navigateToThisGroup()}
-      >
-        {/* 
-          In the following, we use "align-self: stretch" to improve the UX:
-          The area where the user is able to click should be as large as possible so that the user does not accidentally click on the parent element.
-        */}
-        <ListItemIcon
-          sx={{
-            display: 'flex',
-            alignSelf: 'stretch',
-            alignItems: 'center',
-            color: 'inherit',
-          }}
-          onMouseDown={(e): void => {
-            // Disable the "ripple effect" on the button.
-            e.stopPropagation();
-          }}
-          onClick={(e): void => {
-            e.stopPropagation();
-            controller.toggleIsCollapsed();
-          }}
-        >
-          {controller.state.isCollapsed ? (
+      <NavigatorListItemButton
+        icon={
+          controller.state.isCollapsed ? (
             <Icons.ChevronRight />
           ) : (
             <Icons.ExpandMore />
-          )}
-        </ListItemIcon>
-        <ListItemText primary={props.group.name} />
-      </ListItemButton>
+          )
+        }
+        text={props.group.name}
+        indent={props.depth}
+        isSelected={controller.isSelected}
+        buttonRef={controller.buttonRef}
+        onClick={(): void => controller.navigateToThisGroup()}
+        onClickIcon={(): void => controller.toggleIsCollapsed()}
+      />
 
       {!controller.state.isCollapsed && (
         <React.Fragment>
@@ -105,7 +66,8 @@ export const GroupItem: React.FC<Props> = (props) => {
               <ServiceItem
                 key={service.name}
                 service={service}
-                depth={props.depth + 1}
+                indent={props.depth + 1}
+                autoScrollIntoView
               />
             ))}
           </List>
@@ -194,7 +156,7 @@ function useController(props: Props): Controller {
 
     navigateToThisGroup: (): void => {
       navigate(
-        generatePath(GROUPS_TREE_ROUTES_ABS.group, {
+        generatePath(SERVICE_DOCS_EXPLORER_ROUTES_ABS.group, {
           group: props.group.identifier,
         }),
       );

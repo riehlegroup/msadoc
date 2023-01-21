@@ -10,10 +10,10 @@ import {
 } from '../services/service-docs-service';
 
 import { FilterDialog, FilterNode, applyFilter } from './filter';
-import { GroupsTreePageRouter } from './router';
-import { Tree } from './tree';
+import { Navigator } from './navigator';
+import { ServiceDocsExplorerPageRouter } from './router';
 
-export const GroupsTreePage: React.FC = () => {
+export const ServiceDocsExplorerPage: React.FC = () => {
   const controller = useController();
 
   return (
@@ -51,13 +51,13 @@ export const GroupsTreePage: React.FC = () => {
 
             <Divider />
 
-            <Box sx={{ overflow: 'auto', minWidth: 0, flexGrow: 1 }}>
+            <Box sx={{ overflow: 'hidden', minWidth: 0, flexGrow: 1 }}>
               {controller.state.rawFilterQuery !== undefined && (
                 <Alert severity="info">The filter is active</Alert>
               )}
 
               {controller.rawFilteredServiceDocs.length > 0 ? (
-                <Tree />
+                <Navigator />
               ) : (
                 <Alert severity="warning">No Service Docs found</Alert>
               )}
@@ -68,7 +68,7 @@ export const GroupsTreePage: React.FC = () => {
             ref={controller.mainContentRef}
             sx={{ height: '100%', overflow: 'auto', flexGrow: 1 }}
           >
-            <GroupsTreePageRouter
+            <ServiceDocsExplorerPageRouter
               onChangeTreeItem={(): void => controller.scrollMainContentToTop()}
             />
           </Box>

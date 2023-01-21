@@ -12,7 +12,7 @@ import React from 'react';
 import { generatePath, useNavigate } from 'react-router-dom';
 
 import { Icons } from '../../../../../icons';
-import { GROUPS_TREE_ROUTES_ABS } from '../../../../../routes';
+import { SERVICE_DOCS_EXPLORER_ROUTES_ABS } from '../../../../../routes';
 import { ServiceNode } from '../../../service-docs-tree';
 
 import { ResponsibleDetails } from './responsible-details';
@@ -169,7 +169,7 @@ function useController(props: Props): Controller {
 
     goToService: (serviceName: string): void => {
       navigate(
-        generatePath(GROUPS_TREE_ROUTES_ABS.service, {
+        generatePath(SERVICE_DOCS_EXPLORER_ROUTES_ABS.service, {
           service: serviceName,
         }),
       );
