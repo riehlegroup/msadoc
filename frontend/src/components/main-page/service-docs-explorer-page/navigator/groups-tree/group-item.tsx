@@ -67,6 +67,7 @@ export const GroupItem: React.FC<Props> = (props) => {
                 key={service.name}
                 service={service}
                 indent={props.depth + 1}
+                autoScrollIntoView
               />
             ))}
           </List>

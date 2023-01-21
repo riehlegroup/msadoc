@@ -40,6 +40,7 @@ export const SingleResponsible: React.FC<Props> = (props) => {
               key={serviceDoc.name}
               service={serviceDoc}
               indent={1}
+              autoScrollIntoView={false}
             />
           ))}
         </List>

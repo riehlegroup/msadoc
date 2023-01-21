@@ -40,6 +40,7 @@ export const SingleTeam: React.FC<Props> = (props) => {
               key={serviceDoc.name}
               service={serviceDoc}
               indent={1}
+              autoScrollIntoView
             />
           ))}
         </List>

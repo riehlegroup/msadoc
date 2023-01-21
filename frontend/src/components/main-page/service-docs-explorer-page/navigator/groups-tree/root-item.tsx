@@ -49,7 +49,12 @@ export const RootItem: React.FC<Props> = (props) => {
 
         <List component="div" disablePadding>
           {controller.sortedServices.map((service) => (
-            <ServiceItem key={service.name} service={service} indent={1} />
+            <ServiceItem
+              key={service.name}
+              service={service}
+              indent={1}
+              autoScrollIntoView
+            />
           ))}
         </List>
       </React.Fragment>
