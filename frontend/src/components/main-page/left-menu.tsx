@@ -113,11 +113,11 @@ const NavButton: React.FC<NavButtonProps> = (props) => {
   );
 };
 
-interface NavButtonWithRouterTragetProps
+interface NavButtonWithRouterTargetProps
   extends Omit<NavButtonProps, 'highlight' | 'onClick'> {
   routerTarget: string;
 }
-const NavButtonWithRouterTarget: React.FC<NavButtonWithRouterTragetProps> = (
+const NavButtonWithRouterTarget: React.FC<NavButtonWithRouterTargetProps> = (
   props,
 ) => {
   const navigate = useNavigate();
