@@ -17,9 +17,9 @@
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
     "@fontsource/roboto": "^4.5.8",
-    "@mui/icons-material": "^5.10.14",
-    "@mui/lab": "^5.0.0-alpha.108",
-    "@mui/material": "^5.10.14",
+    "@mui/icons-material": "^5.11.0",
+    "@mui/lab": "^5.0.0-alpha.116",
+    "@mui/material": "^5.11.5",
     "@nivo/sankey": "^0.80.0",
     "cytoscape": "^3.23.0",
     "cytoscape-cola": "^2.5.1",
@@ -27,7 +27,7 @@
     "react": "^18.2.0",
     "react-cytoscapejs": "^2.0.0",
     "react-dom": "^18.2.0",
-    "react-router-dom": "^6.4.3",
+    "react-router-dom": "^6.7.0",
     "react-scripts": "5.0.1",
     "search-expression-parser": "0.0.2"
   },
@@ -35,10 +35,10 @@
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^14.4.3",
-    "@types/react": "^18.0.21",
+    "@types/react": "^18.0.27",
     "@types/react-cytoscapejs": "^1.2.2",
-    "@types/react-dom": "^18.0.9",
+    "@types/react-dom": "^18.0.10",
     "gh-pages": "^4.0.0",
-    "sass": "^1.56.1"
+    "sass": "^1.57.1"
   }
 }
