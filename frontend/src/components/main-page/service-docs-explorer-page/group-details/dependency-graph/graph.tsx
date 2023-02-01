@@ -1,6 +1,6 @@
 import { Box, Button } from '@mui/material';
 import { blue, grey, red, yellow } from '@mui/material/colors';
-import cytoscape, { ElementDefinition, Stylesheet } from 'cytoscape';
+import cytoscape, { ElementDefinition } from 'cytoscape';
 import cola from 'cytoscape-cola';
 import React from 'react';
 import CytoscapeComponent from 'react-cytoscapejs';
@@ -13,7 +13,7 @@ import {
 } from '../../../service-docs-tree';
 import { useServiceDocsServiceContext } from '../../../services/service-docs-service';
 
-import { CytoScapeBuilder } from './cytoscape-builder';
+import { CytoScapeBuilder, cyStyleSheets } from './cytoscape-builder';
 import { DepthSlider } from './depth-slider';
 
 cytoscape.use(cola);
@@ -26,37 +26,6 @@ const cyLayout = {
   fit: false,
   centerGraph: true,
 } as cytoscape.LayoutOptions;
-
-const cyStyleSheets: Stylesheet[] = [
-  {
-    selector: 'node',
-    style: {
-      color: 'black',
-      label: 'data(name)',
-      'font-size': 20,
-    },
-  },
-  {
-    selector: 'node[type = "group"]',
-    style: {
-      label: 'data(name)',
-      shape: 'rectangle',
-      'text-valign': 'top',
-      'text-halign': 'center',
-      'text-max-width': '100px',
-      'text-margin-y': 30,
-      'font-weight': 'bold',
-      'padding-top': '50px',
-    },
-  },
-  {
-    selector: 'edge',
-    style: {
-      'curve-style': 'bezier',
-      'target-arrow-shape': 'triangle',
-    },
-  },
-];
 
 export enum GraphMode {
   Card,
