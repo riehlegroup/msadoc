@@ -14,7 +14,6 @@ export const APP_ROUTES = {
 } as const;
 
 export const MAIN_PAGE_ROUTES_REL = {
-  graph: '/graph',
   serviceDocsExplorer: '/service-docs-explorer',
   apiKeys: '/api-keys',
 } as const;

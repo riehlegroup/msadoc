@@ -20,6 +20,8 @@ import { Dependencies } from '../common/dependencies';
 import { Responsibilities } from '../common/responsibilities';
 import { Tags } from '../common/tags';
 
+import { DependencyGraphCardContent } from './dependency-graph';
+
 export const GroupDetails: React.FC = () => {
   const controller = useController();
 
@@ -99,6 +101,15 @@ export const GroupDetails: React.FC = () => {
                 />
               </ListItem>
             </List>
+          </DataContainer>
+
+          {controller.group.type === ServiceDocsTreeNodeType.RootGroup && (
+            <DataContainer>
+              <DependencyGraphCardContent />
+            </DataContainer>
+          )}
+          <DataContainer>
+            <Responsibilities showResponsibilitiesFor={controller.group} />
           </DataContainer>
 
           <DataContainer>

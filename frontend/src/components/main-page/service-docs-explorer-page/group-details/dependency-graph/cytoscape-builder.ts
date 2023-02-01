@@ -8,7 +8,7 @@ import {
   ServiceDocsTreeNodeType,
   ServiceNode,
   getDepthLevel,
-} from '../service-docs-tree';
+} from '../../../service-docs-tree';
 
 export interface ICytoScapeBuilder {
   fromGroup(group: RegularGroupNode | RootGroupNode): ICytoScapeBuilder;

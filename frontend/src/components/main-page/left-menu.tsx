@@ -24,12 +24,6 @@ export const LeftMenu: React.FC<Props> = (props) => {
     >
       <Stack sx={{ width: '100%' }}>
         <NavButtonWithRouterTarget
-          routerTarget={MAIN_PAGE_ROUTES_ABS.graph}
-          tooltipText="Graph View"
-        >
-          <Icons.Insights fontSize="inherit" />
-        </NavButtonWithRouterTarget>
-        <NavButtonWithRouterTarget
           routerTarget={MAIN_PAGE_ROUTES_ABS.serviceDocsExplorer}
           tooltipText="Service Docs Explorer"
         >

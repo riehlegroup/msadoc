@@ -4,18 +4,13 @@ import { Navigate, RouteObject, useRoutes } from 'react-router-dom';
 import { MAIN_PAGE_ROUTES_ABS, MAIN_PAGE_ROUTES_REL } from '../../routes';
 
 import { ApiKeysPage } from './api-keys-page';
-import { DependencyGraph } from './graph-page/dependency-graph-view';
 import { ServiceDocsExplorerPage } from './service-docs-explorer-page';
 
 export const MainPageRouter: React.FC = () => {
   const routes: RouteObject[] = [
     {
       path: '/',
-      element: <Navigate to={MAIN_PAGE_ROUTES_ABS.graph} />,
-    },
-    {
-      path: MAIN_PAGE_ROUTES_REL.graph + '/*',
-      element: <DependencyGraph />,
+      element: <Navigate to={MAIN_PAGE_ROUTES_ABS.serviceDocsExplorer} />,
     },
     {
       path: MAIN_PAGE_ROUTES_REL.serviceDocsExplorer + '/*',
