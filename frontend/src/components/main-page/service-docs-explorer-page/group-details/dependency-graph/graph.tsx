@@ -156,9 +156,6 @@ function useController(props: Props): Controller {
 
       if (props.mode === GraphMode.Card) {
         cy.fit();
-        cy.userZoomingEnabled(false);
-        cy.autoungrabify(true);
-        cy.autounselectify(true);
       }
 
       if (state.reLayoutGraphOnNextRender) {

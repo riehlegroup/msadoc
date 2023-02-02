@@ -22,7 +22,9 @@ export const DependencyGraphCardContent: React.FC = () => {
           </Tooltip>
         </Box>
 
-        <Box sx={{ height: '300px', overflow: 'hidden' }}>
+        <Box
+          sx={{ height: '300px', overflow: 'hidden', pointerEvents: 'none' }}
+        >
           <Graph mode={GraphMode.Card} />
         </Box>
       </Box>
