@@ -1,6 +1,6 @@
 import { Box, Button } from '@mui/material';
 import { blue, grey, red, yellow } from '@mui/material/colors';
-import cytoscape, { ElementDefinition, Stylesheet } from 'cytoscape';
+import cytoscape, { ElementDefinition } from 'cytoscape';
 import cola from 'cytoscape-cola';
 import React from 'react';
 import CytoscapeComponent from 'react-cytoscapejs';
@@ -10,11 +10,13 @@ import {
   RootGroupNode,
   ServiceDocsTreeNodeType,
   getDepth,
-} from '../service-docs-tree';
-import { useServiceDocsServiceContext } from '../services/service-docs-service';
+} from '../../../service-docs-tree';
+import { useServiceDocsServiceContext } from '../../../services/service-docs-service';
 
-import { CytoScapeBuilder } from './cytoscape-builder';
+import { CytoScapeBuilder, cyStyleSheets } from './cytoscape-builder';
 import { DepthSlider } from './depth-slider';
+
+cytoscape.use(cola);
 
 const cyLayout = {
   name: 'cola',
@@ -25,73 +27,50 @@ const cyLayout = {
   centerGraph: true,
 } as cytoscape.LayoutOptions;
 
-const cyStyleSheets: Stylesheet[] = [
-  {
-    selector: 'node',
-    style: {
-      color: 'black',
-      label: 'data(name)',
-      'font-size': 20,
-    },
-  },
-  {
-    selector: 'node[type = "group"]',
-    style: {
-      label: 'data(name)',
-      shape: 'rectangle',
-      'text-valign': 'top',
-      'text-halign': 'center',
-      'text-max-width': '100px',
-      'text-margin-y': 30,
-      'font-weight': 'bold',
-      'padding-top': '50px',
-    },
-  },
-  {
-    selector: 'edge',
-    style: {
-      'curve-style': 'bezier',
-      'target-arrow-shape': 'triangle',
-    },
-  },
-];
-
-export const DependencyGraph: React.FC = () => {
-  const controller = useController();
-  cytoscape.use(cola);
+export enum GraphMode {
+  Card,
+  Large,
+}
+interface Props {
+  mode: GraphMode;
+}
+export const Graph: React.FC<Props> = (props) => {
+  const controller = useController(props);
 
   return (
     <React.Fragment>
-      <Box
-        sx={{
-          display: 'flex',
-          flexDirection: 'row',
-          width: '100%',
-        }}
-      >
-        <DepthSlider
-          maxDepth={controller.maxGraphDepth}
-          onChange={(newDepth: number): void =>
-            controller.setState({ ...controller.state, graphDepth: newDepth })
-          }
-        />
+      {props.mode === GraphMode.Large && (
         <Box
           sx={{
-            height: 'auto',
-            marginRight: 'auto',
-            paddingTop: '1rem',
+            display: 'flex',
+            flexDirection: 'row',
+            width: '100%',
           }}
         >
-          <Button
-            variant="contained"
-            onClick={(): void => {
-              void controller.performDownload();
+          <DepthSlider
+            maxDepth={controller.maxGraphDepth}
+            onChange={(newDepth: number): void =>
+              controller.setState({ ...controller.state, graphDepth: newDepth })
+            }
+          />
+          <Box
+            sx={{
+              height: 'auto',
+              marginRight: 'auto',
+              paddingTop: '1rem',
             }}
           >
-            Download PNG
-          </Button>
+            <Button
+              variant="contained"
+              onClick={(): void => {
+                void controller.performDownload();
+              }}
+            >
+              Download PNG
+            </Button>
+          </Box>
         </Box>
-      </Box>
+      )}
 
       <Box
         sx={{
@@ -133,7 +112,7 @@ interface Controller {
   setState: (newState: State) => void;
   performDownload: () => Promise<void>;
 }
-function useController(): Controller {
+function useController(props: Props): Controller {
   const serviceDocsService = useServiceDocsServiceContext();
 
   const maxDepth = React.useMemo(
@@ -175,11 +154,25 @@ function useController(): Controller {
     onRenderGraph: (cy): void => {
       cyRef.current = cy;
 
+      if (props.mode === GraphMode.Card) {
+        cy.fit();
+      }
+
       if (state.reLayoutGraphOnNextRender) {
         setState((state) => ({ ...state, reLayoutGraphOnNextRender: false }));
 
         // See https://github.com/plotly/react-cytoscapejs/issues/46
-        cy.layout(cyLayout).run();
+        const layout = cy.layout(cyLayout).run();
+
+        layout.one('layoutstop', () => {
+          if (props.mode === GraphMode.Card) {
+            /*
+               In our Card, the graph is sometimes not properly centered/zoomed when nodes got added/removed. 
+               Calling `.fit()` when the layouting has finished seems to fix this issue.
+            */
+            cy.fit();
+          }
+        });
       }
     },
     performDownload: async (): Promise<void> => {

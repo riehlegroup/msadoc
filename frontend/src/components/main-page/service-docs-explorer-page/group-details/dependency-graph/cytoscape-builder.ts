@@ -1,4 +1,9 @@
-import { EdgeDefinition, ElementDefinition, NodeDefinition } from 'cytoscape';
+import {
+  EdgeDefinition,
+  ElementDefinition,
+  NodeDefinition,
+  Stylesheet,
+} from 'cytoscape';
 
 import {
   APINode,
@@ -8,12 +13,46 @@ import {
   ServiceDocsTreeNodeType,
   ServiceNode,
   getDepthLevel,
-} from '../service-docs-tree';
+} from '../../../service-docs-tree';
 
 export interface ICytoScapeBuilder {
   fromGroup(group: RegularGroupNode | RootGroupNode): ICytoScapeBuilder;
   build(): ElementDefinition[];
 }
+
+export const cyStyleSheets: Stylesheet[] = [
+  {
+    selector: 'node',
+    style: {
+      color: 'black',
+      label: 'data(name)',
+      'font-size': 20,
+      'background-color': 'data(backgroundColor)',
+    },
+  },
+  {
+    selector: 'node[type = "group"]',
+    style: {
+      label: 'data(name)',
+      shape: 'rectangle',
+      'text-valign': 'top',
+      'text-halign': 'center',
+      'text-max-width': '100px',
+      'text-margin-y': 30,
+      'font-weight': 'bold',
+      'padding-top': '50px',
+    },
+  },
+  {
+    selector: 'edge',
+    style: {
+      'curve-style': 'bezier',
+      'target-arrow-shape': 'triangle',
+      'line-color': 'data(lineColor)',
+      'target-arrow-color': 'data(targetArrowColor)',
+    },
+  },
+];
 
 interface MyNodeDefinition extends NodeDefinition {
   group: 'nodes';
@@ -22,9 +61,8 @@ interface MyNodeDefinition extends NodeDefinition {
     id: string;
     name: string;
     parent?: string | undefined;
-  };
-  style: {
-    'background-color': string;
+
+    backgroundColor: string;
   };
 }
 type ServiceNodeDefinition = MyNodeDefinition & { data: { type: 'service' } };
@@ -36,10 +74,9 @@ interface MyEdgeDefinition extends EdgeDefinition {
     type: 'api' | 'event';
     source: string;
     target: string;
-  };
-  style: {
-    'line-color': string;
-    'target-arrow-color': string;
+
+    lineColor: string;
+    targetArrowColor: string;
   };
 }
 
@@ -82,9 +119,8 @@ export class CytoScapeBuilder implements ICytoScapeBuilder {
         type: 'service',
         id: this.getIdentifier(service),
         name: service.name,
-      },
-      style: {
-        'background-color': this.options.serviceBackgroundColorFn(service),
+
+        backgroundColor: this.options.serviceBackgroundColorFn(service),
       },
     };
     if (service.group.type === ServiceDocsTreeNodeType.RegularGroup) {
@@ -205,10 +241,9 @@ export class CytoScapeBuilder implements ICytoScapeBuilder {
         type: dependencyType,
         source: this.getIdentifier(source),
         target: this.getIdentifier(target),
-      },
-      style: {
-        'line-color': edgeColor,
-        'target-arrow-color': edgeColor,
+
+        lineColor: edgeColor,
+        targetArrowColor: edgeColor,
       },
     };
     this.elementDefinitions.push(edge);
@@ -235,9 +270,8 @@ export class CytoScapeBuilder implements ICytoScapeBuilder {
         type: 'group',
         id: group.identifier,
         name: group.name,
-      },
-      style: {
-        'background-color': this.options.groupBackgroundColorFn(group),
+
+        backgroundColor: this.options.groupBackgroundColorFn(group),
       },
     };
     if (group.parent.type !== ServiceDocsTreeNodeType.RootGroup) {
