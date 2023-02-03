@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { ENVIRONMENT } from '../../env';
 import { APP_ROUTES } from '../../routes';
 import { useAuthHttpServiceContext } from '../../services/http';
+import { merge } from '../../utils/merge';
 
 enum ViewState {
   Default,
@@ -167,13 +168,13 @@ function useController(): Controller {
     state: state,
 
     setUsername: (username): void => {
-      setState((state) => ({ ...state, username: username }));
+      setState((state) => merge(state, { username: username }));
     },
     setPassword: (password): void => {
-      setState((state) => ({ ...state, password: password }));
+      setState((state) => merge(state, { password: password }));
     },
     performLogin: async (): Promise<void> => {
-      setState((state) => ({ ...state, viewState: ViewState.IsLoading }));
+      setState((state) => merge(state, { viewState: ViewState.IsLoading }));
       const loginResponse = await authHttpService.performLogin(
         state.username,
         state.password,
@@ -184,13 +185,12 @@ function useController(): Controller {
         return;
       }
       if (loginResponse.status === 401) {
-        setState((state) => ({
-          ...state,
-          viewState: ViewState.WrongUsernameOrPassword,
-        }));
+        setState((state) =>
+          merge(state, { viewState: ViewState.WrongUsernameOrPassword }),
+        );
         return;
       }
-      setState((state) => ({ ...state, viewState: ViewState.UnknownError }));
+      setState((state) => merge(state, { viewState: ViewState.UnknownError }));
     },
   };
 }

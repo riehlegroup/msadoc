@@ -3,6 +3,7 @@ import { GetServiceDocResponse } from 'msadoc-client';
 import React from 'react';
 
 import { Icons } from '../../../icons';
+import { merge } from '../../../utils/merge';
 import {
   ServiceDocsService,
   ServiceDocsServiceContextProvider,
@@ -156,21 +157,17 @@ function useController(): Controller {
     rawFilteredServiceDocs: rawFilteredServiceDocs,
 
     setShowFilterDialog: (show): void => {
-      setState((state) => ({ ...state, showFilterDialog: show }));
+      setState((state) => merge(state, { showFilterDialog: show }));
     },
     applyFilter: (filter, rawFilterQuery): void => {
-      setState((state) => ({
-        ...state,
-        filter: filter,
-        rawFilterQuery: rawFilterQuery,
-      }));
+      setState((state) =>
+        merge(state, { filter: filter, rawFilterQuery: rawFilterQuery }),
+      );
     },
     removeFilter: (): void => {
-      setState((state) => ({
-        ...state,
-        filter: undefined,
-        rawFilterQuery: undefined,
-      }));
+      setState((state) =>
+        merge(state, { filter: undefined, rawFilterQuery: undefined }),
+      );
     },
   };
 }

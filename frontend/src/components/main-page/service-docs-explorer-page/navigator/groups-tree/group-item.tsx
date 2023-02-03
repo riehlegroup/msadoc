@@ -4,6 +4,7 @@ import { generatePath, useNavigate } from 'react-router-dom';
 
 import { Icons } from '../../../../../icons';
 import { SERVICE_DOCS_EXPLORER_ROUTES_ABS } from '../../../../../routes';
+import { merge } from '../../../../../utils/merge';
 import {
   MainNode,
   RegularGroupNode,
@@ -133,7 +134,7 @@ function useController(props: Props): Controller {
     if (!isXDescendantOfY({ x: selectedTreeItem, y: props.group })) {
       return;
     }
-    setState((state) => ({ ...state, isCollapsed: false }));
+    setState((state) => merge(state, { isCollapsed: false }));
   }, [props.group, selectedTreeItem]);
 
   const sortedChildGroups = React.useMemo((): RegularGroupNode[] => {
@@ -162,7 +163,7 @@ function useController(props: Props): Controller {
       );
     },
     toggleIsCollapsed: (): void => {
-      setState((state) => ({ ...state, isCollapsed: !state.isCollapsed }));
+      setState((state) => merge(state, { isCollapsed: !state.isCollapsed }));
     },
   };
 }

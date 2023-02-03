@@ -2,6 +2,7 @@ import { Box, Button, Dialog, IconButton, Tooltip } from '@mui/material';
 import React from 'react';
 
 import { Icons } from '../../../../../icons';
+import { merge } from '../../../../../utils/merge';
 
 import { Graph, GraphMode } from './graph';
 
@@ -68,7 +69,7 @@ function useController(): Controller {
     state: state,
 
     setShowModal: (show): void => {
-      setState((state) => ({ ...state, showModal: show }));
+      setState((state) => merge(state, { showModal: show }));
     },
   };
 }

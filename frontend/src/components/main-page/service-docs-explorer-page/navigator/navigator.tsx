@@ -3,6 +3,7 @@ import { blue } from '@mui/material/colors';
 import React from 'react';
 
 import { Icons } from '../../../../icons';
+import { merge } from '../../../../utils/merge';
 
 import { GroupsTree } from './groups-tree';
 import { Responsibles } from './responsibles';
@@ -92,7 +93,7 @@ function useController(): Controller {
     state: state,
 
     setSelectedView: (view): void => {
-      setState((state) => ({ ...state, selectedView: view }));
+      setState((state) => merge(state, { selectedView: view }));
     },
   };
 }

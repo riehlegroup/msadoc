@@ -3,6 +3,7 @@ import React from 'react';
 import { generatePath, useNavigate } from 'react-router-dom';
 
 import { SERVICE_DOCS_EXPLORER_ROUTES_ABS } from '../../../../../routes';
+import { merge } from '../../../../../utils/merge';
 import { addMultipleItemsToSet } from '../../../../../utils/set';
 import { RegularGroupNode, RootGroupNode } from '../../../service-docs-tree';
 import { extractAllServices } from '../../../utils/service-docs-tree-utils';
@@ -166,7 +167,7 @@ function useController(props: Props): Controller {
     responsibles: responsibles,
 
     setViewState: (viewState): void => {
-      setState((state) => ({ ...state, viewState: viewState }));
+      setState((state) => merge(state, { viewState: viewState }));
     },
 
     goToService: (serviceName: string): void => {

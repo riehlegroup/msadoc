@@ -4,6 +4,7 @@ import { generatePath, useNavigate } from 'react-router';
 
 import { Icons } from '../../../../../icons';
 import { SERVICE_DOCS_EXPLORER_ROUTES_ABS } from '../../../../../routes';
+import { merge } from '../../../../../utils/merge';
 import { ServiceNode } from '../../../service-docs-tree';
 import { NavigatorListItemButton } from '../common/navigator-list-item-button';
 import { ServiceItem } from '../common/service-item';
@@ -82,7 +83,7 @@ function useController(props: Props): Controller {
     sortedServiceDocs: sortedServiceDocs,
 
     toggleIsCollapsed: (): void => {
-      setState((state) => ({ ...state, isCollapsed: !state.isCollapsed }));
+      setState((state) => merge(state, { isCollapsed: !state.isCollapsed }));
     },
     navigateToService: (serviceName): void => {
       navigate(

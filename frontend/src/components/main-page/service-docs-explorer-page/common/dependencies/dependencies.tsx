@@ -13,6 +13,7 @@ import { generatePath, useNavigate } from 'react-router-dom';
 
 import { Icons } from '../../../../../icons';
 import { SERVICE_DOCS_EXPLORER_ROUTES_ABS } from '../../../../../routes';
+import { merge } from '../../../../../utils/merge';
 import {
   APINode,
   EventNode,
@@ -191,14 +192,14 @@ function useController(props: Props): Controller {
     dependencyItems: dataToShow,
 
     showDependencyDialog: (data): void => {
-      setState((state) => ({ ...state, dependencyDialogData: data }));
+      setState((state) => merge(state, { dependencyDialogData: data }));
     },
     hideDependencyDialog: (): void => {
-      setState((state) => ({ ...state, dependencyDialogData: undefined }));
+      setState((state) => merge(state, { dependencyDialogData: undefined }));
     },
 
     setShowVisualization: (show): void => {
-      setState((state) => ({ ...state, showVisualization: show }));
+      setState((state) => merge(state, { showVisualization: show }));
     },
 
     goToService: (serviceName: string): void => {

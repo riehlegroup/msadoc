@@ -13,6 +13,7 @@ import React from 'react';
 
 import { useApiKeysHttpServiceContext } from '../../../services/http/api-keys';
 import { useSnackbarServiceContext } from '../../../services/snackbar-service';
+import { merge } from '../../../utils/merge';
 
 enum ViewMode {
   ShowWarningMessage,
@@ -122,16 +123,15 @@ function useController(props: Props): Controller {
     state: state,
 
     deleteApiKey: async (): Promise<void> => {
-      setState((state) => ({ ...state, viewMode: ViewMode.IsDeletingKey }));
+      setState((state) => merge(state, { viewMode: ViewMode.IsDeletingKey }));
 
       const keyDeletionResponse = await apiKeysHttpService.deleteSingleApiKey(
         props.apiKey.id,
       );
       if (keyDeletionResponse.status !== 200) {
-        setState((state) => ({
-          ...state,
-          viewMode: ViewMode.ErrorDeletingKey,
-        }));
+        setState((state) =>
+          merge(state, { viewMode: ViewMode.ErrorDeletingKey }),
+        );
         return;
       }
 

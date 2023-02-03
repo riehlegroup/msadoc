@@ -1,6 +1,8 @@
 import { Box, Slider } from '@mui/material';
 import React from 'react';
 
+import { merge } from '../../../../../utils/merge';
+
 interface Props {
   maxDepth: number;
   onChange: (newValue: number) => void;
@@ -54,7 +56,7 @@ function useController(props: Props): Controller {
   });
 
   React.useEffect(() => {
-    setState((state) => ({ ...state, maxDepth: props.maxDepth }));
+    setState((state) => merge(state, { maxDepth: props.maxDepth }));
   }, [props.maxDepth]);
 
   return {

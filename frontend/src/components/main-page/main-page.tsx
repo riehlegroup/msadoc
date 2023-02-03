@@ -13,6 +13,7 @@ import React from 'react';
 
 import { ENVIRONMENT } from '../../env';
 import { useServiceDocsHttpServiceContext } from '../../services/http';
+import { merge } from '../../utils/merge';
 
 import { DemoModeBanner } from './demo-mode-banner';
 import { LeftMenu } from './left-menu';
@@ -132,21 +133,22 @@ function useController(): Controller {
   });
 
   async function loadServiceDocs(): Promise<void> {
-    setState((state) => ({ ...state, isLoading: true, error: false }));
+    setState((state) => merge(state, { isLoading: true, error: false }));
     const serviceDocsResponse =
       await serviceDocsHttpService.listAllServiceDocs();
-    setState((state) => ({ ...state, isLoading: false }));
+    setState((state) => merge(state, { isLoading: false }));
 
     if (serviceDocsResponse.status === 200) {
-      setState((state) => ({
-        ...state,
-        error: false,
-        serviceDocs: serviceDocsResponse.data.serviceDocs,
-      }));
+      setState((state) =>
+        merge(state, {
+          error: false,
+          serviceDocs: serviceDocsResponse.data.serviceDocs,
+        }),
+      );
       return;
     }
 
-    setState((state) => ({ ...state, error: true }));
+    setState((state) => merge(state, { error: true }));
   }
 
   React.useEffect(() => {

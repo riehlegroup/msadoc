@@ -13,6 +13,7 @@ import { generatePath, useNavigate } from 'react-router-dom';
 
 import { Icons } from '../../../../../icons';
 import { SERVICE_DOCS_EXPLORER_ROUTES_ABS } from '../../../../../routes';
+import { merge } from '../../../../../utils/merge';
 import { ServiceNode } from '../../../service-docs-tree';
 
 import { ResponsibleDetails } from './responsible-details';
@@ -164,7 +165,7 @@ function useController(props: Props): Controller {
     responsibles: responsibles,
 
     setViewState: (viewState): void => {
-      setState((state) => ({ ...state, viewState: viewState }));
+      setState((state) => merge(state, { viewState: viewState }));
     },
 
     goToService: (serviceName: string): void => {

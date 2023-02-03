@@ -5,6 +5,7 @@ import cola from 'cytoscape-cola';
 import React from 'react';
 import CytoscapeComponent from 'react-cytoscapejs';
 
+import { merge } from '../../../../../utils/merge';
 import {
   RegularGroupNode,
   RootGroupNode,
@@ -143,7 +144,7 @@ function useController(props: Props): Controller {
 
   // Whenever the graph data change, we want to re-layout the graph to prevent nodes from overlapping too much.
   React.useEffect(() => {
-    setState((state) => ({ ...state, reLayoutGraphOnNextRender: true }));
+    setState((state) => merge(state, { reLayoutGraphOnNextRender: true }));
   }, [elements]);
 
   return {
@@ -159,7 +160,7 @@ function useController(props: Props): Controller {
       }
 
       if (state.reLayoutGraphOnNextRender) {
-        setState((state) => ({ ...state, reLayoutGraphOnNextRender: false }));
+        setState((state) => merge(state, { reLayoutGraphOnNextRender: false }));
 
         // See https://github.com/plotly/react-cytoscapejs/issues/46
         const layout = cy.layout(cyLayout).run();

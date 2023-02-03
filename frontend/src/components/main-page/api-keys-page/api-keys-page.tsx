@@ -15,6 +15,7 @@ import { GetApiKeyResponseDto } from 'msadoc-client';
 import React from 'react';
 
 import { useApiKeysHttpServiceContext } from '../../../services/http/api-keys';
+import { merge } from '../../../utils/merge';
 
 import { ApiKeyCreationDialog } from './api-key-creation-dialog';
 import { ApiKeysTableRow } from './api-keys-table-row';
@@ -166,34 +167,35 @@ function useController(): Controller {
   }, []);
 
   async function loadApiKeys(): Promise<void> {
-    setState((state) => ({
-      ...state,
-      keysLoadingState: KeysLoadingState.IsLoading,
-      apiKeys: undefined,
-    }));
+    setState((state) =>
+      merge(state, {
+        keysLoadingState: KeysLoadingState.IsLoading,
+        apiKeys: undefined,
+      }),
+    );
 
     const apiKeysResponse = await apiKeysHttpService.listAllApiKeys();
 
     if (apiKeysResponse.status !== 200) {
-      setState((state) => ({
-        ...state,
-        keysLoadingState: KeysLoadingState.Error,
-      }));
+      setState((state) =>
+        merge(state, { keysLoadingState: KeysLoadingState.Error }),
+      );
       return;
     }
 
-    setState((state) => ({
-      ...state,
-      keysLoadingState: KeysLoadingState.HasLoadedKeys,
-      apiKeys: apiKeysResponse.data.apiKeys,
-    }));
+    setState((state) =>
+      merge(state, {
+        keysLoadingState: KeysLoadingState.HasLoadedKeys,
+        apiKeys: apiKeysResponse.data.apiKeys,
+      }),
+    );
   }
 
   return {
     state: state,
 
     setShowApiKeyCreationDialog: (show): void => {
-      setState((state) => ({ ...state, showApiKeyCreationDialog: show }));
+      setState((state) => merge(state, { showApiKeyCreationDialog: show }));
     },
 
     loadApiKeys: loadApiKeys,
