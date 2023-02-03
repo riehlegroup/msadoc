@@ -13,6 +13,7 @@ import React from 'react';
 
 import { useServiceDocsHttpServiceContext } from '../../../../services/http';
 import { useSnackbarServiceContext } from '../../../../services/snackbar-service';
+import { merge } from '../../../../utils/merge';
 import { ServiceNode } from '../../service-docs-tree';
 import { useServiceDocsServiceContext } from '../../services/service-docs-service';
 
@@ -170,32 +171,27 @@ function useController(props: Props): Controller {
     state: state,
 
     setViewState: (viewState): void => {
-      setState((state) => ({ ...state, viewState: viewState }));
+      setState((state) => merge(state, { viewState: viewState }));
     },
 
     deleteServiceDoc: async (): Promise<void> => {
-      setState((state) => ({
-        ...state,
-        viewState: ViewState.IsDeletingServiceDoc,
-      }));
+      setState((state) =>
+        merge(state, { viewState: ViewState.IsDeletingServiceDoc }),
+      );
 
       const serviceDocDeletionResponse =
         await serviceDocsHttpService.deleteSingleServiceDoc(
           props.correspondingService.name,
         );
       if (serviceDocDeletionResponse.status !== 200) {
-        setState((state) => ({
-          ...state,
-          viewState: ViewState.ErrorDeletingServiceDoc,
-        }));
+        setState((state) =>
+          merge(state, { viewState: ViewState.ErrorDeletingServiceDoc }),
+        );
         return;
       }
 
       // Resetting our View State is especially important in demo mode, because triggering a deletion does not actually delete the Service Doc and because of this, we probably don't navigate away from this page.
-      setState((state) => ({
-        ...state,
-        viewState: ViewState.Default,
-      }));
+      setState((state) => merge(state, { viewState: ViewState.Default }));
 
       snackbarService.showSnackbar(
         `Service Doc "${props.correspondingService.name}" has been deleted`,

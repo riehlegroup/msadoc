@@ -17,6 +17,7 @@ import React from 'react';
 import { Icons } from '../../../icons';
 import { useApiKeysHttpServiceContext } from '../../../services/http/api-keys';
 import { useSnackbarServiceContext } from '../../../services/snackbar-service';
+import { merge } from '../../../utils/merge';
 
 enum ViewMode {
   AskForKeyName,
@@ -186,30 +187,30 @@ function useController(props: Props): Controller {
     state: state,
 
     setKeyName: (keyName): void => {
-      setState((state) => ({ ...state, keyName: keyName }));
+      setState((state) => merge(state, { keyName: keyName }));
     },
 
     createApiKey: async (): Promise<void> => {
-      setState((state) => ({ ...state, viewMode: ViewMode.IsCreatingKey }));
+      setState((state) => merge(state, { viewMode: ViewMode.IsCreatingKey }));
 
       const keyCreationResponse = await apiKeysHttpService.createApiKey(
         state.keyName,
       );
       if (keyCreationResponse.status !== 201) {
-        setState((state) => ({
-          ...state,
-          viewMode: ViewMode.ErrorCreatingKey,
-        }));
+        setState((state) =>
+          merge(state, { viewMode: ViewMode.ErrorCreatingKey }),
+        );
         return;
       }
 
       props.afterCreateApiKey();
 
-      setState((state) => ({
-        ...state,
-        viewMode: ViewMode.AfterCreateKey,
-        keyDetails: keyCreationResponse.data,
-      }));
+      setState((state) =>
+        merge(state, {
+          viewMode: ViewMode.AfterCreateKey,
+          keyDetails: keyCreationResponse.data,
+        }),
+      );
     },
 
     copyApiKeyToClipboard: (): void => {

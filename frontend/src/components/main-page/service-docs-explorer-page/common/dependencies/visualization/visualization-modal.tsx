@@ -3,6 +3,7 @@ import { ResponsiveSankey } from '@nivo/sankey';
 import React from 'react';
 
 import { Icons } from '../../../../../../icons';
+import { merge } from '../../../../../../utils/merge';
 import { MainNode } from '../../../../service-docs-tree';
 import { useServiceDocsServiceContext } from '../../../../services/service-docs-service';
 
@@ -151,7 +152,7 @@ function useController(props: Props): Controller {
     sankeyData: sankeyData,
 
     setSankeyConfig: (newConfig): void => {
-      setState((state) => ({ ...state, sankeyConfig: newConfig }));
+      setState((state) => merge(state, { sankeyConfig: newConfig }));
     },
   };
 }

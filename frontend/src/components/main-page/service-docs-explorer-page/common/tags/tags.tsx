@@ -3,6 +3,7 @@ import React from 'react';
 import { generatePath, useNavigate } from 'react-router-dom';
 
 import { SERVICE_DOCS_EXPLORER_ROUTES_ABS } from '../../../../../routes';
+import { merge } from '../../../../../utils/merge';
 import { addMultipleItemsToSet } from '../../../../../utils/set';
 import { MainNode, ServiceDocsTreeNodeType } from '../../../service-docs-tree';
 import { extractAllServices } from '../../../utils/service-docs-tree-utils';
@@ -107,10 +108,10 @@ function useController(props: Props): Controller {
     tags: tags,
 
     showTagDialog: (data): void => {
-      setState((state) => ({ ...state, tagDialogData: data }));
+      setState((state) => merge(state, { tagDialogData: data }));
     },
     hideTagDialog: (): void => {
-      setState((state) => ({ ...state, tagDialogData: undefined }));
+      setState((state) => merge(state, { tagDialogData: undefined }));
     },
 
     goToService: (serviceName: string): void => {

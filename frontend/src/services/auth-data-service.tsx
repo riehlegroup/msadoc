@@ -1,5 +1,7 @@
 import React from 'react';
 
+import { merge } from '../utils/merge';
+
 const ACCESS_TOKEN_LOCALSTORAGE_KEY = 'msadoc--access-token';
 const REFRESH_TOKEN_LOCALSTORAGE_KEY = 'msadoc--refresh-token';
 
@@ -65,11 +67,11 @@ function useAuthDataService(): AuthDataService {
     state: state,
 
     setAccessAndRefreshToken: (newTokens): void => {
-      setState((state) => ({ ...state, accessAndRefreshToken: newTokens }));
+      setState((state) => merge(state, { accessAndRefreshToken: newTokens }));
     },
 
     deleteAccessAndRefreshToken: (): void => {
-      setState((state) => ({ ...state, accessAndRefreshToken: undefined }));
+      setState((state) => merge(state, { accessAndRefreshToken: undefined }));
     },
   };
 }

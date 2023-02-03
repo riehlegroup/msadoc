@@ -2,6 +2,8 @@ import { Button, TableCell, TableRow } from '@mui/material';
 import { GetApiKeyResponseDto } from 'msadoc-client';
 import React from 'react';
 
+import { merge } from '../../../utils/merge';
+
 import { ApiKeyDeletionDialog } from './api-key-deletion-dialog';
 
 interface Props {
@@ -67,7 +69,7 @@ function useController(props: Props): Controller {
     state: state,
 
     setShowApiKeyDeletionDialog: (show): void => {
-      setState((state) => ({ ...state, showApiKeyDeletionDialog: show }));
+      setState((state) => merge(state, { showApiKeyDeletionDialog: show }));
     },
 
     formattedCreationTimeStamp: formattedCreationTimeStamp,

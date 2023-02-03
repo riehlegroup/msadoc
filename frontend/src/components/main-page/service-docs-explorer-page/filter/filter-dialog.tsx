@@ -14,6 +14,7 @@ import { Box } from '@mui/system';
 import React from 'react';
 
 import { Icons } from '../../../../icons';
+import { merge } from '../../../../utils/merge';
 
 import { FilterNode, FilterParseError } from './models';
 import { parseFilterQuery } from './parse-query';
@@ -142,7 +143,7 @@ function useController(props: Props): Controller {
     state: state,
 
     setFilterQuery: (query): void => {
-      setState((state) => ({ ...state, filterQuery: query }));
+      setState((state) => merge(state, { filterQuery: query }));
     },
 
     applyOrRemoveFilter: (): void => {
@@ -153,10 +154,9 @@ function useController(props: Props): Controller {
 
       const filterQueryParseResult = parseFilterQuery(state.filterQuery);
       if (!filterQueryParseResult.success) {
-        setState((state) => ({
-          ...state,
-          filterParseError: filterQueryParseResult.error,
-        }));
+        setState((state) =>
+          merge(state, { filterParseError: filterQueryParseResult.error }),
+        );
         return;
       }
 
@@ -164,10 +164,11 @@ function useController(props: Props): Controller {
     },
 
     toggleShowSyntaxDocumentation: (): void => {
-      setState((state) => ({
-        ...state,
-        showSyntaxDocumentation: !state.showSyntaxDocumentation,
-      }));
+      setState((state) =>
+        merge(state, {
+          showSyntaxDocumentation: !state.showSyntaxDocumentation,
+        }),
+      );
     },
   };
 }

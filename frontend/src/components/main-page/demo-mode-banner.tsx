@@ -12,6 +12,7 @@ import { red } from '@mui/material/colors';
 import React from 'react';
 
 import { Icons } from '../../icons';
+import { merge } from '../../utils/merge';
 
 export const DemoModeBanner: React.FC = () => {
   const controller = useController();
@@ -85,7 +86,7 @@ function useController(): Controller {
     state: state,
 
     setShowInfoDialog: (show): void => {
-      setState((state) => ({ ...state, showInfoDialog: show }));
+      setState((state) => merge(state, { showInfoDialog: show }));
     },
   };
 }
