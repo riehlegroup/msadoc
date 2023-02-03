@@ -84,6 +84,7 @@ export const Graph: React.FC<Props> = (props) => {
           layout={cyLayout}
           style={{ width: '100%', height: '100%' }}
           stylesheet={cyStyleSheets}
+          wheelSensitivity={0.2}
           cy={(cy): void => {
             controller.onRenderGraph(cy);
           }}
