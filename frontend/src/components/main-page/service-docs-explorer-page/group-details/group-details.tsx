@@ -27,7 +27,7 @@ export const GroupDetails: React.FC = () => {
 
   return (
     <React.Fragment>
-      {controller.group !== undefined && (
+      {controller.group !== undefined && !controller.isEmptyGroup && (
         <Box
           sx={{
             overflowX: 'hidden',
@@ -131,6 +131,7 @@ export const GroupDetails: React.FC = () => {
 
 interface Controller {
   group: RegularGroupNode | RootGroupNode | undefined;
+  isEmptyGroup: boolean;
 }
 function useController(): Controller {
   const selectedTreeItem = useSelectedTreeItem();
@@ -144,7 +145,26 @@ function useController(): Controller {
     group = selectedTreeItem;
   }
 
+  const isEmptyGroup = ((): boolean => {
+    if (!group) {
+      return true;
+    }
+    if (group.type === ServiceDocsTreeNodeType.RegularGroup) {
+      // By design, a regular group cannot be empty.
+      return false;
+    }
+
+    if (
+      Object.entries(group.childGroups).length > 0 ||
+      group.services.length > 0
+    ) {
+      return false;
+    }
+    return true;
+  })();
+
   return {
     group: group,
+    isEmptyGroup: isEmptyGroup,
   };
 }
