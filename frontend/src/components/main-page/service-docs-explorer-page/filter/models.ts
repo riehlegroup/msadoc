@@ -34,10 +34,7 @@ export interface FilterNotNode {
 export const EXTENSIONS_KEY_PREFIX = 'extensions.';
 export type ExtensionsKey = `${typeof EXTENSIONS_KEY_PREFIX}${string}`;
 export function isExtensionsKey(key: string): key is ExtensionsKey {
-  if (key.startsWith(EXTENSIONS_KEY_PREFIX)) {
-    return true;
-  }
-  return false;
+  return key.startsWith(EXTENSIONS_KEY_PREFIX);
 }
 
 export interface FilterKeyValueNode {
