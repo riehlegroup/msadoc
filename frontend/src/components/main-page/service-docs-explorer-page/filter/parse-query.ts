@@ -19,6 +19,7 @@ import {
   FilterOrNode,
   FilterParseError,
   isAllowedLiteralNodeKey,
+  isExtensionsKey,
 } from './models';
 
 export function parseFilterQuery(
@@ -142,7 +143,8 @@ function transformKeyValueNodeToInternalRepresentation(
   node: SEPKeyValueNode,
 ): Result<FilterKeyValueNode, FilterParseError> {
   const key = node.key.content.toLowerCase();
-  if (!isAllowedLiteralNodeKey(key)) {
+
+  if (!isAllowedLiteralNodeKey(key) && !isExtensionsKey(key)) {
     return {
       success: false,
       error: {

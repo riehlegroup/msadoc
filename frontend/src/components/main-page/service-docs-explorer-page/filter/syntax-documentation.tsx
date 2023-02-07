@@ -48,6 +48,13 @@ export const SyntaxDocumentation: React.FC = () => {
         <li>responsibleTeam</li>
         <li>responsible</li>
       </ul>
+      <Box sx={{ marginY: 3 }}>
+        Additionally, you can filter for <b>Extension Fields</b> using the
+        following syntax:
+        <Example example="extensions.customField:important" />
+        In this example, all Service Docs are matched that have an Extension
+        Field called {`"customField"`} with value {`"important"`}.
+      </Box>
       <Typography variant="h5">Wildcards</Typography>
       <Box>
         You can use wildcards to perform matching against substrings. For

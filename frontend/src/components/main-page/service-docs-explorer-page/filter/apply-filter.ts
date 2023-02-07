@@ -4,6 +4,7 @@ import { ExpressionNodeType } from 'search-expression-parser';
 import { ServiceNode } from '../../service-docs-tree';
 
 import {
+  EXTENSIONS_KEY_PREFIX,
   FilterAndNode,
   FilterKeyValueNode,
   FilterNode,
@@ -11,6 +12,7 @@ import {
   FilterOrNode,
   QUERY_KEY_TO_SERVICEDOC_MAP,
   SPECIAL_EMPTY_TAG,
+  isExtensionsKey,
 } from './models';
 
 export function applyFilter(
@@ -73,11 +75,21 @@ function doesMatchKeyValueNode(
   filter: FilterKeyValueNode,
   serviceDoc: ServiceNode,
 ): boolean {
-  const serviceDocKey = QUERY_KEY_TO_SERVICEDOC_MAP[filter.key];
+  let serviceDocEntryFromRawData: unknown;
 
-  // We use the raw Service Doc here, because there are less different data types we need to distinguish compared to the processed ones in the containing Service Doc.
-  const serviceDocEntry = serviceDoc.rawData[serviceDocKey];
-  return doesEntryMatchFilter(filter, serviceDocEntry);
+  // Special case: We are filtering for an Extension Field.
+  if (isExtensionsKey(filter.key)) {
+    const keyWithoutPrefix = filter.key.replace(EXTENSIONS_KEY_PREFIX, '');
+    serviceDocEntryFromRawData =
+      serviceDoc.rawData.extensions?.[keyWithoutPrefix];
+  } else {
+    const serviceDocKey = QUERY_KEY_TO_SERVICEDOC_MAP[filter.key];
+
+    // We use the raw Service Doc here, because there are less different data types we need to distinguish compared to the processed ones in the containing Service Doc.
+    serviceDocEntryFromRawData = serviceDoc.rawData[serviceDocKey];
+  }
+
+  return doesEntryMatchFilter(filter, serviceDocEntryFromRawData);
 }
 function doesEntryMatchFilter(
   filter: FilterKeyValueNode,
@@ -96,13 +108,13 @@ function doesEntryMatchFilter(
     return false;
   }
 
-  if (typeof serviceDocEntry === 'string') {
-    return isStringMatching(serviceDocEntry, filter.value);
+  if (isAllowedPrimitiveValue(serviceDocEntry)) {
+    return isPrimitiveValueMatching(serviceDocEntry, filter.value);
   }
 
-  if (isStringArray(serviceDocEntry)) {
+  if (isArrayOfAllowedPrimitiveValues(serviceDocEntry)) {
     for (const singleEntry of serviceDocEntry) {
-      if (isStringMatching(singleEntry, filter.value)) {
+      if (isPrimitiveValueMatching(singleEntry, filter.value)) {
         return true;
       }
     }
@@ -111,18 +123,62 @@ function doesEntryMatchFilter(
   return false;
 }
 
-function isStringArray(element: unknown): element is string[] {
+/**
+ * Types of primitive values that may appear in our Service Docs.
+ */
+type AllowedPrimitiveValue = string | number | boolean;
+function isAllowedPrimitiveValue(
+  value: unknown,
+): value is AllowedPrimitiveValue {
+  if (
+    typeof value === 'string' ||
+    typeof value === 'number' ||
+    typeof value === 'boolean'
+  ) {
+    return true;
+  }
+  return false;
+}
+function isArrayOfAllowedPrimitiveValues(
+  element: unknown,
+): element is AllowedPrimitiveValue[] {
   if (!Array.isArray(element)) {
     return false;
   }
 
   for (const singleEntry of element) {
-    if (typeof singleEntry !== 'string') {
+    if (!isAllowedPrimitiveValue(singleEntry)) {
       return false;
     }
   }
 
   return true;
+}
+
+function isPrimitiveValueMatching(
+  theValue: AllowedPrimitiveValue,
+  theQuery: string,
+): boolean {
+  if (typeof theValue === 'string') {
+    return isStringMatching(theValue, theQuery);
+  }
+
+  if (typeof theValue === 'number') {
+    const queryAsNumber = Number.parseInt(theQuery, 10);
+    if (Number.isNaN(queryAsNumber)) {
+      return false;
+    }
+    return theValue === queryAsNumber;
+  }
+
+  if (theValue === true && theQuery.toLowerCase() === 'true') {
+    return true;
+  }
+  if (theValue === false && theQuery.toLowerCase() === 'false') {
+    return true;
+  }
+
+  return false;
 }
 
 function isStringMatching(theString: string, theQuery: string): boolean {
