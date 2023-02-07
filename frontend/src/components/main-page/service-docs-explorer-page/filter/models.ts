@@ -27,10 +27,20 @@ export interface FilterNotNode {
 
   child: FilterNode;
 }
+
+/**
+ * Users can write "extensions.foo:bar" to ask for extension field "foo" with value "bar".
+ */
+export const EXTENSIONS_KEY_PREFIX = 'extensions.';
+export type ExtensionsKey = `${typeof EXTENSIONS_KEY_PREFIX}${string}`;
+export function isExtensionsKey(key: string): key is ExtensionsKey {
+  return key.startsWith(EXTENSIONS_KEY_PREFIX);
+}
+
 export interface FilterKeyValueNode {
   type: ExpressionNodeType.KeyValue;
 
-  key: AllowedLiteralNodeKey;
+  key: AllowedLiteralNodeKey | ExtensionsKey;
   value: string;
 }
 
