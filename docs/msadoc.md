@@ -43,7 +43,7 @@ The name of the microservice. The `name` is used as key to identify and referenc
 
 ### `group` (string)
 
-The group of the microservice. Supports multiple hierarchies seperated by a dot, e.g. `group.sub-group.sub-sub-group`.
+The group of the microservice. Supports multiple hierarchies separated by a dot, e.g. `group.sub-group.sub-sub-group`.
 The `group` name will later be used as key to add more meta-data to the group.
 
 #### Example
@@ -138,7 +138,7 @@ The chosen formatting as string is deliberatively chosen to allow documenting mu
 
 ### `consumedAPIs` (string[])
 
-The APIs that the microservice consumes. The `consumedAPI` identifier has to match a `providerAPI` identifier in another microservice`s `msadoc.json` in order to link them.
+The APIs that the microservice consumes. The `consumedAPI` identifier has to match a `providerAPI` identifier in another microservice's `msadoc.json` in order to link them.
 
 #### Example
 
@@ -181,7 +181,7 @@ The chosen formatting as string is deliberatively chosen to allow documenting mu
 
 ### `subscribedEvents` (string[])
 
-The events that the microservice consumes. The `subscribedEvents` identifier has to match a `publishedEvents` identifier in another microservice`s `msadoc.json` in order to link them.
+The events that the microservice consumes. The `subscribedEvents` identifier has to match a `publishedEvents` identifier in another microservice's `msadoc.json` in order to link them.
 
 #### Example
 
@@ -254,7 +254,7 @@ The link to the API documentation.
 
 ### `responsibleTeam` (string)
 
-The identifyier of the responsible team. Make sure all microservices goverend by the same team use the same identifier in order to link them.
+The identifier of the responsible team. Make sure all microservices governed by the same team use the same identifier in order to link them.
 
 #### Example
 
@@ -271,7 +271,7 @@ The identifyier of the responsible team. Make sure all microservices goverend by
 
 ### `responsibles` (string[])
 
-The email addresses or names of the mainly responsible people that should serve as contact persons. Make sure all microservices goverend by the same responsible use the same identifier in order to link them.
+The email addresses or names of the mainly responsible people that should serve as contact persons. Make sure all microservices governed by the same responsible use the same identifier in order to link them.
 
 #### Example
 
