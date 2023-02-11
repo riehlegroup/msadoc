@@ -1,0 +1,128 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+
+  "type": "object",
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+
+    "name": {
+      "type": "string",
+      "description": "The name of the microservice. The name is used as key to identify and reference services.",
+      "markdownDescription": "The name of the microservice. The `name` is used as key to identify and reference services.\n ### Best Practices\n - Use a consistent naming scheme across all microservices.\n - Don't use spaces to avoid ambiguities."
+    },
+    "group": {
+      "type": "string",
+      "description": "The group of the microservice. Supports multiple hierarchies separated by a dot, e.g. \"group.sub-group.sub-sub-group\". The group name will later be used as key to add more meta-data to the group.",
+      "markdownDescription": "The group of the microservice. Supports multiple hierarchies separated by a dot, e.g. `group.sub-group.sub-sub-group`. The `group` name will later be used as key to add more meta-data to the group.\n ### Best Practices\n - Use a consistent naming scheme across all groups.\n - Don't use spaces to avoid ambiguities."
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "A list of tags for the microservice. The tag is used as key to filter services.",
+      "markdownDescription": "A list of tags for the microservice. The `tag` is used as key to filter services.\n ### Best Practices\n - Use a consistent tagging scheme across all microservices.\n - Don't use spaces to avoid ambiguities."
+    },
+    "repository": {
+      "type": "string",
+      "description": "The link to the microservice's repository.",
+      "markdownDescription": "The link to the microservice's repository.\n ### Best Practices\n - If you use a mono-repo approach you might want to link to the directory of the microservice instead."
+    },
+    "taskBoard": {
+      "type": "string",
+      "description": "The link to the microservice's task board.",
+      "markdownDescription": "The link to the microservice's task board.\n ### Best Practices\n - If you utilize a microservice-overarching task board you might want to link to a filtered view specific to the microservice."
+    },
+
+    "providedAPIs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "The APIs that the microservice provides. The \"consumedAPI\" identifier of other microservices have to match with the here chosen \"providerAPI\" in order to link them. A microservice can provide multiple APIs allowing to document more fine-granularly. The chosen formatting as string is deliberatively chosen to allow documenting multiple communication protocols.",
+      "markdownDescription": "The APIs that the microservice provides. The `consumedAPI` identifier of other microservices have to match with the here chosen `providerAPI` in order to link them. A microservice can provide multiple APIs allowing to document more fine-granularly. The chosen formatting as string is deliberatively chosen to allow documenting multiple communication protocols.\n ### Best Practices\n - Use this attribute to document synchronous API dependencies. For events use the attribute `publishedEvents`.\n - Use a consistent naming scheme for APIs across all microservices.\n - Consider if you can uniquely identify an API via its route, e.g. `/pipelines` to add more expressiveness to the documentation. Otherwise you can use custom names as e.g. `PipelineApi`.\n - Don't use spaces to avoid ambiguities."
+    },
+    "consumedAPIs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "The APIs that the microservice consumes. The \"consumedAPI\" identifier has to match a \"providerAPI\" identifier in another microservice's msadoc.json in order to link them.",
+      "markdownDescription": "The APIs that the microservice consumes. The `consumedAPI` identifier has to match a `providerAPI` identifier in another microservice's `msadoc.json` in order to link them.\n ### Best Practices\n - Use this attribute to document synchronous API dependencies. For events use the attribute `subscribedEvents`."
+    },
+    "publishedEvents": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "The events that the microservice publishes. The \"subscribedEvents\" identifier of other microservices have to match with the here chosen \"publishedEvents\" in order to link them. A microservice can provide multiple events allowing to document more fine-grained. The chosen formatting as string is deliberatively chosen to allow documenting multiple communication protocols.",
+      "markdownDescription": "The events that the microservice publishes. The `subscribedEvents` identifier of other microservices have to match with the here chosen `publishedEvents` in order to link them. A microservice can provide multiple events allowing to document more fine-grained. The chosen formatting as string is deliberatively chosen to allow documenting multiple communication protocols.\n ### Best Practices\n - Use this attribute to document asynchronous event dependencies. For synchronous APIs like HTTP or RPC use the attribute `providedAPIs`.\n - Use a consistent naming scheme for events across all microservices.\n - Consider if you can uniquely identify an event via its routing key, e.g. `datasources.config.created` to add more expressiveness to the documentation. Otherwise you can use custom names as e.g. `DatasourceConfigCreatedEvent`.\n - Don't use spaces to avoid ambiguities."
+    },
+    "subscribedEvents": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "The events that the microservice consumes. The \"subscribedEvents\" identifier has to match a \"publishedEvents\" identifier in another microservice's msadoc.json in order to link them.",
+      "markdownDescription": "The events that the microservice consumes. The `subscribedEvents` identifier has to match a `publishedEvents` identifier in another microservice's `msadoc.json` in order to link them.\n ### Best Practices\n - Use this attribute to document asynchronous event dependencies. For synchronous APIs like HTTP or RPC use the attribute `consumedAPIs`."
+    },
+
+    "developmentDocumentation": {
+      "type": "string",
+      "description": "The link to the development documentation.",
+      "markdownDescription": "The link to the development documentation.\n ### Best Practices\n - Maintain a markdown file in your microservice repository that you can link here."
+    },
+    "deploymentDocumentation": {
+      "type": "string",
+      "description": "The link to the deployment documentation.",
+      "markdownDescription": "The link to the deployment documentation.\n ### Best Practices\n - Maintain a markdown file in your microservice repository or in the deployment repository that you can link here."
+    },
+    "apiDocumentation": {
+      "type": "string",
+      "description": "The link to the API documentation.",
+      "markdownDescription": "The link to the API documentation.\n ### Best Practices\n - Maintain a markdown file in your microservice repository or you can link here.\n - Alternatively, use a documentation tool as [OpenAPI](https://support.smartbear.com/swaggerhub/docs/tutorials/openapi-3-tutorial.html) or [AsyncAPI](https://www.asyncapi.com/blog/understanding-asyncapis) to document your APIs and link to the running instance here."
+    },
+
+    "responsibleTeam": {
+      "type": "string",
+      "description": "The identifier of the responsible team. Make sure all microservices governed by the same team use the same identifier in order to link them.",
+      "markdownDescription": "The identifier of the responsible team. Make sure all microservices governed by the same team use the same identifier in order to link them.\n ### Best Practices\n - If you have shared responsibilities for certain microservices, you might consider introducing a `SharedOwnership` team."
+    },
+    "responsibles": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "The email addresses or names of the mainly responsible people that should serve as contact persons. Make sure all microservices governed by the same responsible use the same identifier in order to link them.",
+      "markdownDescription": "The email addresses or names of the mainly responsible people that should serve as contact persons. Make sure all microservices governed by the same responsible use the same identifier in order to link them.\n ### Best Practices\n - Use a consistent tagging scheme across all microservices.\n - Using email addresses makes getting in touch easier than names."
+    },
+
+    "extensions": {
+      "type": "object",
+      "additionalProperties": {
+        "anyOf": [
+          { "type": "string" },
+          { "type": "number" },
+          { "type": "boolean" },
+          {
+            "type": "array",
+            "items": {
+              "anyOf": [
+                { "type": "string" },
+                { "type": "number" },
+                { "type": "boolean" }
+              ]
+            }
+          }
+        ]
+      },
+
+      "description": "You can easily add custom fields under the attribute \"extensions\".Extension field values can only be of type string, number, boolean, or array of these types. Extension fields are visualized in the UI in a very generic way.",
+      "markdownDescription": "You can easily add custom fields under the attribute `extensions`.\n Extension field values can only be of type `string`, `number`, `boolean`, or `array` of these types.\n Extension fields are visualized in the UI in a very generic way.\n ### Best Practices\n - Use extension fields to document things the base version does not support (as an alternative to tags)."
+    }
+  },
+  "required": ["name"],
+  "additionalProperties": false
+}
