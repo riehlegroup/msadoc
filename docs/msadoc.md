@@ -1,5 +1,13 @@
 # MSAdoc Format Specification
 
+> Tip: The MSAdoc format is available as JSON Schema. In editors like VSCode, simply add the following line to your `.msadoc.json` files to enable IntelliSense and validation:
+
+```json
+{
+  "$schema": "https://raw.githubusercontent.com/osrgroup/msadoc/main/schemas/service-doc.json"
+}
+```
+
 ## Table of Contents
 
 - [Base Data](#base-data)
