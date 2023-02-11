@@ -1,4 +1,6 @@
 {
+  "$schema": "https://raw.githubusercontent.com/osrgroup/msadoc/main/schemas/service-doc.json",
+
   "name": "GraphQlQueryService",
   "group": "backend.etl.load.query",
   "tags": ["app=ods"],
