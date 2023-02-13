@@ -9,15 +9,16 @@ import { ServiceNode } from '../../../service-docs-tree';
 import { NavigatorListItemButton } from '../common/navigator-list-item-button';
 import { ServiceItem } from '../common/service-item';
 
-export interface ResponsibleWithServiceDocs {
-  responsibleName: string;
-  correspondingServiceDocs: ServiceNode[];
-}
-
 interface Props {
-  responsible: ResponsibleWithServiceDocs;
+  /**
+   * The name of the Responsible the {@link serviceDocs} belong to.
+   *
+   * Special case: This value is `undefined` if no Responsible has been defined for the given {@link serviceDocs}.
+   */
+  responsibleName: string | undefined;
+  serviceDocs: ServiceNode[];
 }
-export const SingleResponsible: React.FC<Props> = (props) => {
+export const ResponsibleItem: React.FC<Props> = (props) => {
   const controller = useController(props);
 
   return (
@@ -30,7 +31,8 @@ export const SingleResponsible: React.FC<Props> = (props) => {
             <Icons.ExpandMore />
           )
         }
-        text={props.responsible.responsibleName}
+        text={props.responsibleName ?? 'No Responsible'}
+        isFallbackElement={props.responsibleName === undefined}
         onClick={(): void => controller.toggleIsCollapsed()}
       />
 
@@ -69,13 +71,13 @@ function useController(props: Props): Controller {
   });
 
   const sortedServiceDocs = React.useMemo((): ServiceNode[] => {
-    const result = [...props.responsible.correspondingServiceDocs];
+    const result = [...props.serviceDocs];
     result.sort((a, b) => {
       return a.name.localeCompare(b.name);
     });
 
     return result;
-  }, [props.responsible.correspondingServiceDocs]);
+  }, [props.serviceDocs]);
 
   return {
     state: state,

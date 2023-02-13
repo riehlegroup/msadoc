@@ -7,6 +7,17 @@ interface Props {
   isSelected?: boolean;
 
   /**
+   * Sometimes, our list contains a "fallback element".
+   * For instance, let's say we build a list of teams.
+   * And we have entries that do not belong to a team.
+   * Then we want to create a list item like "No team defined".
+   *
+   * In this case, we want to use a slightly different styling compared to regular items,
+   * so that users know that we aren't talking about a team called "No team defined".
+   */
+  isFallbackElement?: boolean;
+
+  /**
    * Spacing that will be added to the left.
    * This is particularly useful to visualize tree structures or the like:
    * Use an indent level of 0 for the root element,
@@ -75,7 +86,16 @@ export const NavigatorListItemButton: React.FC<Props> = (props) => {
       >
         {props.icon}
       </ListItemIcon>
-      <ListItemText primary={props.text} />
+      <ListItemText
+        primary={props.text}
+        sx={{
+          fontStyle: props.isFallbackElement === true ? 'italic' : undefined,
+          color: (theme) =>
+            props.isFallbackElement === true
+              ? theme.palette.grey[500]
+              : undefined,
+        }}
+      />
     </ListItemButton>
   );
 };
