@@ -9,15 +9,16 @@ import { ServiceNode } from '../../../service-docs-tree';
 import { NavigatorListItemButton } from '../common/navigator-list-item-button';
 import { ServiceItem } from '../common/service-item';
 
-export interface TeamWithServiceDocs {
-  teamName: string;
-  correspondingServiceDocs: ServiceNode[];
-}
-
 interface Props {
-  team: TeamWithServiceDocs;
+  /**
+   * The name of the Team the {@link serviceDocs} belong to.
+   *
+   * Special case: This value is `undefined` if no Team has been defined for the given {@link serviceDocs}.
+   */
+  teamName: string | undefined;
+  serviceDocs: ServiceNode[];
 }
-export const SingleTeam: React.FC<Props> = (props) => {
+export const TeamItem: React.FC<Props> = (props) => {
   const controller = useController(props);
 
   return (
@@ -30,7 +31,8 @@ export const SingleTeam: React.FC<Props> = (props) => {
             <Icons.ExpandMore />
           )
         }
-        text={props.team.teamName}
+        text={props.teamName ?? 'No Team'}
+        isFallbackElement={props.teamName === undefined}
         onClick={(): void => controller.toggleIsCollapsed()}
       />
 
@@ -69,13 +71,13 @@ function useController(props: Props): Controller {
   });
 
   const sortedServiceDocs = React.useMemo((): ServiceNode[] => {
-    const result = [...props.team.correspondingServiceDocs];
+    const result = [...props.serviceDocs];
     result.sort((a, b) => {
       return a.name.localeCompare(b.name);
     });
 
     return result;
-  }, [props.team.correspondingServiceDocs]);
+  }, [props.serviceDocs]);
 
   return {
     state: state,
