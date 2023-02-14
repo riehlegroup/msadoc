@@ -10,7 +10,7 @@
 
   "providedAPIs": ["/scheduler/tasks"],
 
-  "publishedEvents": ["extraction.execution.tiggered"],
+  "publishedEvents": ["extraction.execution.triggered"],
   "subscribedEvents": [
     "extraction.config.created",
     "extraction.config.updated",

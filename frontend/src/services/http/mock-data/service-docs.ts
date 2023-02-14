@@ -60,7 +60,7 @@ const allServiceDocs: GetServiceDocResponse[] = [
       'extraction.config.updated',
       'extraction.config.deleted',
     ],
-    publishedEvents: ['extraction.execution.tiggered'],
+    publishedEvents: ['extraction.execution.triggered'],
     developmentDocumentation:
       'https://github.com/jvalue/ods/blob/main/scheduler/README.md',
     deploymentDocumentation:
