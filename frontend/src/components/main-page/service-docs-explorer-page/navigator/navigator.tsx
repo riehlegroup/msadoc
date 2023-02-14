@@ -7,10 +7,12 @@ import { merge } from '../../../../utils/merge';
 
 import { GroupsTree } from './groups-tree';
 import { Responsibles } from './responsibles';
+import { ServicesList } from './services-list';
 import { Teams } from './teams';
 
 enum NavigatorView {
   GroupsTree,
+  ServicesList,
   Responsibles,
   Teams,
 }
@@ -46,6 +48,16 @@ export const Navigator: React.FC = () => {
           }
         />
         <TabButton
+          icon={<Icons.ViewList fontSize="inherit" />}
+          title="Services List"
+          isActive={
+            controller.state.selectedView === NavigatorView.ServicesList
+          }
+          onClick={(): void =>
+            controller.setSelectedView(NavigatorView.ServicesList)
+          }
+        />
+        <TabButton
           icon={<Icons.Person fontSize="inherit" />}
           title="Responsibles"
           isActive={
@@ -66,6 +78,9 @@ export const Navigator: React.FC = () => {
       <Box sx={{ flexGrow: 1, overflow: 'auto' }}>
         {controller.state.selectedView === NavigatorView.GroupsTree && (
           <GroupsTree />
+        )}
+        {controller.state.selectedView === NavigatorView.ServicesList && (
+          <ServicesList />
         )}
         {controller.state.selectedView === NavigatorView.Responsibles && (
           <Responsibles />
