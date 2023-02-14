@@ -2,7 +2,7 @@
 
 This example was inspired by our open data project - the [JValue ODS](https://github.com/jvalue/ods).
 
-## Prerequesites
+## Prerequisites
 
 - Install the [Rest Client](https://marketplace.visualstudio.com/items?itemName=humao.rest-client) plugin to your `VSCode` IDE.
 - A `msadoc-server` instance is running locally on your machine.
