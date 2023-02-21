@@ -1,4 +1,4 @@
-import { Alert, Box, Divider, IconButton } from '@mui/material';
+import { Alert, Box, Divider, IconButton, Tooltip } from '@mui/material';
 import { GetServiceDocResponse } from 'msadoc-client';
 import React from 'react';
 
@@ -13,6 +13,7 @@ import {
 import { FilterDialog, FilterNode, applyFilter } from './filter';
 import { Navigator } from './navigator';
 import { ServiceDocsExplorerPageRouter } from './router';
+import { SearchDialog } from './search';
 
 export const ServiceDocsExplorerPage: React.FC = () => {
   const controller = useController();
@@ -43,11 +44,21 @@ export const ServiceDocsExplorerPage: React.FC = () => {
             }}
           >
             <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-              <IconButton
-                onClick={(): void => controller.setShowFilterDialog(true)}
-              >
-                <Icons.FilterAlt />
-              </IconButton>
+              <Tooltip title="Find Service">
+                <IconButton
+                  onClick={(): void => controller.setShowSearchDialog(true)}
+                >
+                  <Icons.Search />
+                </IconButton>
+              </Tooltip>
+
+              <Tooltip title="Filter Services">
+                <IconButton
+                  onClick={(): void => controller.setShowFilterDialog(true)}
+                >
+                  <Icons.FilterAlt />
+                </IconButton>
+              </Tooltip>
             </Box>
 
             <Divider />
@@ -74,6 +85,12 @@ export const ServiceDocsExplorerPage: React.FC = () => {
             />
           </Box>
         </Box>
+
+        {controller.state.showSearchDialog && (
+          <SearchDialog
+            close={(): void => controller.setShowSearchDialog(false)}
+          />
+        )}
       </ServiceDocsServiceContextProvider>
 
       {controller.state.showFilterDialog && (
@@ -98,6 +115,7 @@ interface State {
   filter: FilterNode | undefined;
   rawFilterQuery: string | undefined;
 
+  showSearchDialog: boolean;
   showFilterDialog: boolean;
 }
 interface Controller {
@@ -110,6 +128,7 @@ interface Controller {
 
   rawFilteredServiceDocs: GetServiceDocResponse[];
 
+  setShowSearchDialog: (show: boolean) => void;
   setShowFilterDialog: (show: boolean) => void;
   applyFilter: (filter: FilterNode, rawFilterQuery: string) => void;
   removeFilter: () => void;
@@ -120,6 +139,7 @@ function useController(): Controller {
   const [state, setState] = React.useState<State>({
     filter: undefined,
     rawFilterQuery: undefined,
+    showSearchDialog: false,
     showFilterDialog: false,
   });
 
@@ -156,6 +176,9 @@ function useController(): Controller {
 
     rawFilteredServiceDocs: rawFilteredServiceDocs,
 
+    setShowSearchDialog: (show): void => {
+      setState((state) => merge(state, { showSearchDialog: show }));
+    },
     setShowFilterDialog: (show): void => {
       setState((state) => merge(state, { showFilterDialog: show }));
     },

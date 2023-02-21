@@ -32,7 +32,7 @@ export const FilterDialog: React.FC<Props> = (props) => {
 
   return (
     <Dialog maxWidth={false} open onClose={(): void => props.close()}>
-      <DialogTitle>Filter</DialogTitle>
+      <DialogTitle>Filter Services</DialogTitle>
 
       <DialogContent sx={{ width: '900px', maxWidth: '100%' }} dividers>
         {controller.state.filterParseError && (
