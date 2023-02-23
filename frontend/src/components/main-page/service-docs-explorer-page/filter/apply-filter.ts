@@ -187,6 +187,8 @@ function isStringMatching(theString: string, theQuery: string): boolean {
   // There is one special case: We want to allow wildcards with the "*" character. So: "un-escape" this character and replace it with a proper Regex wildcard.
   preparedQuery = preparedQuery.replaceAll('\\*', '.*');
 
+  preparedQuery = `^${preparedQuery}$`;
+
   const regex = new RegExp(preparedQuery, 'i');
   return regex.test(theString);
 }
