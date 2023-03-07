@@ -1,0 +1,44 @@
+{
+  "name": "msadoc-cli",
+  "version": "0.0.1",
+  "license": "Apache-2.0",
+  "keywords": [
+    "cli",
+    "decentralized",
+    "documentation",
+    "microservice"
+  ],
+  "files": [
+    "dist/"
+  ],
+  "type": "module",
+  "module": "dist/cli.js",
+  "bin": {
+    "msadoc": "dist/cli.js"
+  },
+  "scripts": {
+    "build": "rimraf dist/ && rollup -c --bundleConfigAsCjs",
+    "test": "echo 'Ignoring the test command in msadoc-cli'",
+    "lint": "eslint src --max-warnings=0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/osrgroup/msadoc.git"
+  },
+  "bugs": {
+    "url": "https://github.com/osrgroup/msadoc/issues"
+  },
+  "homepage": "https://github.com/osrgroup/msadoc#readme",
+  "//": "We declare all dependencies as devDependencies because we use rollup which adds the necessary dependencies to our bundle.",
+  "devDependencies": {
+    "@commander-js/extra-typings": "^10.0.3",
+    "@rollup/plugin-commonjs": "^24.0.1",
+    "@rollup/plugin-json": "^6.0.0",
+    "@rollup/plugin-node-resolve": "^15.0.1",
+    "@rollup/plugin-typescript": "^11.0.0",
+    "chalk": "^5.2.0",
+    "commander": "^10.0.0",
+    "rollup": "^3.18.0",
+    "xhr2": "^0.2.1"
+  }
+}

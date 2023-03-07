@@ -6,6 +6,7 @@
   "workspaces": [
     "client-generated",
     "client-generator",
+    "cli",
     "frontend",
     "server"
   ],
