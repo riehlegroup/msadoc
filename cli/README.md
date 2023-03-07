@@ -123,3 +123,5 @@ npm install -g ./msadoc-cli-0.0.1.tgz
 (Make sure to replace `0.0.1` with the current version number.)
 
 Now, you can run the CLI as if it was installed directly from npm.
+
+One interesting side effect of this procedure: When to unpack the Tar file, you can see which files are actually part of the package. This is particularly useful to check whether you maybe added unnecessary files to the package, or whether something is missing.
