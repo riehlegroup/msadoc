@@ -20,6 +20,16 @@ export interface ICytoScapeBuilder {
   build(): ElementDefinition[];
 }
 
+export const SERVICE_PREFIX = 'service:';
+export const GROUP_PREFIX = 'group:';
+type ServiceOrGroupPrefix = typeof SERVICE_PREFIX | typeof GROUP_PREFIX;
+/**
+ * The identifier of a service or group. Examples:
+ * - `service:TheNameOfTheService`
+ * - `group:TheNameOfTheGroup`
+ */
+export type NodeIdentifier = `${ServiceOrGroupPrefix}${string}`;
+
 export const cyStyleSheets: Stylesheet[] = [
   {
     selector: 'node',
@@ -70,14 +80,40 @@ type GroupNodeDefinition = MyNodeDefinition & { data: { type: 'group' } };
 
 interface MyEdgeDefinition extends EdgeDefinition {
   group: 'edges';
-  data: {
-    type: 'api' | 'event';
-    source: string;
-    target: string;
+  data: MyEdgeData;
+}
+export interface MyEdgeData {
+  type: 'api' | 'event';
+  source: NodeIdentifier;
+  target: NodeIdentifier;
 
-    lineColor: string;
-    targetArrowColor: string;
-  };
+  lineColor: string;
+  targetArrowColor: string;
+}
+/**
+ * Check if the given {@link item} has the shape of {@link MyEdgeData}.
+ */
+export function isEdgeData(item: unknown): item is MyEdgeData {
+  if (typeof item !== 'object' || item == null) {
+    return false;
+  }
+  const itemAsRecord = item as Record<string, unknown>;
+
+  const expectedStringFields: Array<keyof MyEdgeData> = [
+    'type',
+    'source',
+    'target',
+    'lineColor',
+    'targetArrowColor',
+  ];
+
+  for (const singleExpectedStringField of expectedStringFields) {
+    if (typeof itemAsRecord[singleExpectedStringField] !== 'string') {
+      return false;
+    }
+  }
+
+  return true;
 }
 
 interface CytoScapeBuilderOptions {
@@ -124,21 +160,17 @@ export class CytoScapeBuilder implements ICytoScapeBuilder {
       },
     };
     if (service.group.type === ServiceDocsTreeNodeType.RegularGroup) {
-      nodeDefinition.data.parent = service.group.identifier;
+      nodeDefinition.data.parent = this.getIdentifier(service.group);
     }
     this.elementDefinitions.push(nodeDefinition);
   }
 
-  private getIdentifier(node: ServiceNode | RegularGroupNode): string {
+  private getIdentifier(node: ServiceNode | RegularGroupNode): NodeIdentifier {
     if (node.type === ServiceDocsTreeNodeType.RegularGroup) {
-      return node.identifier;
+      return `group:${node.identifier}`;
     }
 
-    return `${
-      node.group.type === ServiceDocsTreeNodeType.RegularGroup
-        ? node.group.identifier
-        : '#/'
-    }/${node.name}`;
+    return `service:${node.name}`;
   }
 
   private addServiceDependencies(service: ServiceNode): void {
@@ -268,14 +300,14 @@ export class CytoScapeBuilder implements ICytoScapeBuilder {
       group: 'nodes',
       data: {
         type: 'group',
-        id: group.identifier,
+        id: this.getIdentifier(group),
         name: group.name,
 
         backgroundColor: this.options.groupBackgroundColorFn(group),
       },
     };
     if (group.parent.type !== ServiceDocsTreeNodeType.RootGroup) {
-      nodeDefinition.data.parent = group.parent.identifier;
+      nodeDefinition.data.parent = this.getIdentifier(group.parent);
     }
     this.elementDefinitions.push(nodeDefinition);
   }
