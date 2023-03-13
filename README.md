@@ -47,7 +47,7 @@ Microservice-based projects often struggle with documentation. Information is di
 
 4. Browse all your microservices on your `msadoc-frontend` instance.
 <p float="left">
-  <img src="docs/screenshot-list-view.png" width="45%" />
+  <img src="docs/screenshot-groups-tree-view.png" width="45%" />
   <img src="docs/screenshot-dependency-view.png" width="45%" /> 
 </p>
 
