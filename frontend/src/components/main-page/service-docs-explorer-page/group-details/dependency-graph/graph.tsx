@@ -14,8 +14,14 @@ import {
 } from '../../../service-docs-tree';
 import { useServiceDocsServiceContext } from '../../../services/service-docs-service';
 
-import { CytoScapeBuilder, cyStyleSheets } from './cytoscape-builder';
+import {
+  CytoScapeBuilder,
+  MyEdgeData,
+  cyStyleSheets,
+  isEdgeData,
+} from './cytoscape-builder';
 import { DepthSlider } from './depth-slider';
+import { EdgeDetailsPopover } from './edge-details-popover';
 
 cytoscape.use(cola);
 
@@ -90,10 +96,22 @@ export const Graph: React.FC<Props> = (props) => {
           }}
         />
       </Box>
+
+      {controller.state.edgeDetailsPopoverData !== undefined && (
+        <EdgeDetailsPopover
+          edge={controller.state.edgeDetailsPopoverData.edge}
+          event={controller.state.edgeDetailsPopoverData.event}
+          close={(): void => controller.closeEdgeDetailsPopover()}
+        />
+      )}
     </React.Fragment>
   );
 };
 
+interface EdgeDetailsPopoverData {
+  edge: MyEdgeData;
+  event: MouseEvent;
+}
 interface State {
   graphDepth: number;
 
@@ -104,6 +122,8 @@ interface State {
    * We use State for this because we want to actually trigger the Cytoscape component to update.
    */
   reLayoutGraphOnNextRender: boolean;
+
+  edgeDetailsPopoverData: EdgeDetailsPopoverData | undefined;
 }
 
 interface Controller {
@@ -113,6 +133,8 @@ interface Controller {
   onRenderGraph: (cy: cytoscape.Core) => void;
   setState: (newState: State) => void;
   performDownload: () => Promise<void>;
+
+  closeEdgeDetailsPopover: () => void;
 }
 function useController(props: Props): Controller {
   const serviceDocsService = useServiceDocsServiceContext();
@@ -127,6 +149,7 @@ function useController(props: Props): Controller {
   const [state, setState] = React.useState<State>({
     graphDepth: maxDepth,
     reLayoutGraphOnNextRender: false,
+    edgeDetailsPopoverData: undefined,
   });
 
   const elements = React.useMemo(
@@ -148,6 +171,37 @@ function useController(props: Props): Controller {
     setState((state) => merge(state, { reLayoutGraphOnNextRender: true }));
   }, [elements]);
 
+  const edgeClickEventListener = React.useRef<cytoscape.EventHandler>();
+  /**
+   * When the user clicks on an edge, we want to show a Popover menu with some details.
+   * This function attaches an event listener to our Cytoscape component in order to capture these click events.
+   */
+  function attachEdgeClickEventListener(cy: cytoscape.Core): void {
+    // Remove the previous listener. Otherwise, the event handler will be called multiple times.
+    if (edgeClickEventListener.current) {
+      cy.off('click', edgeClickEventListener.current);
+    }
+
+    edgeClickEventListener.current = (event): void => {
+      // It seems like "data" is always a function.
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+      const data = event.target.data();
+
+      if (!isEdgeData(data)) {
+        return;
+      }
+
+      const edgeDetails: EdgeDetailsPopoverData = {
+        edge: data,
+        event: event.originalEvent,
+      };
+      setState((state) =>
+        merge(state, { edgeDetailsPopoverData: edgeDetails }),
+      );
+    };
+    cy.on('click', edgeClickEventListener.current);
+  }
+
   return {
     cyElements: elements,
     maxGraphDepth: maxDepth,
@@ -155,6 +209,8 @@ function useController(props: Props): Controller {
     setState: setState,
     onRenderGraph: (cy): void => {
       cyRef.current = cy;
+
+      attachEdgeClickEventListener(cy);
 
       if (props.mode === GraphMode.Card) {
         cy.fit();
@@ -190,6 +246,10 @@ function useController(props: Props): Controller {
       downloadLink.href = URL.createObjectURL(pngBlob);
       downloadLink.download = fileName;
       downloadLink.click();
+    },
+
+    closeEdgeDetailsPopover: (): void => {
+      setState((state) => merge(state, { edgeDetailsPopoverData: undefined }));
     },
   };
 }
