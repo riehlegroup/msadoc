@@ -86,7 +86,7 @@ $ npm install
 
 > Whenever you checkout a new version of msadoc, make sure to run this command so that your dependencies are up-to-date.
 
-> Tip for developers: Among others, this command will also build a shared npm library called `msadoc-client`. This library is used in the frontend. When building this library, the old library output is always deleted first. This might lead to some "hiccups" in your IDE (i.e. your IDE might insist that the library does not exist, even after the build has finished). If you experience this problem, simply restart your IDE after building the client library. If you are using VSCode, you can alternatively use the "Restart TS server" and "Restart ESLint Server" commands.
+> Tip for developers: Among others, this command will also build a shared npm library called `msadoc-client`. This library is used in the frontend. When building this library, the old library output is always deleted first. This might lead to some "hiccups" in your IDE (i.e. your IDE might insist that the library does not exist, even after the build has finished). If you experience this problem, simply restart your IDE after building the client library. If you are using VSCode, you can alternatively use the "Restart TS server" and "Restart ESLint Server" commands. In some cases, the frontend dev server might also run into a similar "hiccup". If this is the case, restart the dev server. If this does not help, delete `frontend/node_modules/.cache/`.
 
 #### 2. Start the backend
 
