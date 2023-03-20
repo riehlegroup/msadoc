@@ -1,3 +1,4 @@
+import { GetServiceDocResponse } from 'msadoc-client';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { ExpressionNode, ExpressionNodeType } from 'search-expression-parser';
 
@@ -51,15 +52,6 @@ export interface FilterKeyValueNode {
  *
  * **IMPORTANT**: The keys must all be lowercase, because we use ".toLowerCase()" when accessing entries in this Map.
  */
-/*
-  The following can be made more type-safe in TS 4.9 using the "satisfies" operator:
-  ```
-  type QueryKeyToServiceDocKeyMap = Record<string, keyof GetServiceDocResponse>;
-  export const QUERY_KEY_TO_SERVICEDOC_MAP = {...} satisfies QueryKeyToServiceDocKeyMap;
-  ```
-
-  Unfortunately, react-scripts 18.2.0 did not support this syntax yet, leading to a compiler error.
-*/
 export const QUERY_KEY_TO_SERVICEDOC_MAP = {
   name: 'name',
   tag: 'tags',
@@ -78,7 +70,7 @@ export const QUERY_KEY_TO_SERVICEDOC_MAP = {
 
   responsibleteam: 'responsibleTeam',
   responsible: 'responsibles',
-} as const;
+} as const satisfies Record<string, keyof GetServiceDocResponse>;
 
 type AllowedLiteralNodeKey = keyof typeof QUERY_KEY_TO_SERVICEDOC_MAP;
 
