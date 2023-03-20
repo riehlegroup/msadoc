@@ -4,6 +4,7 @@
   "description": "OpenAPI client for msadoc-server",
   "author": "OpenAPI-Generator",
   "private": true,
+  "type": "module",
   "repository": {
     "type": "git",
     "url": "https://github.com/osrgroup/msadoc.git"

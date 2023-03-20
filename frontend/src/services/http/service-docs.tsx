@@ -49,7 +49,7 @@ function useServiceDocsHttpService(): ServiceDocsHttpService {
   async function doListAllServiceDocs(
     configuration: Configuration,
   ): Promise<ListServiceDocResponse> {
-    if (ENVIRONMENT.REACT_APP_DEMO_MODE) {
+    if (ENVIRONMENT.DEMO_MODE) {
       return {
         serviceDocs: ServiceDocsMockData.allServiceDocs,
       };
@@ -88,7 +88,7 @@ function useServiceDocsHttpService(): ServiceDocsHttpService {
       serviceName: string;
     },
   ): Promise<DeleteServiceDocResponse> {
-    if (ENVIRONMENT.REACT_APP_DEMO_MODE) {
+    if (ENVIRONMENT.DEMO_MODE) {
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       return ServiceDocsMockData.allServiceDocs[0]!;
     }

@@ -59,7 +59,7 @@ function useAuthHttpService(): AuthHttpService {
     username: string,
     password: string,
   ): Promise<LoginResponseDto> {
-    if (ENVIRONMENT.REACT_APP_DEMO_MODE) {
+    if (ENVIRONMENT.DEMO_MODE) {
       return {
         access_token: 'mock-access-token',
         refresh_token: 'mock-refresh-token',
@@ -78,7 +78,7 @@ function useAuthHttpService(): AuthHttpService {
 
   const doRefreshAuthToken = React.useCallback(
     async (refreshToken: string): Promise<LoginResponseDto> => {
-      if (ENVIRONMENT.REACT_APP_DEMO_MODE) {
+      if (ENVIRONMENT.DEMO_MODE) {
         return {
           access_token: 'mock-access-token',
           refresh_token: 'mock-refresh-token',

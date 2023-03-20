@@ -9,7 +9,7 @@ services:
       context: ../..
       dockerfile: frontend.Dockerfile
       args:
-        REACT_APP_BACKEND_URL: '/api'
+        VITE_BACKEND_URL: '/api'
 
   msadoc-server:
     # Add build context to image

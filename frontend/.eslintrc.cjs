@@ -3,6 +3,10 @@ module.exports = {
   parserOptions: {
     tsconfigRootDir: __dirname,
   },
+
+  // Ignore all folders except for '/src'.
+  ignorePatterns: ['/*', '!/src'],
+
   overrides: [
     {
       files: ['*.ts', '*.tsx'],
