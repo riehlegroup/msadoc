@@ -13,7 +13,9 @@ COPY client-generated ./client-generated/
 # copy rest of the files
 COPY *.js ./
 COPY frontend/tsconfig* ./frontend/
-COPY frontend/*.js ./frontend/
+COPY frontend/*.cjs ./frontend/
+COPY frontend/*.ts ./frontend/
+COPY frontend/index.html ./frontend/
 COPY frontend/public ./frontend/public/
 COPY frontend/.env* ./frontend/
 COPY frontend/src ./frontend/src/
@@ -25,7 +27,7 @@ RUN npm ci
 #--------------------------------------------------------#
 FROM base as build
 
-ARG REACT_APP_BACKEND_URL
+ARG VITE_BACKEND_URL
 
 # lint project
 RUN npm run lint -w frontend

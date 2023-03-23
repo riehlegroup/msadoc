@@ -1,18 +1,18 @@
 {
   "name": "msadoc-frontend",
   "version": "0.0.1",
-  "homepage": "https://osrgroup.github.io/msadoc",
   "license": "Apache-2.0",
   "private": true,
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "build:demo": "REACT_APP_ROUTER_BASE=msadoc REACT_APP_DEMO_MODE=true npm run build",
-    "test": "react-scripts test --watchAll=false",
-    "test-interactive": "react-scripts test",
-    "eject": "react-scripts eject",
-    "lint": "eslint src --max-warnings=0"
+    "start": "vite",
+    "preview": "vite preview",
+    "clean": "rimraf build/",
+    "build": "npm run clean && tsc && vite build",
+    "build:demo": "VITE_ROUTER_BASE=msadoc VITE_DEMO_MODE=true npm run build",
+    "test": "echo 'Ignoring the test command in frontend'",
+    "lint": "eslint . --max-warnings=0"
   },
+  "type": "module",
   "dependencies": {
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
@@ -28,17 +28,17 @@
     "react-cytoscapejs": "^2.0.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.7.0",
-    "react-scripts": "5.0.1",
     "search-expression-parser": "0.0.2"
   },
   "devDependencies": {
-    "@testing-library/jest-dom": "^5.16.5",
-    "@testing-library/react": "^13.4.0",
-    "@testing-library/user-event": "^14.4.3",
     "@types/react": "^18.0.27",
     "@types/react-cytoscapejs": "^1.2.2",
     "@types/react-dom": "^18.0.10",
+    "@vitejs/plugin-react": "^3.1.0",
+    "autoprefixer": "^10.4.14",
+    "eslint-config-react-app": "^7.0.1",
     "gh-pages": "^4.0.0",
-    "sass": "^1.57.1"
+    "sass": "^1.57.1",
+    "vite": "^4.2.0"
   }
 }

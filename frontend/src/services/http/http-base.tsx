@@ -33,12 +33,12 @@ function useHttpService(): HttpService {
   function createConfiguration(accessToken?: string): Configuration {
     if (accessToken === undefined) {
       return new Configuration({
-        basePath: ENVIRONMENT.REACT_APP_BACKEND_URL,
+        basePath: ENVIRONMENT.BACKEND_URL,
       });
     }
 
     return new Configuration({
-      basePath: ENVIRONMENT.REACT_APP_BACKEND_URL,
+      basePath: ENVIRONMENT.BACKEND_URL,
 
       /*
         The generated client is not capable of adding the "authorization: Bearer <access token>" header. 

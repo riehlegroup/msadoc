@@ -51,7 +51,7 @@ function useApiKeysHttpService(): ApiKeysHttpService {
   async function doListAllApiKeys(
     configuration: Configuration,
   ): Promise<GetApiKeysResponseDto> {
-    if (ENVIRONMENT.REACT_APP_DEMO_MODE) {
+    if (ENVIRONMENT.DEMO_MODE) {
       return {
         apiKeys: ApiKeysMockData.allApiKeys,
       };
@@ -88,7 +88,7 @@ function useApiKeysHttpService(): ApiKeysHttpService {
       apiKeyName: string;
     },
   ): Promise<CreateApiKeyResponseDto> {
-    if (ENVIRONMENT.REACT_APP_DEMO_MODE) {
+    if (ENVIRONMENT.DEMO_MODE) {
       return {
         ...ApiKeysMockData.apiKeyCreationResponse,
         keyName: data.apiKeyName,
@@ -128,7 +128,7 @@ function useApiKeysHttpService(): ApiKeysHttpService {
       apiKeyId: number;
     },
   ): Promise<void> {
-    if (ENVIRONMENT.REACT_APP_DEMO_MODE) {
+    if (ENVIRONMENT.DEMO_MODE) {
       return;
     }
 

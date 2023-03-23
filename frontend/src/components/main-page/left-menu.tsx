@@ -37,7 +37,6 @@ export const LeftMenu: React.FC<Props> = (props) => {
           <Icons.Key fontSize="inherit" />
         </NavButtonWithRouterTarget>
       </Stack>
-
       <Box>
         <Stack sx={{ width: '100%' }}>
           <NavButton

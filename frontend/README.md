@@ -1,52 +1,49 @@
-# Getting Started with Create React App
+In the following, you can find documentation of the most important frontend-related tasks/features, and a few development tips.
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+> All of the npm commands mentioned here should be run from the root of the project, not from the `frontend/` folder.
 
-## Available Scripts
+## Development server
 
-In the project directory, you can run:
+To start a development server in order to preview the application, run
 
-### `npm start`
+```
+npm start -w=frontend
+```
 
-Runs the app in the development mode.\
-Open [http://localhost:3001](http://localhost:3001) to view it in the browser.
+Open [http://localhost:3001](http://localhost:3001) to view the application in the browser. When you make edits, the corresponding parts of the application will automatically reload.
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+Please note:
 
-### `npm test`
+- We are using [Vite](https://vitejs.dev) as our build tool. The Vite development server starts very quickly (it should only take a few seconds). However, when you load the application in your browser for the very first time, it is possible that it takes even up to one minute until your browser shows the page. Future page loads will be much faster.
+- The development server does perform type checking and thus not warn you if you have any type-related errors in your code.
 
-Launches the test runner. Unlike in the default CreateReactApp setup, this does not launch the tests in interactive mode. Use `npm run test-interactive` if you want to run the tests in interactive mode.
+## Production build
 
-### `npm run test-interactive`
+To build the frontend for production, run
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+```
+npm run build -w=frontend
+```
 
-### `npm run build`
+Typically, we run this command in a CI/CD pipeline. However, it is also useful locally: Once you have finished implementing a particular (larger) feature, it might be helpful to see whether it works properly in production mode. Once you have built the frontend for production, you can run the following command to preview the production build in your browser:
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+```
+npm run preview -w=frontend
+```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Environment variables
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+The following environment variables are available.
 
-### `npm run eject`
+- `VITE_BACKEND_URL` (string): The URL to the backend of our application.
+- `VITE_DEMO_MODE` (boolean): Should the application be started in Demo Mode? (Tip: When developing a new feature for the frontend, Demo Mode is pretty useful, because you don't need to start any backend in this case.)
+- `VITE_ROUTER_BASE` (string): When deploying on a subfolder (e.g. `https://osrgroup.github.io/msadoc/` instead of `https://osrgroup.github.io`), make sure to set this variable to the name of the folder (in the example: `msadoc`).
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+> If you want to override some of the environment variables for local development, create a `.env.local` file and add the overrides to this file. See https://vitejs.dev/guide/env-and-mode.html
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Notes
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+In the following, a few unordered notes.
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-### `npm run lint`
-
-This will run ESLint in order to lint the app.
-
-### `npm run deploy:demo`
-
-This will deploy the current version to GitHub pages in demo-mode.
+- `npm run build:demo -w=frontend` will build the frontend for GitHub pages.
+- We are using a monorepo. One of the benefits of this is that we can create reusable libraries and import/use them in our projects (see e.g. `client-generated`), just like if we installed these libraries from npm. For some reason, Vite handles these local libraries in a different way compared to ones from npm. See https://vitejs.dev/guide/dep-pre-bundling.html#monorepos-and-linked-dependencies Most importantly, the local libraries need to be ESM modules, i.e. they need `"type": "module"` in their `package.json`, and `"module": "es2022"` in their `tsconfig.json`.

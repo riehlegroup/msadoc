@@ -32,7 +32,7 @@ export const MainPage: React.FC = () => {
           height: '100%',
         }}
       >
-        {ENVIRONMENT.REACT_APP_DEMO_MODE && (
+        {ENVIRONMENT.DEMO_MODE && (
           <Box>
             <DemoModeBanner />
           </Box>

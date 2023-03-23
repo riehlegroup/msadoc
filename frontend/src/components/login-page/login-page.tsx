@@ -126,7 +126,7 @@ export const LoginPage: React.FC = () => {
                   Login
                 </LoadingButton>
 
-                {ENVIRONMENT.REACT_APP_DEMO_MODE && (
+                {ENVIRONMENT.DEMO_MODE && (
                   <Alert severity="info">
                     <b>Demo Mode:</b> Login with any unsername/password!
                   </Alert>
