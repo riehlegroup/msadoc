@@ -1,6 +1,6 @@
 In the following, you can find documentation of the most important frontend-related tasks/features, and a few development tips.
 
-> All of the npm commands mentioned here should be run from the root of the project, not from the `frontend/` folder.
+> All of the npm commands mentioned here should be run from the root of the project, not from the `frontend/` folder. When opening the project in VSCode, make sure to open the root of the project, not the `frontend/` folder.
 
 ## Development server
 
@@ -40,6 +40,12 @@ The following environment variables are available.
 - `VITE_ROUTER_BASE` (string): When deploying on a subfolder (e.g. `https://osrgroup.github.io/msadoc/` instead of `https://osrgroup.github.io`), make sure to set this variable to the name of the folder (in the example: `msadoc`).
 
 > If you want to override some of the environment variables for local development, create a `.env.local` file and add the overrides to this file. See https://vitejs.dev/guide/env-and-mode.html
+
+## Controller Pattern
+
+The React components used in our frontend are all structured according to the [Controller Pattern](https://medium.com/@MBuchalik/the-controller-pattern-separate-business-logic-from-presentation-in-react-331f72fcb32a). Please make sure to follow this pattern when creating new components.
+
+The repository already contains a VSCode code snippet that allows you to easily create the boilerplate code for a component that uses the Controller Pattern. In a fresh `.tsx` file, simply type `reactcomponent`. You should get a suggestion that, once accepted, creates the necessary boilerplate code for you.
 
 ## Notes
 
