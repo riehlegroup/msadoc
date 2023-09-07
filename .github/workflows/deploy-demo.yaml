@@ -46,7 +46,7 @@ jobs:
             </head>
             <body>
               <script>
-                window.location.replace('https://osrgroup.github.io/msadoc');
+                window.location.replace('https://riehlegroup.github.io/msadoc');
               </script>
             </body>
           </html>

@@ -11,7 +11,7 @@
         "inputSpec": "http://localhost:3000/api-json",
         "additionalProperties": {
           "npmName": "msadoc-client",
-          "npmRepository": "https://github.com/osrgroup/msadoc",
+          "npmRepository": "https://github.com/riehlegroup/msadoc",
           "withInterfaces": true
         }
       }

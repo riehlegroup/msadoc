@@ -51,7 +51,10 @@ export const DemoModeBanner: React.FC = () => {
 
             <Box sx={{ marginTop: 3 }}>
               Visit our{' '}
-              <Link href="https://github.com/osrgroup/msadoc" target="_blank">
+              <Link
+                href="https://github.com/riehlegroup/msadoc"
+                target="_blank"
+              >
                 GitHub page
               </Link>{' '}
               to learn more about <b>msadoc</b>.

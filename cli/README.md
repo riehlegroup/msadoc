@@ -1,6 +1,6 @@
 # MSAdoc CLI
 
-The MSAdoc CLI allows you to upload Service Docs to a MSAdoc backend. See the [project homepage](https://github.com/osrgroup/msadoc) to learn more about MSAdoc.
+The MSAdoc CLI allows you to upload Service Docs to a MSAdoc backend. See the [project homepage](https://github.com/riehlegroup/msadoc) to learn more about MSAdoc.
 
 ## Installation
 

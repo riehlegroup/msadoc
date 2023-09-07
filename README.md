@@ -9,7 +9,7 @@
 - Find the responsible person if you need to get in touch with the service owner.
 - Extend the documentation format with custom fields according to your very specific needs.
 
-**[A demo is available here!](https://osrgroup.github.io/msadoc)**
+**[A demo is available here!](https://riehlegroup.github.io/msadoc)**
 
 ## Mission
 

@@ -4,7 +4,7 @@
 
 ```json
 {
-  "$schema": "https://raw.githubusercontent.com/osrgroup/msadoc/main/schemas/service-doc.json"
+  "$schema": "https://raw.githubusercontent.com/riehlegroup/msadoc/main/schemas/service-doc.json"
 }
 ```
 

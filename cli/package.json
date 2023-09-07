@@ -23,12 +23,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/osrgroup/msadoc.git"
+    "url": "git+https://github.com/riehlegroup/msadoc.git"
   },
   "bugs": {
-    "url": "https://github.com/osrgroup/msadoc/issues"
+    "url": "https://github.com/riehlegroup/msadoc/issues"
   },
-  "homepage": "https://github.com/osrgroup/msadoc#readme",
+  "homepage": "https://github.com/riehlegroup/msadoc#readme",
   "//": "We declare all dependencies as devDependencies because we use rollup which adds the necessary dependencies to our bundle.",
   "devDependencies": {
     "@commander-js/extra-typings": "^10.0.3",

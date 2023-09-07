@@ -37,7 +37,7 @@ The following environment variables are available.
 
 - `VITE_BACKEND_URL` (string): The URL to the backend of our application.
 - `VITE_DEMO_MODE` (boolean): Should the application be started in Demo Mode? (Tip: When developing a new feature for the frontend, Demo Mode is pretty useful, because you don't need to start any backend in this case.)
-- `VITE_ROUTER_BASE` (string): When deploying on a subfolder (e.g. `https://osrgroup.github.io/msadoc/` instead of `https://osrgroup.github.io`), make sure to set this variable to the name of the folder (in the example: `msadoc`).
+- `VITE_ROUTER_BASE` (string): When deploying on a subfolder (e.g. `https://riehlegroup.github.io/msadoc/` instead of `https://riehlegroup.github.io`), make sure to set this variable to the name of the folder (in the example: `msadoc`).
 
 > If you want to override some of the environment variables for local development, create a `.env.local` file and add the overrides to this file. See https://vitejs.dev/guide/env-and-mode.html
 

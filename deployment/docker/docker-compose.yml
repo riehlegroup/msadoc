@@ -2,13 +2,13 @@ version: '3.7'
 
 services:
   msadoc-frontend:
-    image: ghcr.io/osrgroup/msadoc-frontend
+    image: ghcr.io/riehlegroup/msadoc-frontend
     labels:
       - 'traefik.enable=true'
       - 'traefik.http.routers.to-ui.rule=PathPrefix(`/`)'
 
   msadoc-server:
-    image: ghcr.io/osrgroup/msadoc-server
+    image: ghcr.io/riehlegroup/msadoc-server
     environment:
       msadoc_port: 80
 
