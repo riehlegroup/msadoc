@@ -9,7 +9,7 @@ The MSAdoc CLI allows you to upload Service Docs to a MSAdoc backend. See the [p
 To install the CLI, run
 
 ```
-npm install -g msadoc-cli@latest
+npm install -g @msadoc/cli@latest
 ```
 
 To update the package, simply rerun the installation command.
