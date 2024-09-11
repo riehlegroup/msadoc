@@ -1,23 +1,17 @@
 {
   "$schema": "https://raw.githubusercontent.com/riehlegroup/msadoc/main/schemas/service-doc.json",
-
   "name": "NotificationService",
   "group": "backend",
   "tags": ["project=msadoc-demo"],
-  
   "repository": "https://github.com/msadoc-demo/notification-service",
   "taskBoard": "https://github.com/orgs/msadoc-demo/projects/5",
-  "deploymentDocumentation":
-    "https://github.com/msadoc-demo/notification-service/blob/main/deployment.md",
-  
-    "responsibles": ["daniel.wilson@msadoc-demo.org"],
+  "deploymentDocumentation": "https://github.com/msadoc-demo/notification-service/blob/main/deployment.md",
+  "responsibles": ["daniel.wilson@msadoc-demo.org"],
   "responsibleTeam": "N Team",
-  
   "extensions": {
     "usedInProducts": ["CloudService"],
     "programmingLanguage": "Go"
   },
-
   "providedAPIs": ["/notifications/configs", "/notifications/execution-stats"],
   "subscribedEvents": ["load.execution.success", "load.execution.failure"],
   "publishedEvents": [

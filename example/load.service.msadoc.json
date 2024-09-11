@@ -1,23 +1,20 @@
 {
   "$schema": "https://raw.githubusercontent.com/riehlegroup/msadoc/main/schemas/service-doc.json",
-
   "name": "LoadService",
   "group": "backend.etl.load",
   "tags": ["project=msadoc-demo"],
-  
   "repository": "https://github.com/msadoc-demo/load-service",
   "taskBoard": "https://github.com/orgs/msadoc-demo/projects/4",
-  "deploymentDocumentation":
-    "https://github.com/msadoc-demo/load-service/blob/main/deployment.md",
-  
-  "responsibles": ["michael.johnson@msadoc-demo.org", "emily.brown@msadoc-demo.org"],
+  "deploymentDocumentation": "https://github.com/msadoc-demo/load-service/blob/main/deployment.md",
+  "responsibles": [
+    "michael.johnson@msadoc-demo.org",
+    "emily.brown@msadoc-demo.org"
+  ],
   "responsibleTeam": "L Team",
-  
   "extensions": {
-      "usedInProducts": ["WhiteLabelProduct", "CloudService"],
-      "programmingLanguage": "Java"
+    "usedInProducts": ["WhiteLabelProduct", "CloudService"],
+    "programmingLanguage": "Java"
   },
-
   "providedAPIs": ["/load/configs", "/load/execution-stats"],
   "subscribedEvents": [
     "transformation.config.created",

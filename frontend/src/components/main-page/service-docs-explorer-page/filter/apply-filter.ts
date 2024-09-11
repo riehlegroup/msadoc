@@ -89,6 +89,7 @@ function doesMatchKeyValueNode(
     );
     if (matchingExtensionKeys.length > 0) {
       serviceDocEntryFromRawData =
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         serviceDoc.rawData.extensions?.[matchingExtensionKeys[0]!];
     }
   } else {

@@ -1,18 +1,17 @@
 {
   "$schema": "https://raw.githubusercontent.com/riehlegroup/msadoc/main/schemas/service-doc.json",
-  
+
   "name": "GraphQlQueryService",
   "group": "backend.etl.load.query",
   "tags": ["project=msadoc-demo"],
-  
+
   "repository": "https://github.com/msadoc-demo/graphql-query-service",
   "taskBoard": "https://github.com/orgs/msadoc-demo/projects/7",
-  "deploymentDocumentation":
-    "https://github.com/msadoc-demo/graphql-query-service/blob/main/deployment.md",
-  
+  "deploymentDocumentation": "https://github.com/msadoc-demo/graphql-query-service/blob/main/deployment.md",
+
   "responsibles": ["emily.brown@msadoc-demo.org"],
   "responsibleTeam": "L Team",
-  
+
   "extensions": {
     "usedInProducts": ["CloudService"],
     "programmingLanguage": "Go"

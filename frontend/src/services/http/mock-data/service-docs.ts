@@ -26,9 +26,9 @@ const allServiceDocs: GetServiceDocResponse[] = [
     creationTimestamp: '2022-12-16T13:56:47.727Z',
     updateTimestamp: '2022-12-16T14:00:22.610Z',
     extensions: {
-      "usedInProducts": ["WhiteLabelProduct", "CloudService"],
-      "programmingLanguage": "TypeScript"
-    }
+      usedInProducts: ['WhiteLabelProduct', 'CloudService'],
+      programmingLanguage: 'TypeScript',
+    },
   },
   {
     name: 'ExtractionService',
@@ -46,15 +46,15 @@ const allServiceDocs: GetServiceDocResponse[] = [
       'extraction.execution.failure',
     ],
     deploymentDocumentation:
-    'https://github.com/msadoc-demo/extraction-service/blob/main/deployment.md',
+      'https://github.com/msadoc-demo/extraction-service/blob/main/deployment.md',
     responsibles: ['jane.smith@msadoc-demo.org'],
     responsibleTeam: 'ET Team',
     creationTimestamp: '2022-12-16T13:56:48.744Z',
     updateTimestamp: '2022-12-16T14:00:51.493Z',
     extensions: {
-      "usedInProducts": ["WhiteLabelProduct", "CloudService"],
-      "programmingLanguage": "TypeScript"
-    }
+      usedInProducts: ['WhiteLabelProduct', 'CloudService'],
+      programmingLanguage: 'TypeScript',
+    },
   },
   {
     name: 'SchedulerService',
@@ -72,15 +72,15 @@ const allServiceDocs: GetServiceDocResponse[] = [
     developmentDocumentation:
       'https://github.com/msadoc-demo/scheduler-service/blob/main/README.md',
     deploymentDocumentation:
-    'https://github.com/msadoc-demo/scheduler-service/blob/main/deployment.md',
+      'https://github.com/msadoc-demo/scheduler-service/blob/main/deployment.md',
     responsibles: ['jane.smith@msadoc-demo.org'],
     responsibleTeam: 'ET Team',
     creationTimestamp: '2022-12-16T13:56:49.570Z',
     updateTimestamp: '2022-12-16T14:00:52.661Z',
     extensions: {
-      "usedInProducts": ["WhiteLabelProduct", "CloudService"],
-      "programmingLanguage": "TypeScript"
-    }
+      usedInProducts: ['WhiteLabelProduct', 'CloudService'],
+      programmingLanguage: 'TypeScript',
+    },
   },
   {
     name: 'LoadService',
@@ -104,15 +104,18 @@ const allServiceDocs: GetServiceDocResponse[] = [
       'load.execution.failure',
     ],
     deploymentDocumentation:
-    'https://github.com/msadoc-demo/load-service/blob/main/deployment.md',
-    responsibles: ['michael.johnson@msadoc-demo.org', 'emily.brown@msadoc-demo.org'],
+      'https://github.com/msadoc-demo/load-service/blob/main/deployment.md',
+    responsibles: [
+      'michael.johnson@msadoc-demo.org',
+      'emily.brown@msadoc-demo.org',
+    ],
     responsibleTeam: 'L Team',
     creationTimestamp: '2022-12-16T13:56:52.553Z',
     updateTimestamp: '2022-12-16T13:58:07.149Z',
     extensions: {
-      "usedInProducts": ["WhiteLabelProduct", "CloudService"],
-      "programmingLanguage": "Java"
-    }
+      usedInProducts: ['WhiteLabelProduct', 'CloudService'],
+      programmingLanguage: 'Java',
+    },
   },
   {
     name: 'NotificationService',
@@ -130,15 +133,15 @@ const allServiceDocs: GetServiceDocResponse[] = [
       'notification.execution.failure',
     ],
     deploymentDocumentation:
-    'https://github.com/msadoc-demo/notification-service/blob/main/deployment.md',
+      'https://github.com/msadoc-demo/notification-service/blob/main/deployment.md',
     responsibles: ['daniel.wilson@msadoc-demo.org'],
     responsibleTeam: 'N Team',
     creationTimestamp: '2022-12-16T13:56:54.131Z',
     updateTimestamp: '2022-12-16T13:58:08.297Z',
     extensions: {
-      "usedInProducts": ["CloudService"],
-      "programmingLanguage": "Go"
-    }
+      usedInProducts: ['CloudService'],
+      programmingLanguage: 'Go',
+    },
   },
   {
     name: 'RestfulQueryService',
@@ -155,15 +158,15 @@ const allServiceDocs: GetServiceDocResponse[] = [
       'loading.execution.failure',
     ],
     deploymentDocumentation:
-    'https://github.com/msadoc-demo/restful-query-service/blob/main/deployment.md',
+      'https://github.com/msadoc-demo/restful-query-service/blob/main/deployment.md',
     responsibles: ['michael.johnson@msadoc-demo.org'],
     responsibleTeam: 'L Team',
     creationTimestamp: '2022-12-16T13:56:56.288Z',
     updateTimestamp: '2022-12-16T13:58:09.287Z',
     extensions: {
-      "usedInProducts": ["CloudService"],
-      "programmingLanguage": "Go"
-    }
+      usedInProducts: ['CloudService'],
+      programmingLanguage: 'Go',
+    },
   },
   {
     name: 'GraphQlQueryService',
@@ -180,15 +183,15 @@ const allServiceDocs: GetServiceDocResponse[] = [
       'loading.execution.failure',
     ],
     deploymentDocumentation:
-    'https://github.com/msadoc-demo/graphql-query-service/blob/main/deployment.md',
+      'https://github.com/msadoc-demo/graphql-query-service/blob/main/deployment.md',
     responsibles: ['emily.brown@msadoc-demo.org'],
     responsibleTeam: 'L Team',
     creationTimestamp: '2022-12-16T13:56:57.659Z',
     updateTimestamp: '2022-12-16T13:58:10.360Z',
     extensions: {
-      "usedInProducts": ["CloudService"],
-      "programmingLanguage": "Go"
-    }
+      usedInProducts: ['CloudService'],
+      programmingLanguage: 'Go',
+    },
   },
   {
     name: 'TransformationService',
@@ -223,9 +226,9 @@ const allServiceDocs: GetServiceDocResponse[] = [
     creationTimestamp: '2022-12-16T13:56:51.462Z',
     updateTimestamp: '2022-12-16T13:59:32.151Z',
     extensions: {
-      "usedInProducts": ["WhiteLabelProduct", "CloudService"],
-      "programmingLanguage": "TypeScript"
-    }
+      usedInProducts: ['WhiteLabelProduct', 'CloudService'],
+      programmingLanguage: 'TypeScript',
+    },
   },
   {
     name: 'MobileAppClient',
@@ -254,9 +257,9 @@ const allServiceDocs: GetServiceDocResponse[] = [
     creationTimestamp: '2022-12-16T13:56:51.462Z',
     updateTimestamp: '2022-12-16T13:59:32.151Z',
     extensions: {
-      "usedInProducts": ["WhiteLabelProduct", "CloudService"],
-      "programmingLanguage": "TypeScript"
-    }
+      usedInProducts: ['WhiteLabelProduct', 'CloudService'],
+      programmingLanguage: 'TypeScript',
+    },
   },
 ];
 

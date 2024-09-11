@@ -1,23 +1,17 @@
 {
   "$schema": "https://raw.githubusercontent.com/riehlegroup/msadoc/main/schemas/service-doc.json",
-
   "name": "ExtractionService",
   "group": "backend.etl.extract",
   "tags": ["project=msadoc-demo"],
-  
   "repository": "https://github.com/msadoc-demo/extraction-service",
   "taskBoard": "https://github.com/orgs/msadoc-demo/projects/2",
-  "deploymentDocumentation":
-    "https://github.com/msadoc-demo/extraction-service/blob/main/deployment.md",
-  
+  "deploymentDocumentation": "https://github.com/msadoc-demo/extraction-service/blob/main/deployment.md",
   "responsibles": ["jane.smith@msadoc-demo.org"],
   "responsibleTeam": "ET Team",
-  
   "extensions": {
     "usedInProducts": ["WhiteLabelProduct", "CloudService"],
     "programmingLanguage": "TypeScript"
   },
-
   "providedAPIs": ["/extractions/config", "/extractions/execution-stats"],
   "subscribedEvents": ["extraction.execution.triggered"],
   "publishedEvents": [

@@ -1,25 +1,18 @@
 {
   "$schema": "https://raw.githubusercontent.com/riehlegroup/msadoc/main/schemas/service-doc.json",
-  
   "name": "MobileAppClient",
   "group": "frontend",
   "tags": ["project=msadoc-demo"],
-  
   "repository": "https://github.com/msadoc-demo/mobile-app",
   "taskBoard": "https://github.com/orgs/msadoc-demo/projects/9",
-  "developmentDocumentation":
-    "https://github.com/msadoc-demo/mobile-app/blob/main/README.md",
-  "deploymentDocumentation":
-    "https://github.com/msadoc-demo/mobile-app/tree/main/deployment.md",
-  
+  "developmentDocumentation": "https://github.com/msadoc-demo/mobile-app/blob/main/README.md",
+  "deploymentDocumentation": "https://github.com/msadoc-demo/mobile-app/tree/main/deployment.md",
   "responsibles": ["chris.davis@msadoc-demo.org"],
   "responsibleTeam": "App Team",
-  
   "extensions": {
     "usedInProducts": ["WhiteLabelProduct", "CloudService"],
     "programmingLanguage": "TypeScript"
   },
-  
   "consumedAPIs": [
     "/extractions/config",
     "/extractions/execution-stats",

@@ -1,41 +1,34 @@
 {
   "$schema": "https://raw.githubusercontent.com/riehlegroup/msadoc/main/schemas/service-doc.json",
-  
   "name": "TransformationService",
   "group": "backend.etl.transform",
   "tags": ["project=msadoc-demo"],
-  
   "repository": "https://github.com/msadoc-demo/transformation-service",
   "taskBoard": "https://github.com/orgs/msadoc-demo/projects/8",
-  "developmentDocumentation":
-    "https://github.com/msadoc-demo/transformation-service/blob/main/README.md",
-  "deploymentDocumentation":
-    "https://github.com/msadoc-demo/transformation-service/tree/main/deployment.md",
-  
+  "developmentDocumentation": "https://github.com/msadoc-demo/transformation-service/blob/main/README.md",
+  "deploymentDocumentation": "https://github.com/msadoc-demo/transformation-service/tree/main/deployment.md",
   "responsibles": ["jane.smith@msadoc-demo.org"],
   "responsibleTeam": "ET Team",
-  
   "extensions": {
     "usedInProducts": ["WhiteLabelProduct", "CloudService"],
     "programmingLanguage": "TypeScript"
   },
-      
   "providedAPIs": [
-      "/transformation/configs",
-      "/transformation/execution-stats"
-    ],
+    "/transformation/configs",
+    "/transformation/execution-stats"
+  ],
   "subscribedEvents": [
-      "extraction.config.created",
-      "extraction.config.updated",
-      "extraction.config.deleted",
-      "extraction.execution.success",
-      "extraction.execution.failure"
+    "extraction.config.created",
+    "extraction.config.updated",
+    "extraction.config.deleted",
+    "extraction.execution.success",
+    "extraction.execution.failure"
   ],
   "publishedEvents": [
-      "transformation.execution.success",
-      "transformation.execution.failure",
-      "transformation.config.created",
-      "transformation.config.updated",
-      "transformation.config.deleted"
+    "transformation.execution.success",
+    "transformation.execution.failure",
+    "transformation.config.created",
+    "transformation.config.updated",
+    "transformation.config.deleted"
   ]
 }

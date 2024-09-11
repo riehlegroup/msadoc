@@ -1,36 +1,23 @@
 {
   "$schema": "https://raw.githubusercontent.com/riehlegroup/msadoc/main/schemas/service-doc.json",
-  
   "name": "RestfulQueryService",
   "group": "backend.etl.load.query",
-  "tags": [
-      "project=msadoc-demo"
-  ],
-  
+  "tags": ["project=msadoc-demo"],
   "repository": "https://github.com/msadoc-demo/restful-query-service",
   "taskBoard": "https://github.com/orgs/msadoc-demo/projects/6",
   "deploymentDocumentation": "https://github.com/msadoc-demo/restful-query-service/blob/main/deployment.md",
-  
-  "responsibles": [
-      "michael.johnson@msadoc-demo.org"
-  ],
+  "responsibles": ["michael.johnson@msadoc-demo.org"],
   "responsibleTeam": "L Team",
-  
   "extensions": {
-      "usedInProducts": [
-          "CloudService"
-      ],
-      "programmingLanguage": "Go"
+    "usedInProducts": ["CloudService"],
+    "programmingLanguage": "Go"
   },
-
-  "providedAPIs": [
-      "/query/restful"
-  ],
+  "providedAPIs": ["/query/restful"],
   "subscribedEvents": [
-      "loading.config.created",
-      "loading.config.updated",
-      "loading.config.deleted",
-      "loading.execution.success",
-      "loading.execution.failure"
+    "loading.config.created",
+    "loading.config.updated",
+    "loading.config.deleted",
+    "loading.execution.success",
+    "loading.execution.failure"
   ]
 }

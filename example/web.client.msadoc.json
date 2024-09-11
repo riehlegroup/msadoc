@@ -1,33 +1,27 @@
 {
   "$schema": "https://raw.githubusercontent.com/riehlegroup/msadoc/main/schemas/service-doc.json",
-
   "name": "WebClient",
   "group": "frontend",
   "tags": ["project=msadoc-demo"],
-  
   "repository": "https://github.com/msadoc-demo/web-client",
   "taskBoard": "https://github.com/orgs/msadoc-demo/projects/1",
-  "deploymentDocumentation":
-    "https://github.com/msadoc-demo/web-client/blob/main/deployment.md",
-  
+  "deploymentDocumentation": "https://github.com/msadoc-demo/web-client/blob/main/deployment.md",
   "responsibles": ["john.doe@msadoc-demo.org"],
   "responsibleTeam": "WC Team",
-  
   "extensions": {
     "usedInProducts": ["WhiteLabelProduct", "CloudService"],
     "programmingLanguage": "TypeScript"
   },
-
   "consumedAPIs": [
-      "/extractions/config",
-      "/extractions/execution-stats",
-      "/transformation/configs",
-      "/transformation/execution-stats",
-      "/load/configs",
-      "/load/execution-stats",
-      "/notifications/configs",
-      "/notifications/execution-stats",
-      "/query/graphql",
-      "/query/restful"
-    ]
+    "/extractions/config",
+    "/extractions/execution-stats",
+    "/transformation/configs",
+    "/transformation/execution-stats",
+    "/load/configs",
+    "/load/execution-stats",
+    "/notifications/configs",
+    "/notifications/execution-stats",
+    "/query/graphql",
+    "/query/restful"
+  ]
 }
