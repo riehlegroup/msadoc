@@ -80,8 +80,17 @@ function doesMatchKeyValueNode(
   // Special case: We are filtering for an Extension Field.
   if (isExtensionsKey(filter.key)) {
     const keyWithoutPrefix = filter.key.replace(EXTENSIONS_KEY_PREFIX, '');
-    serviceDocEntryFromRawData =
-      serviceDoc.rawData.extensions?.[keyWithoutPrefix];
+
+    const availableExtensionKeys = Object.keys(
+      serviceDoc.rawData.extensions ?? {},
+    );
+    const matchingExtensionKeys = availableExtensionKeys.filter(
+      (key) => key.toLowerCase() === keyWithoutPrefix,
+    );
+    if (matchingExtensionKeys.length > 0) {
+      serviceDocEntryFromRawData =
+        serviceDoc.rawData.extensions?.[matchingExtensionKeys[0]!];
+    }
   } else {
     const serviceDocKey = QUERY_KEY_TO_SERVICEDOC_MAP[filter.key];
 
