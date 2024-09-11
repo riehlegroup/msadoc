@@ -3,24 +3,28 @@
 
   "name": "NotificationService",
   "group": "backend",
-  "tags": ["app=ods"],
-
-  "repository": "https://github.com/jvalue/ods.git",
-  "taskBoard": "https://github.com/jvalue/ods/projects",
+  "tags": ["project=msadoc-demo"],
+  
+  "repository": "https://github.com/msadoc-demo/notification-service",
+  "taskBoard": "https://github.com/orgs/msadoc-demo/projects/5",
+  "deploymentDocumentation":
+    "https://github.com/msadoc-demo/notification-service/blob/main/deployment.md",
+  
+    "responsibles": ["daniel.wilson@msadoc-demo.org"],
+  "responsibleTeam": "N Team",
+  
+  "extensions": {
+    "usedInProducts": ["CloudService"],
+    "programmingLanguage": "Go"
+  },
 
   "providedAPIs": ["/notifications/configs", "/notifications/execution-stats"],
-
+  "subscribedEvents": ["load.execution.success", "load.execution.failure"],
   "publishedEvents": [
     "notification.config.created",
     "notification.config.updated",
     "notification.config.deleted",
     "notification.execution.success",
     "notification.execution.failure"
-  ],
-  "subscribedEvents": ["load.execution.success", "load.execution.failure"],
-
-  "deploymentDocumentation": "https://github.com/jvalue/ods/tree/main/deployment",
-
-  "responsibles": ["schwarz@group.riehle.org"],
-  "responsibleTeam": "jvalue-core"
+  ]
 }

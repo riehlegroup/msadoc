@@ -3,23 +3,28 @@
 
   "name": "SchedulerService",
   "group": "backend.etl.extract",
-  "tags": ["app=ods"],
+  "tags": ["project=msadoc-demo"],
 
-  "repository": "https://github.com/jvalue/ods.git",
-  "taskBoard": "https://github.com/jvalue/ods/projects",
+  "repository": "https://github.com/msadoc-demo/scheduler-service",
+  "taskBoard": "https://github.com/orgs/msadoc-demo/projects/3",
+  "developmentDocumentation":
+    "https://github.com/msadoc-demo/scheduler-service/blob/main/README.md",
+  "deploymentDocumentation":
+    "https://github.com/msadoc-demo/scheduler-service/blob/main/deployment.md",
+  
+  "responsibles": ["jane.smith@msadoc-demo.org"],
+  "responsibleTeam": "ET Team",
+  
+  "extensions": {
+    "usedInProducts": ["WhileLabelProduct", "CloudService"],
+    "programmingLanguage": "TypeScript"
+  },
 
   "providedAPIs": ["/scheduler/tasks"],
-
-  "publishedEvents": ["extraction.execution.triggered"],
   "subscribedEvents": [
     "extraction.config.created",
     "extraction.config.updated",
     "extraction.config.deleted"
   ],
-
-  "deploymentDocumentation": "https://github.com/jvalue/ods/tree/main/deployment",
-  "developmentDocumentation": "https://github.com/jvalue/ods/blob/main/scheduler/README.md",
-
-  "responsibles": ["schwarz@group.riehle.org"],
-  "responsibleTeam": "jvalue-core"
+  "publishedEvents": ["extraction.execution.triggered"]
 }

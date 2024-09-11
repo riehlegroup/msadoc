@@ -1,36 +1,41 @@
 {
   "$schema": "https://raw.githubusercontent.com/riehlegroup/msadoc/main/schemas/service-doc.json",
-
+  
   "name": "TransformationService",
   "group": "backend.etl.transform",
-  "tags": ["app=ods"],
-
-  "repository": "https://github.com/jvalue/ods.git",
-  "taskBoard": "https://github.com/jvalue/ods/projects",
-
+  "tags": ["project=msadoc-demo"],
+  
+  "repository": "https://github.com/msadoc-demo/transformation-service",
+  "taskBoard": "https://github.com/orgs/msadoc-demo/projects/8",
+  "developmentDocumentation":
+    "https://github.com/msadoc-demo/transformation-service/blob/main/README.md",
+  "deploymentDocumentation":
+    "https://github.com/msadoc-demo/transformation-service/tree/main/deployment.md",
+  
+  "responsibles": ["jane.smith@msadoc-demo.org"],
+  "responsibleTeam": "ET Team",
+  
+  "extensions": {
+    "usedInProducts": ["WhileLabelProduct", "CloudService"],
+    "programmingLanguage": "TypeScript"
+  },
+      
   "providedAPIs": [
-    "/transformation/configs",
-    "/transformation/execution-stats"
-  ],
-
+      "/transformation/configs",
+      "/transformation/execution-stats"
+    ],
   "subscribedEvents": [
-    "extraction.config.created",
-    "extraction.config.updated",
-    "extraction.config.deleted",
-    "extraction.execution.success",
-    "extraction.execution.failure"
+      "extraction.config.created",
+      "extraction.config.updated",
+      "extraction.config.deleted",
+      "extraction.execution.success",
+      "extraction.execution.failure"
   ],
   "publishedEvents": [
-    "transformation.execution.success",
-    "transformation.execution.failure",
-    "transformation.config.created",
-    "transformation.config.updated",
-    "transformation.config.deleted"
-  ],
-
-  "deploymentDocumentation": "https://github.com/jvalue/ods/tree/main/deployment",
-  "developmentDocumentation": "https://github.com/jvalue/ods/blob/main/transformation/README.md",
-
-  "responsibles": ["schwarz@group.riehle.org"],
-  "responsibleTeam": "jvalue-core"
+      "transformation.execution.success",
+      "transformation.execution.failure",
+      "transformation.config.created",
+      "transformation.config.updated",
+      "transformation.config.deleted"
+  ]
 }

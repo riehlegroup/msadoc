@@ -3,30 +3,31 @@
 
   "name": "WebClient",
   "group": "frontend",
-  "tags": ["app=ods"],
-
-  "repository": "https://github.com/jvalue/ods.git",
-  "taskBoard": "https://github.com/jvalue/ods/projects",
+  "tags": ["project=msadoc-demo"],
+  
+  "repository": "https://github.com/msadoc-demo/web-client",
+  "taskBoard": "https://github.com/orgs/msadoc-demo/projects/1",
+  "deploymentDocumentation":
+    "https://github.com/msadoc-demo/web-client/blob/main/deployment.md",
+  
+  "responsibles": ["john.doe@msadoc-demo.org"],
+  "responsibleTeam": "WC Team",
+  
+  "extensions": {
+    "usedInProducts": ["WhileLabelProduct", "CloudService"],
+    "programmingLanguage": "TypeScript"
+  },
 
   "consumedAPIs": [
-    "/extractions/config",
-    "/extractions/execution-stats",
-
-    "/transformation/configs",
-    "/transformation/execution-stats",
-
-    "/load/configs",
-    "/load/execution-stats",
-
-    "/notifications/configs",
-    "/notifications/execution-stats",
-
-    "/query/graphql",
-    "/query/restful"
-  ],
-
-  "deploymentDocumentation": "https://github.com/jvalue/ods/tree/main/deployment",
-
-  "responsibles": ["schwarz@group.riehle.org"],
-  "responsibleTeam": "jvalue-core"
+      "/extractions/config",
+      "/extractions/execution-stats",
+      "/transformation/configs",
+      "/transformation/execution-stats",
+      "/load/configs",
+      "/load/execution-stats",
+      "/notifications/configs",
+      "/notifications/execution-stats",
+      "/query/graphql",
+      "/query/restful"
+    ]
 }

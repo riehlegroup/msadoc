@@ -3,13 +3,22 @@
 
   "name": "ExtractionService",
   "group": "backend.etl.extract",
-  "tags": ["app=ods"],
-
-  "repository": "https://github.com/jvalue/ods.git",
-  "taskBoard": "https://github.com/jvalue/ods/projects",
+  "tags": ["project=msadoc-demo"],
+  
+  "repository": "https://github.com/msadoc-demo/extraction-service",
+  "taskBoard": "https://github.com/orgs/msadoc-demo/projects/2",
+  "deploymentDocumentation":
+    "https://github.com/msadoc-demo/extraction-service/blob/main/deployment.md",
+  
+  "responsibles": ["jane.smith@msadoc-demo.org"],
+  "responsibleTeam": "ET Team",
+  
+  "extensions": {
+    "usedInProducts": ["WhileLabelProduct", "CloudService"],
+    "programmingLanguage": "TypeScript"
+  },
 
   "providedAPIs": ["/extractions/config", "/extractions/execution-stats"],
-
   "subscribedEvents": ["extraction.execution.triggered"],
   "publishedEvents": [
     "extraction.config.created",
@@ -17,10 +26,5 @@
     "extraction.config.deleted",
     "extraction.execution.success",
     "extraction.execution.failure"
-  ],
-
-  "deploymentDocumentation": "https://github.com/jvalue/ods/tree/main/deployment",
-
-  "responsibles": ["schwarz@group.riehle.org"],
-  "responsibleTeam": "jvalue-core"
+  ]
 }

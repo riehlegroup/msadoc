@@ -1,25 +1,29 @@
 {
   "$schema": "https://raw.githubusercontent.com/riehlegroup/msadoc/main/schemas/service-doc.json",
-
+  
   "name": "GraphQlQueryService",
   "group": "backend.etl.load.query",
-  "tags": ["app=ods"],
-
-  "repository": "https://github.com/jvalue/ods.git",
-  "taskBoard": "https://github.com/jvalue/ods/projects",
+  "tags": ["project=msadoc-demo"],
+  
+  "repository": "https://github.com/msadoc-demo/graphql-query-service",
+  "taskBoard": "https://github.com/orgs/msadoc-demo/projects/7",
+  "deploymentDocumentation":
+    "https://github.com/msadoc-demo/graphql-query-service/blob/main/deployment.md",
+  
+  "responsibles": ["emily.brown@msadoc-demo.org"],
+  "responsibleTeam": "L Team",
+  
+  "extensions": {
+    "usedInProducts": ["CloudService"],
+    "programmingLanguage": "Go"
+  },
 
   "providedAPIs": ["/query/graphql"],
-
   "subscribedEvents": [
     "loading.config.created",
     "loading.config.updated",
     "loading.config.deleted",
     "loading.execution.success",
     "loading.execution.failure"
-  ],
-
-  "deploymentDocumentation": "https://github.com/jvalue/ods/tree/main/deployment",
-
-  "responsibles": ["schwarz@group.riehle.org"],
-  "responsibleTeam": "jvalue-core"
+  ]
 }
