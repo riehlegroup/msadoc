@@ -16,7 +16,7 @@
   "responsibleTeam": "ET Team",
   
   "extensions": {
-    "usedInProducts": ["WhileLabelProduct", "CloudService"],
+    "usedInProducts": ["WhiteLabelProduct", "CloudService"],
     "programmingLanguage": "TypeScript"
   },
 

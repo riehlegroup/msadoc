@@ -14,7 +14,7 @@
   "responsibleTeam": "WC Team",
   
   "extensions": {
-    "usedInProducts": ["WhileLabelProduct", "CloudService"],
+    "usedInProducts": ["WhiteLabelProduct", "CloudService"],
     "programmingLanguage": "TypeScript"
   },
 

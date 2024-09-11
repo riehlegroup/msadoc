@@ -26,7 +26,7 @@ const allServiceDocs: GetServiceDocResponse[] = [
     creationTimestamp: '2022-12-16T13:56:47.727Z',
     updateTimestamp: '2022-12-16T14:00:22.610Z',
     extensions: {
-      "usedInProducts": ["WhileLabelProduct", "CloudService"],
+      "usedInProducts": ["WhiteLabelProduct", "CloudService"],
       "programmingLanguage": "TypeScript"
     }
   },
@@ -52,7 +52,7 @@ const allServiceDocs: GetServiceDocResponse[] = [
     creationTimestamp: '2022-12-16T13:56:48.744Z',
     updateTimestamp: '2022-12-16T14:00:51.493Z',
     extensions: {
-      "usedInProducts": ["WhileLabelProduct", "CloudService"],
+      "usedInProducts": ["WhiteLabelProduct", "CloudService"],
       "programmingLanguage": "TypeScript"
     }
   },
@@ -78,7 +78,7 @@ const allServiceDocs: GetServiceDocResponse[] = [
     creationTimestamp: '2022-12-16T13:56:49.570Z',
     updateTimestamp: '2022-12-16T14:00:52.661Z',
     extensions: {
-      "usedInProducts": ["WhileLabelProduct", "CloudService"],
+      "usedInProducts": ["WhiteLabelProduct", "CloudService"],
       "programmingLanguage": "TypeScript"
     }
   },
@@ -110,7 +110,7 @@ const allServiceDocs: GetServiceDocResponse[] = [
     creationTimestamp: '2022-12-16T13:56:52.553Z',
     updateTimestamp: '2022-12-16T13:58:07.149Z',
     extensions: {
-      "usedInProducts": ["WhileLabelProduct", "CloudService"],
+      "usedInProducts": ["WhiteLabelProduct", "CloudService"],
       "programmingLanguage": "Java"
     }
   },
@@ -223,7 +223,7 @@ const allServiceDocs: GetServiceDocResponse[] = [
     creationTimestamp: '2022-12-16T13:56:51.462Z',
     updateTimestamp: '2022-12-16T13:59:32.151Z',
     extensions: {
-      "usedInProducts": ["WhileLabelProduct", "CloudService"],
+      "usedInProducts": ["WhiteLabelProduct", "CloudService"],
       "programmingLanguage": "TypeScript"
     }
   },
@@ -254,7 +254,7 @@ const allServiceDocs: GetServiceDocResponse[] = [
     creationTimestamp: '2022-12-16T13:56:51.462Z',
     updateTimestamp: '2022-12-16T13:59:32.151Z',
     extensions: {
-      "usedInProducts": ["WhileLabelProduct", "CloudService"],
+      "usedInProducts": ["WhiteLabelProduct", "CloudService"],
       "programmingLanguage": "TypeScript"
     }
   },

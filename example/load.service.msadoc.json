@@ -14,7 +14,7 @@
   "responsibleTeam": "L Team",
   
   "extensions": {
-      "usedInProducts": ["WhileLabelProduct", "CloudService"],
+      "usedInProducts": ["WhiteLabelProduct", "CloudService"],
       "programmingLanguage": "Java"
   },
 
